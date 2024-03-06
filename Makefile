@@ -1,13 +1,16 @@
-CC = gcc
+CC = /usr/bin/gcc
 EXE = ./assembler
-OBJS = src/*.o
-CFLAGS = -ansi -Wall -pedantic -Iinclude/
-LD_FLAGS = -lm
+OBJS = *.o
+CFLAGS = -ansi -Wall -pedantic 
+INC=-Iinclude/
+LD_FLAGS = 
 
 all: $(EXE)
 
 $(EXE): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LD_FLAGS)
+
+$(OBJS): src/*.c
 
 clean:
 	-rm $(OBJS) $(EXE)
@@ -19,4 +22,4 @@ test:
 	$(EXE) < test3.txt > test3_out.txt
 	
 %.o : %.c
-	$(CC) -c $(CFLAGS) $< 
+	$(CC) -c $(INC) $(CFLAGS) $< 
