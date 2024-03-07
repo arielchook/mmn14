@@ -1,0 +1,6 @@
+assembler
+obj/hashtable.o
+obj/macros.o
+obj/main.o
+obj/utils.o
+test/ps.am

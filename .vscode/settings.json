@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "strhelpers.h": "c",
+        "macros.h": "c",
+        "hashtable.h": "c",
+        "util.h": "c",
+        "messages.h": "c",
+        "string.h": "c",
+        "reserved.h": "c"
     }
 }

@@ -1,25 +1,24 @@
 CC = /usr/bin/gcc
-EXE = ./assembler
-OBJS = *.o
-CFLAGS = -ansi -Wall -pedantic 
-INC=-Iinclude/
-LD_FLAGS = 
+EXE = assembler
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = .
+CFLAGS = -ansi -Wall -pedantic -Iinclude/
+
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+TARGET = $(BIN_DIR)/$(EXE)
 
 all: $(EXE)
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(EXE): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LD_FLAGS)
-
-$(OBJS): src/*.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	-rm $(OBJS) $(EXE)
+	rm -rf $(OBJ_DIR)/*.o $(TARGET)
 
 test:
 	@echo Running tests..
-	$(EXE) < test1.txt > test1_out.txt
-	$(EXE) < test2.txt > test2_out.txt
-	$(EXE) < test3.txt > test3_out.txt
 	
-%.o : %.c
-	$(CC) -c $(INC) $(CFLAGS) $< 

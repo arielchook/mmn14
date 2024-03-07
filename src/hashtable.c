@@ -2,17 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <hashtable.h>
-#include <messages.h>
+#include <utils.h>
 
-char *strdup(const char *s) {
-    size_t size = strlen(s) + 1;
-    char *p = malloc(size);
-    if (p) {
-        memcpy(p, s, size);
-    }
-    return p;
-}
-
+/* Generate a hash code from a string */
 unsigned long hash(const char *str) {
     unsigned long hash = 5381;
     int c;
@@ -21,37 +13,32 @@ unsigned long hash(const char *str) {
     return hash;
 }
 
-Hashtable* createHashtable() {
-    Hashtable *ht = (Hashtable*)malloc(sizeof(Hashtable));
-    if (ht == NULL) {
-        fprintf(stderr, ERR_MEM_ALLOC_FAILED);
-        exit(EXIT_FAILURE);
-    }
-    ht->table = (KeyValuePair*)malloc(sizeof(KeyValuePair) * INITIAL_SIZE);
-    if (ht->table == NULL) {
-        fprintf(stderr, ERR_MEM_ALLOC_FAILED);
-        exit(EXIT_FAILURE);
-    }
+Hashtable* hashtable_create() {
+    Hashtable *ht = (Hashtable*)safe_malloc(sizeof(Hashtable));
+    ht->table = (KeyValuePair*)safe_malloc(sizeof(KeyValuePair) * INITIAL_SIZE);
     ht->size = 0;
     ht->capacity = INITIAL_SIZE;
     return ht;
 }
 
-void destroyHashtable(Hashtable *ht) {
+void hashtable_destroy(Hashtable *ht) {
+    int i;
     if (ht == NULL) return;
+    for (i=0;i<ht->capacity;i++) {
+        if (ht->table[i].key != NULL) {
+            free(ht->table[i].key);
+            free(ht->table[i].value);
+        }
+    }
     free(ht->table);
     free(ht);
 }
 
-void resizeHashtable(Hashtable *ht) {
+void hashtable_resize(Hashtable *ht) {
     int i;
     int new_capacity = ht->capacity * GROWTH_FACTOR;
-    KeyValuePair *new_table = (KeyValuePair*)malloc(sizeof(KeyValuePair) * new_capacity);
-    if (new_table == NULL) {
-        fprintf(stderr, ERR_MEM_ALLOC_FAILED);
-        exit(EXIT_FAILURE);
-    }
-    for (i = 0; i < ht->capacity; i++) {
+    KeyValuePair *new_table = (KeyValuePair*)safe_malloc(sizeof(KeyValuePair) * new_capacity);
+    for (i=0;i<ht->capacity; i++) {
         if (ht->table[i].key != NULL) {
             unsigned long index = hash(ht->table[i].key) % new_capacity;
             while (new_table[index].key != NULL) {
@@ -65,31 +52,65 @@ void resizeHashtable(Hashtable *ht) {
     ht->capacity = new_capacity;
 }
 
-void insert(Hashtable *ht, const char *key, Entry value) {
+void* hashtable_insert(Hashtable *ht, char *key, void *value) {
     unsigned long index;
+    
     if ((double)ht->size / ht->capacity > 0.7) {
-        resizeHashtable(ht);
+        hashtable_resize(ht);
     }
     index = hash(key) % ht->capacity;
     while (ht->table[index].key != NULL) {
         if (strcmp(ht->table[index].key, key) == 0) {
+            void *old_value = ht->table[index].value;
             ht->table[index].value = value;
-            return;
+            return old_value;
         }
         index = (index + 1) % ht->capacity;
     }
     ht->table[index].key = strdup(key);
+    /*ht->table[index].key = key;*/
     ht->table[index].value = value;
     ht->size++;
+    return NULL;
 }
 
-Entry* get(Hashtable *ht, const char *key) {
+void* hashtable_get(Hashtable *ht, const char *key) {
     unsigned long index = hash(key) % ht->capacity;
     while (ht->table[index].key != NULL) {
         if (strcmp(ht->table[index].key, key) == 0) {
-            return &ht->table[index].value;
+            return ht->table[index].value;
         }
         index = (index + 1) % ht->capacity;
     }
     return NULL;
 }
+/*
+int main() {
+    Hashtable *ht = hashtable_create();
+
+    int *value1 = malloc(sizeof(int));
+    *value1 = 42;
+    hashtable_insert(ht, "key1", value1);
+
+    double *value2 = malloc(sizeof(double));
+    *value2 = 3.14;
+    hashtable_insert(ht, "key2", value2);
+
+    int *result1 = hashtable_get(ht, "key1");
+    if (result1 != NULL) {
+        printf("Value found: %d\n", *result1);
+    } else {
+        printf("Value not found.\n");
+    }
+
+    double *result2 = hashtable_get(ht, "key2");
+    if (result2 != NULL) {
+        printf("Value found: %lf\n", *result2);
+    } else {
+        printf("Value not found.\n");
+    }
+
+    hashtable_destroy(ht);
+    return 0;
+}
+*/

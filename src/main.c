@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <messages.h>
-#include <util.h>
+#include <utils.h>
 #include <string.h>
+#include <macros.h>
 
-void processFile(char *fname)
+bool processFile(char *fname)
 {
+    bool success=true;
     FILE *asFile, *amFile;
     char *fnameWext=(char*)safe_malloc(strlen(fname)+4);
     /* add .as extension and try to open the input file */
@@ -13,20 +15,25 @@ void processFile(char *fname)
     {
         fprintf(stderr,ERR_FILE_CANT_BE_WRITTEN, fnameWext);
         free(fnameWext);
-        return;
+        success=false;
     }
 
-    /* add .am extension and try to open the macro output file. 
-       no need to allocate a new file name since it's the same length */
-    sprintf(fnameWext,"%s.am",fname);
-    if ((amFile=fopen(fnameWext,"w")) == NULL)
-    {
-        fprintf(stderr,ERR_FILE_CANT_BE_WRITTEN, fnameWext);
-        free(fnameWext);
-        return;
+    if (success) {
+        /* add .am extension and try to open the macro output file. 
+        no need to allocate a new file name since it's the same length */
+        sprintf(fnameWext,"%s.am",fname);
+        if ((amFile=fopen(fnameWext,"w")) == NULL)
+        {
+            fprintf(stderr,ERR_FILE_CANT_BE_WRITTEN, fnameWext);
+            free(fnameWext);
+            success=false;
+        }
     }
+    if (success) {
+        success=preprocess(asFile, amFile);
+    }
+    return success;
 
-    
 }
 
 int main(int argc, char *argv[])
