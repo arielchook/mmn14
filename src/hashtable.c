@@ -68,7 +68,6 @@ void* hashtable_insert(Hashtable *ht, char *key, void *value) {
         index = (index + 1) % ht->capacity;
     }
     ht->table[index].key = strdup(key);
-    /*ht->table[index].key = key;*/
     ht->table[index].value = value;
     ht->size++;
     return NULL;

@@ -3,8 +3,10 @@
 .extern W
 .define sz = 2
 mcr avi
+        mcr kaka
  mov r1,r2
  mov r2,r3
+    endmcr
 endmcr
 MAIN: mov r3, LIST[sz]
 avi
@@ -17,6 +19,8 @@ LOOP: jmp W
  cmp K, #sz
  bne W
  avi
+ avi
+ papa
 L1: inc L3
 .entry LOOP
  bne LOOP
