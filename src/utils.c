@@ -64,6 +64,10 @@ int numWords(const char* str) {
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
 char* extractWord(const char* str, int n) {
+    return extractWordSeparator(str, n, ' ');
+}
+
+char* extractWordSeparator(const char* str, int n, char c) {
     int word_count = 0,length;
     const char* start = NULL;
     const char* end = NULL;
@@ -71,10 +75,10 @@ char* extractWord(const char* str, int n) {
     char* result;
 
     while (*str) {
-        if (*str != ' ' && !in_word) {
+        if (*str != c && !in_word) {
             in_word = 1;
             start = str;
-        } else if (*str == ' ' && in_word) {
+        } else if (*str == c && in_word) {
             in_word = 0;
             word_count++;
             if (word_count == n) {

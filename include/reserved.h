@@ -11,7 +11,7 @@ enum reserved_idx
     ENDMCR,
     MOV
 };
-static char *reserved_words[] = {"mcr", "endmcr", "mov"};
+static char *reserved_words[] = {"mcr", "endmcr", "mov", "define"};
 
 bool is_reserved_word(char *cmd)
 {

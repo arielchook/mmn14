@@ -20,5 +20,6 @@ int numWords(const char* str);
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
 char* extractWord(const char* str, int n);
+char* extractWordSeparator(const char* str, int n, char c);
 char *strdup(const char *str);
 #endif

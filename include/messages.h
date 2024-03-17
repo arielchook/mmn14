@@ -16,4 +16,12 @@
 #define PP_ERR_EXTRA_ENDMCR "Precomp:%d:Extraneous characters after endmcr command\n"
 #define PP_ERR_ENDMCR_MISLOCATION "Precomp:%d:endmcr encountered but not inside macro definition\n"
 
+/* Error messages for definition step */
+
+#define ERR_NO_NESTED_DEFINITIONS "Definition:%d: Nested definitions are not allowed\n"
+#define ERR_INVALID_DEFINITION_NAME "Definition:%d: invalid definition name specified\n"
+#define ERR_RESERVED_WORD "Definition:%d: Cannot use reserved words as a definition name\n"
+#define ERR_INVALID_DEFINE "Definition:%d: Invalid number of arguments in definition statement\n"
+#define ERR_DEF_NOT_STRING "Definition:%d: Definition name is not a string\n"
+
 #endif
