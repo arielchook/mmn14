@@ -5,8 +5,6 @@
 #include <hashtable.h>
 #include <utils.h>
 
-/* Maximum line length in the as file */
-#define MAX_LINE_LENGTH 80
 /* Maximum number of lines in a macro */
 #define MAX_LINES_IN_MACRO 100
 

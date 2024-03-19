@@ -1,8 +1,7 @@
-#include <macros.h>
 #include <stdio.h>
 #include <reserved.h>
 #include <string.h>
-#include <macros.h>
+#include <precomp.h>
 #include <utils.h>
 
 /* this is the macro hashtable. it maps a macro name to an array of lines of code */
@@ -46,20 +45,19 @@ bool preprocess(FILE *input, FILE *output)
     int num_words;
 
     /* get the next line from input file, until we reach EOF  */
-    while (fgets(line,MAX_LINE_LENGTH,input)!=NULL) {
+    for(lineNumber=1;fgets(line,MAX_LINE_LENGTH,input)!=NULL;lineNumber++) {
 
         /* remove leading and trailing whitespaces*/
         ltrim(line);
         /* skip empty lines */
         if(strlen(line)==0) {
-            lineNumber++; 
             continue;
         }
         rtrim(line);
 
         /* examine the first word in the line */
-        firstWord=extractWord(line,1);
-        num_words=numWords(line);
+        firstWord=extractWord(line,1,&num_words);
+        
         /* is it a macro definition*/
         if (strcmp(firstWord,reserved_words[MCR])==0) {
             if (inMacro) {
@@ -72,7 +70,7 @@ bool preprocess(FILE *input, FILE *output)
                 success=false;
             }
             /* extract the macro name */
-            if (success && (macroName=extractWord(line,2))==NULL) {
+            if (success && (macroName=extractWord(line,2, &num_words))==NULL) {
                 printf(PP_ERR_INVALID_MACRO_NAME,lineNumber);
                 success=false;
             }
@@ -128,7 +126,6 @@ bool preprocess(FILE *input, FILE *output)
                 }
             }
         }
-        lineNumber++;
     }
     free_macro_table();
     return success;

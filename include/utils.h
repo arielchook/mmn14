@@ -6,6 +6,9 @@
 #include <messages.h>
 #include <stdbool.h>
 
+/* Maximum line length in the input file */
+#define MAX_LINE_LENGTH 80
+
 void *safe_malloc(int size);
 /* Trim whitespace characters from the beginning of a string */
 void ltrim(char *str);
@@ -19,7 +22,7 @@ int endsWith(const char *str, const char *suffix);
 int numWords(const char* str);
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
-char* extractWord(const char* str, int n);
-char* extractWordSeparator(const char* str, int n, char c);
+char* extractWord(const char* str, int n, int *wordCount);
+char* extractWordSeparator(const char* str, int n, int *wordCount, char separator);
 char *strdup(const char *str);
 #endif

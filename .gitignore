@@ -1,6 +1,3 @@
 assembler
-obj/hashtable.o
-obj/macros.o
-obj/main.o
-obj/utils.o
+obj/*
 test/ps.am
