@@ -34,7 +34,9 @@ void free_macro_table()
     if (macroTable!=NULL) hashtable_destroy(macroTable);
 }
 
-bool preprocess(FILE *input, FILE *output)
+/* TODO: check conflict between marco names and symbols (unsure if needed) */
+/* TODO: change it to "if.. return false;" */
+bool precompile(FILE *input, FILE *output)
 {
     bool success=true;
     bool inMacro=false;
@@ -56,8 +58,8 @@ bool preprocess(FILE *input, FILE *output)
         rtrim(line);
 
         /* examine the first word in the line */
-        firstWord=extractWord(line,1,&num_words);
-        
+        firstWord=extractWord(line,1,NULL);
+        num_words=numWords(line);
         /* is it a macro definition*/
         if (strcmp(firstWord,reserved_words[MCR])==0) {
             if (inMacro) {
@@ -70,7 +72,7 @@ bool preprocess(FILE *input, FILE *output)
                 success=false;
             }
             /* extract the macro name */
-            if (success && (macroName=extractWord(line,2, &num_words))==NULL) {
+            if (success && (macroName=extractWord(line,2,NULL))==NULL) {
                 printf(PP_ERR_INVALID_MACRO_NAME,lineNumber);
                 success=false;
             }

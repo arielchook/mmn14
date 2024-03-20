@@ -22,7 +22,7 @@ int endsWith(const char *str, const char *suffix);
 int numWords(const char* str);
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
-char* extractWord(const char* str, int n, int *wordCount);
-char* extractWordSeparator(const char* str, int n, int *wordCount, char separator);
+char* extractWord(char* str, int n, char **pStart);
+char* extractWordSeparator(char* str, int n, char **pStart, char separator);
 char *strdup(const char *str);
 #endif

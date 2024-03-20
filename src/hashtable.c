@@ -83,33 +83,3 @@ void* hashtable_get(Hashtable *ht, const char *key) {
     }
     return NULL;
 }
-/*
-int main() {
-    Hashtable *ht = hashtable_create();
-
-    int *value1 = malloc(sizeof(int));
-    *value1 = 42;
-    hashtable_insert(ht, "key1", value1);
-
-    double *value2 = malloc(sizeof(double));
-    *value2 = 3.14;
-    hashtable_insert(ht, "key2", value2);
-
-    int *result1 = hashtable_get(ht, "key1");
-    if (result1 != NULL) {
-        printf("Value found: %d\n", *result1);
-    } else {
-        printf("Value not found.\n");
-    }
-
-    double *result2 = hashtable_get(ht, "key2");
-    if (result2 != NULL) {
-        printf("Value found: %lf\n", *result2);
-    } else {
-        printf("Value not found.\n");
-    }
-
-    hashtable_destroy(ht);
-    return 0;
-}
-*/

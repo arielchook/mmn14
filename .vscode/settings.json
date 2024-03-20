@@ -8,6 +8,9 @@
         "messages.h": "c",
         "string.h": "c",
         "reserved.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "stdlib.h": "c",
+        "functional": "c",
+        "random": "c"
     }
 }

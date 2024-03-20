@@ -1,12 +1,10 @@
 ; file ps.as
 .entry LIST
 .extern W
-.define sz = 2
+.define sz = 2  
 mcr avi
-        mcr kaka
  mov r1,r2
  mov r2,r3
-    endmcr
 endmcr
 MAIN: mov r3, LIST[sz]
 avi

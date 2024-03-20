@@ -6,22 +6,20 @@
 bool handle_define(char *symbolStmt, int lineNumber)
 {
     char *defName, *defVal;
-    int wordCount;
     char *ptr;
     long value;
 
-    /* Parse the name=val part */
+    /* trim the statement */
     ltrim(symbolStmt);
-
-    /* check for .symbol statement w/o name=val */
     if (strlen(symbolStmt) == 0)
     {
         printf(ERR_MISSING_DEFINE, lineNumber);
         return false;
     }
+    rtrim(symbolStmt);
 
     /* is it in the format name=val ? */
-    if ((defName=extractWordSeparator(symbolStmt, 1, &wordCount, '=')) == NULL)
+    if ((defName = extractWordSeparator(symbolStmt, 1, NULL, '=')) == NULL)
     {
         printf(ERR_MISSING_EQUAL, lineNumber);
         return false;
@@ -33,15 +31,16 @@ bool handle_define(char *symbolStmt, int lineNumber)
         printf(ERR_MISSING_DEFINE_NAME, lineNumber);
         return false;
     }
-    
+    rtrim(defName);
+
     /* make sure constant name is legal */
-    if (!isValidSymbolName(defName, lineNumber))
+    if (!is_valid_symbol_name(defName, lineNumber))
     {
         return false;
     }
 
     /* look for the value in the name=val */
-    if ((defVal=extractWordSeparator(symbolStmt, 2, &wordCount, '=')) == NULL)
+    if ((defVal = extractWordSeparator(symbolStmt, 2, NULL, '=')) == NULL)
     {
         printf(ERR_MISSING_DEFINE_VALUE, lineNumber);
         return false;
@@ -49,7 +48,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
     /* try to convert to int */
     value = strtol(defVal, &ptr, 10);
-    if (*ptr!='\0')
+    if (*ptr != '\0')
     {
         printf(ERR_DEFINE_VALUE_NOT_INT, lineNumber);
         return false;
@@ -63,43 +62,46 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
 bool handle_data(char *dataStmt, int lineNumber)
 {
-    int wordCount, valCnt, intValue;
+    int valCnt, intValue;
     SymbolBlock *sb;
     char *ptr;
     char *value;
 
     ltrim(dataStmt);
-    
-    for(valCnt=1;((value=extractWordSeparator(dataStmt, valCnt, &wordCount, ',')) != NULL);valCnt++)
+    for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, ',')) != NULL); valCnt++)
     {
+        /* trim whitespaces around each value */
         ltrim(value);
         if (strlen(value) == 0)
         {
             printf(ERR_MISSING_VALUE, lineNumber);
             return false;
         }
+        rtrim(value);
 
         /* try to convert to int */
         intValue = strtol(value, &ptr, 10);
         /* this means it's a string. check if it's a name of a constant */
-        if (*ptr!='\0')
+        if (*ptr != '\0')
         {
-            sb=find_symbol(value);
-            if (sb==NULL || sb->type!=ST_DEFINE) {
-                printf(ERR_CANT_FIND_DEFINE, lineNumber, value);    
+            sb = find_symbol(value);
+            if (sb == NULL || sb->type != ST_DEFINE)
+            {
+                printf(ERR_CANT_FIND_DEFINE, lineNumber, value);
                 return false;
             }
 
             /* at this point we found a constant with that name. use its value */
-            intValue=*(int*)(sb->value);
-        }        
-
+            intValue = *(int *)(sb->value);
+        }
         /* write the value to the data section */
-        if (!writeToDataSection(intValue)) {
-            printf(ERR_DATA_SECTION_FULL, lineNumber);  
+        if (!writeToDataSection(intValue))
+        {
+            printf(ERR_DATA_SECTION_FULL, lineNumber);
             return false;
         }
     }
+
     return true;
 }
 
@@ -108,33 +110,73 @@ bool handle_string(char *stringStmt, int lineNumber)
     char *stringEnd;
 
     ltrim(stringStmt);
+    if (strlen(stringStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber);
+        return false;
+    }
     rtrim(stringStmt);
-    if (!startsWith(stringStmt,"\"")||!endsWith(stringStmt,"\""))
+
+    if (!startsWith(stringStmt, "\"") || !endsWith(stringStmt, "\""))
     {
         printf(ERR_MISSING_QUOTES, lineNumber);
         return false;
     }
     /* go through the string constant and write it to memory character by character, word by word */
-    /* also write the \0 at the end */
-    stringEnd=stringStmt+strlen(stringStmt);
-    for(*stringEnd='\0';stringStmt<=stringEnd;stringStmt++)
+    /* ignore the quotes and write the \0 at the end */
+    stringEnd = stringStmt + strlen(stringStmt) - 1;
+    *stringEnd = '\0';
+    for (stringStmt++; stringStmt <= stringEnd; stringStmt++)
     {
         /* write the value to the data section */
-        if (!writeToDataSection(*stringStmt)) {
-            printf(ERR_DATA_SECTION_FULL, lineNumber);  
+        if (!writeToDataSection(*stringStmt))
+        {
+            printf(ERR_DATA_SECTION_FULL, lineNumber);
             return false;
         }
     }
-   
+
     return true;
 }
 
 bool handle_entry(char *entryStmt, int lineNumber)
 {
+    ltrim(entryStmt);
+    if (strlen(entryStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber);
+        return false;
+    }
+    rtrim(entryStmt);
+
+    /* make sure entry name is legal and that there are no duplicate symbols */
+    if (!is_valid_symbol_name(entryStmt, lineNumber))
+    {
+        return false;
+    }
+
+    add_entry(entryStmt);
+
     return true;
 }
 
 bool handle_extern(char *externStmt, int lineNumber)
 {
+    ltrim(externStmt);
+    if (strlen(externStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber);
+        return false;
+    }
+    rtrim(externStmt);
+
+    /* make sure entry name is legal and that there are no duplicate symbols */
+    if (!is_valid_symbol_name(externStmt, lineNumber))
+    {
+        return false;
+    }
+
+    add_extern(externStmt);
+
     return true;
 }

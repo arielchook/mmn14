@@ -1,12 +1,10 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-
 #define ERR_USAGE "Usage: %s <file1> [<file2> .. <fileN>]\nWhere file1..fileN are .as files\n"
 #define ERR_FILE_CANT_BE_READ "%s: file could not be opened for reading\n"
 #define ERR_FILE_CANT_BE_WRITTEN "%s: cannot open file for writing\n"
 #define ERR_MEM_ALLOC_FAILED "Memory allocation failed.\n"
-
 
 /* Error messages for the pre-processing step */
 #define PP_ERR_NO_NESTED_MACROS "Precomp:%d:Nested macros are not allowed\n"
@@ -34,4 +32,6 @@
 #define ERR_FOUND_IN_PRECOMP "Erros found in precompilation. Cannot continue...\n"
 #define ERR_FOUND_IN_FIRSTPASS "Erros found in first-pass. Cannot continue...\n"
 #define ERR_FOUND_IN_SECONDPASS "Erros found in second-pass. Cannot continue...\n"
+
+#define WARN_LABEL_UNEXPCTED "FirstPass:%d: Misplaced label warning. Label is ignored in .entry and .extern definitons\n"
 #endif

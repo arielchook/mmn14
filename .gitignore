@@ -1,3 +1,4 @@
 assembler
 obj/*
-test/ps.am
+bin/*
+test/*.am

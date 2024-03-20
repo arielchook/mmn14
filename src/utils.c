@@ -63,26 +63,26 @@ int numWords(const char* str) {
 
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
-char* extractWord(const char* str, int n, int *wordCount) {
-    return extractWordSeparator(str, n, wordCount, ' ');
+char* extractWord(char* str, int n, char **pStart) {
+    return extractWordSeparator(str, n, pStart, ' ');
 }
 
-char* extractWordSeparator(const char* str, int n, int *wordCount, char separator) {
+char* extractWordSeparator(char* str, int n, char **pStart, char separator) {
+    int wordCount=0;
     int length;
-    const char* start = NULL;
-    const char* end = NULL;
+    char* start = NULL;
+    char* end = NULL;
     int in_word = 0;
     char* result;
 
-    *wordCount=0;
     while (*str) {
         if (*str != separator && !in_word) {
             in_word = 1;
             start = str;
         } else if (*str == separator && in_word) {
             in_word = 0;
-            (*wordCount)++;
-            if (*wordCount == n) {
+            wordCount++;
+            if (wordCount == n) {
                 end = str;
                 break;
             }
@@ -91,14 +91,14 @@ char* extractWordSeparator(const char* str, int n, int *wordCount, char separato
     }
 
     if (in_word) {
-        (*wordCount)++;
-        if (*wordCount == n) {
+        (wordCount)++;
+        if (wordCount == n) {
             end = str;
         }
     }
 
     /* n-th word does not exist */
-    if (*wordCount < n || start == NULL || end == NULL) {
+    if (wordCount < n || start == NULL || end == NULL) {
         return NULL; 
     }
 
@@ -107,6 +107,12 @@ char* extractWordSeparator(const char* str, int n, int *wordCount, char separato
 
     strncpy(result, start, length);
     result[length] = '\0';
+
+    /* this will return a pointer to the start of the word that was extracted */
+    if (pStart!=NULL)
+    {
+        *pStart=start;
+    }
 
     return result;
 }

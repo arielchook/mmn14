@@ -24,6 +24,6 @@ MacroBlock *find_macro(char *name);
 void free_macro_table();
 
 /* Preprocess a .am file to generate a .as file where all macros are expanded */
-bool preprocess(FILE *input, FILE *output);
+bool precompile(FILE *input, FILE *output);
 
 #endif

@@ -2,6 +2,7 @@
 #define FIRSTPASS_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 bool firstPass(FILE *input);
 
