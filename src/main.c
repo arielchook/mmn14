@@ -80,6 +80,9 @@ bool processFile(char *fname)
         printf(ERR_FOUND_IN_SECONDPASS);
         return false;
     }
+
+    /* TODO: write .ent file and .ext file (only if found) */
+
     return true;
 }
 

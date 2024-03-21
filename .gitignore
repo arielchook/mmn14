@@ -1,4 +1,3 @@
-assembler
 obj/*
 bin/*
 test/*.am

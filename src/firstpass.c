@@ -82,15 +82,9 @@ bool processLine(char *line, int lineNumber)
         return true;
     }
 
-    /* .entry definition */
+    /* .entry definition should be handled in 2nd pass */
     if (strcmp(cmd, reserved_words[ENTRY]) == 0)
     {
-        if (hasLabel)
-        {
-            printf(WARN_LABEL_UNEXPCTED, lineNumber);
-        }
-        if (!handle_entry(pStart + strlen(reserved_words[ENTRY]), lineNumber))
-            return false;
         return true;
     }
 

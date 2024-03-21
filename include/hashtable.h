@@ -14,27 +14,30 @@
 
 /* Each entry in the hashtable comprises of a key and a value.
 The key is always a string and the value can be whatever */
-typedef struct {
+typedef struct
+{
     char *key;
     void *value;
 } KeyValuePair;
 
 /* The hashtable is implemented using an array of KeyValuePair objects */
-typedef struct {
+typedef struct
+{
     KeyValuePair *table;
-    int size; /* number of items in the table */
+    int size;     /* number of items in the table */
     int capacity; /* maximum size of the table before it needs to be expanded */
 } Hashtable;
 
 /* creates the hashtable data structure */
-Hashtable* hashtable_create();
+Hashtable *hashtable_create();
 /* destroy the hashtable data structure and free all memory */
 void hashtable_destroy(Hashtable *ht);
 
 /* insert an item into the hashtable, returning the old item that was there or NULL if it was empty */
-void* hashtable_insert(Hashtable *ht, char *key, void *value);
+void *hashtable_insert(Hashtable *ht, char *key, void *value);
 
 /* retrieve an item from the hashtable using a specified key */
-void* hashtable_get(Hashtable *ht, const char *key);
+void *hashtable_get(Hashtable *ht, const char *key);
 
+void hashtable_iterate(Hashtable *ht, void *step_function(const KeyValuePair));
 #endif

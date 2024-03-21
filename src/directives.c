@@ -68,7 +68,14 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
     return true;
 }
-
+/**
+ * @brief
+ *
+ * @param dataStmt
+ * @param lineNumber
+ * @return true
+ * @return false
+ */
 bool handle_data(char *dataStmt, int lineNumber)
 {
     int valCnt, intValue;
@@ -146,27 +153,6 @@ bool handle_string(char *stringStmt, int lineNumber)
             return false;
         }
     }
-
-    return true;
-}
-
-bool handle_entry(char *entryStmt, int lineNumber)
-{
-    ltrim(entryStmt);
-    if (strlen(entryStmt) == 0)
-    {
-        printf(ERR_MISSING_VALUE, lineNumber);
-        return false;
-    }
-    rtrim(entryStmt);
-
-    /* make sure entry name is legal and that there are no duplicate symbols */
-    if (!is_valid_symbol_name(entryStmt, lineNumber))
-    {
-        return false;
-    }
-
-    add_entry(entryStmt);
 
     return true;
 }
