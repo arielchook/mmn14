@@ -18,8 +18,26 @@ extern int DC;
 #define MC_HAS_EXTERNS 0x1
 #define MC_HAS_ENRTIES 0x2
 
-bool writeToDataSection(int value);
+bool write_data_section(int value);
+
+/**
+ * @brief prints out the contents of the data section
+ *
+ */
 void dump_data_section();
+
+/**
+ * @brief resets the state of our machine code compiler.
+ * this should be called before processing each file.
+ *
+ */
 void reset_mc_state();
+
+/**
+ * @brief Set/unset flags in the machine code state
+ *
+ * @param flag
+ */
 void set_machine_code_flag(unsigned flag);
+bool is_mc_flag_set(unsigned flag);
 #endif

@@ -3,6 +3,15 @@
 #include <reserved.h>
 #include <machinecode.h>
 
+/**
+ * @brief handle a .define statement. print out error messages and update the symbols table
+ * accordingly.
+ *
+ * @param symbolStmt the statement string, after the ".define" part
+ * @param lineNumber the current line number in the file we're processing
+ * @return true if the operation was successful
+ * @return false if any error occured while processing the statement
+ */
 bool handle_define(char *symbolStmt, int lineNumber)
 {
     char *defName, *defVal;
@@ -33,7 +42,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
     }
     rtrim(defName);
 
-    /* make sure constant name is legal */
+    /* make sure constant name is valid */
     if (!is_valid_symbol_name(defName, lineNumber))
     {
         return false;
@@ -81,6 +90,7 @@ bool handle_data(char *dataStmt, int lineNumber)
 
         /* try to convert to int */
         intValue = strtol(value, &ptr, 10);
+
         /* this means it's a string. check if it's a name of a constant */
         if (*ptr != '\0')
         {
@@ -94,8 +104,9 @@ bool handle_data(char *dataStmt, int lineNumber)
             /* at this point we found a constant with that name. use its value */
             intValue = *(int *)(sb->value);
         }
+
         /* write the value to the data section */
-        if (!writeToDataSection(intValue))
+        if (!write_data_section(intValue))
         {
             printf(ERR_DATA_SECTION_FULL, lineNumber);
             return false;
@@ -129,7 +140,7 @@ bool handle_string(char *stringStmt, int lineNumber)
     for (stringStmt++; stringStmt <= stringEnd; stringStmt++)
     {
         /* write the value to the data section */
-        if (!writeToDataSection(*stringStmt))
+        if (!write_data_section(*stringStmt))
         {
             printf(ERR_DATA_SECTION_FULL, lineNumber);
             return false;
@@ -170,7 +181,7 @@ bool handle_extern(char *externStmt, int lineNumber)
     }
     rtrim(externStmt);
 
-    /* make sure entry name is legal and that there are no duplicate symbols */
+    /* make sure entry name is valid and that there are no duplicate symbols */
     if (!is_valid_symbol_name(externStmt, lineNumber))
     {
         return false;
