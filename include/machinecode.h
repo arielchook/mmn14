@@ -2,6 +2,8 @@
 #define MACHINECODE_H
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <mcwordtypes.h>
 
 #define DATA_SECTION_SIZE 4096
 
@@ -18,7 +20,15 @@ extern int DC;
 #define MC_HAS_EXTERNS 0x1
 #define MC_HAS_ENRTIES 0x2
 
-bool write_data_section(int value);
+/**
+ * @brief memory word contains 14 bits. we could define a struct with a variable with :14 but since 14 bits are 2 bytes
+ * we are using uint16_t (which is unsigned 16 bit) and will handle the bit manipulation in the encoding.
+ */
+typedef uint16_t mem_word;
+
+bool write_data_section(mem_word value);
+
+bool write_code_word(mc_word *word);
 
 /**
  * @brief prints out the contents of the data section
@@ -40,4 +50,5 @@ void reset_mc_state();
  */
 void set_machine_code_flag(unsigned flag);
 bool is_mc_flag_set(unsigned flag);
+
 #endif

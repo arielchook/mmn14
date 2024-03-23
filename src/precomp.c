@@ -31,100 +31,123 @@ MacroBlock *find_macro(char *name)
 
 void free_macro_table()
 {
-    if (macroTable!=NULL) hashtable_destroy(macroTable);
+    if (macroTable != NULL)
+        hashtable_destroy(macroTable);
 }
 
 /* TODO: check conflict between marco names and symbols (unsure if needed) */
 /* TODO: change it to "if.. return false;" */
 bool precompile(FILE *input, FILE *output)
 {
-    bool success=true;
-    bool inMacro=false;
+    bool success = true;
+    bool inMacro = false;
     MacroBlock *m;
     char line[MAX_LINE_LENGTH];
-    int lineNumber = 1,i;
+    int lineNumber = 1, i;
     char *macroName, *firstWord;
     int num_words;
 
     /* get the next line from input file, until we reach EOF  */
-    for(lineNumber=1;fgets(line,MAX_LINE_LENGTH,input)!=NULL;lineNumber++) {
+    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
+    {
 
         /* remove leading and trailing whitespaces*/
         ltrim(line);
         /* skip empty lines */
-        if(strlen(line)==0) {
+        if (strlen(line) == 0)
+        {
             continue;
         }
         rtrim(line);
 
         /* examine the first word in the line */
-        firstWord=extractWord(line,1,NULL);
-        num_words=numWords(line);
+        firstWord = extractWord(line, 1, NULL);
+        num_words = numWords(line);
         /* is it a macro definition*/
-        if (strcmp(firstWord,reserved_words[MCR])==0) {
-            if (inMacro) {
-                printf(PP_ERR_NO_NESTED_MACROS,lineNumber);
-                success=false;
+        if (strcmp(firstWord, directives[MCR]) == 0)
+        {
+            if (inMacro)
+            {
+                printf(PP_ERR_NO_NESTED_MACROS, lineNumber);
+                success = false;
             }
             /* make sure we only have mcr and the macro name */
-            if (success && num_words>2) {
-                printf(PP_ERR_EXTRA_CHARS,lineNumber);
-                success=false;
+            if (success && num_words > 2)
+            {
+                printf(PP_ERR_EXTRA_CHARS, lineNumber);
+                success = false;
             }
             /* extract the macro name */
-            if (success && (macroName=extractWord(line,2,NULL))==NULL) {
-                printf(PP_ERR_INVALID_MACRO_NAME,lineNumber);
-                success=false;
+            if (success && (macroName = extractWord(line, 2, NULL)) == NULL)
+            {
+                printf(PP_ERR_INVALID_MACRO_NAME, lineNumber);
+                success = false;
             }
             /* check whether macro name is a reserved word */
-            if (success && is_reserved_word(macroName)) {
-                printf(PP_ERR_RESERVED_WORD,lineNumber, line);
-                success=false;
-            } 
-            if (success) {
-                inMacro=true;
-                m=safe_malloc(sizeof(MacroBlock));
-                m->name=macroName;
-                /* m->lines is an array of strings containing the macro lines */
-                m->lines=safe_malloc(MAX_LINE_LENGTH*MAX_LINES_IN_MACRO);
-                m->num_lines=0;
+            if (success && is_reserved_word(macroName))
+            {
+                printf(PP_ERR_RESERVED_WORD, lineNumber, line);
+                success = false;
             }
-        /* check if it's an endmcr command */
-        } else if (strcmp(firstWord, reserved_words[ENDMCR])==0) {
+            if (success)
+            {
+                inMacro = true;
+                m = safe_malloc(sizeof(MacroBlock));
+                m->name = macroName;
+                /* m->lines is an array of strings containing the macro lines */
+                m->lines = safe_malloc(MAX_LINE_LENGTH * MAX_LINES_IN_MACRO);
+                m->num_lines = 0;
+            }
+            /* check if it's an endmcr command */
+        }
+        else if (strcmp(firstWord, directives[ENDMCR]) == 0)
+        {
             /* make sure it's the only command in the line */
-            if (num_words>1) {
-                printf(PP_ERR_EXTRA_ENDMCR,lineNumber);
-                success=false;
+            if (num_words > 1)
+            {
+                printf(PP_ERR_EXTRA_ENDMCR, lineNumber);
+                success = false;
             }
             /* make sure we are inside a macro definition */
-            if (success && !inMacro) {
-                printf(PP_ERR_ENDMCR_MISLOCATION,lineNumber);
-                success=false;
+            if (success && !inMacro)
+            {
+                printf(PP_ERR_ENDMCR_MISLOCATION, lineNumber);
+                success = false;
             }
             /* all good - add the macro to the macro table */
-            if (success) {
+            if (success)
+            {
                 add_macro(m);
-                inMacro=false;
+                inMacro = false;
             }
-        } else {
+        }
+        else
+        {
             /* are we inside a macro definition? if so, just accumulate the macro lines */
-            if (inMacro) {
-                m->lines[m->num_lines]=strdup(line);
+            if (inMacro)
+            {
+                m->lines[m->num_lines] = strdup(line);
                 m->num_lines++;
 
-            /* not inside a macro definition. check if we are calling a macro */
-            } else {
+                /* not inside a macro definition. check if we are calling a macro */
+            }
+            else
+            {
                 /* calling a macro can only be done with one word in the line */
                 /* search for that macro */
-                if (num_words==1 && (m=find_macro(firstWord))!=NULL) {
+                if (num_words == 1 && (m = find_macro(firstWord)) != NULL)
+                {
                     /* write the macro lines to output */
-                    for(i=0;i<m->num_lines;i++) {
+                    for (i = 0; i < m->num_lines; i++)
+                    {
                         fputs(m->lines[i], output);
-                        fputs("\n",output);
+                        fputs("\n", output);
                     }
-                } else {
+                }
+                else
+                {
                     fputs(line, output);
-                    fputs("\n",output);
+                    fputs("\n", output);
                 }
             }
         }

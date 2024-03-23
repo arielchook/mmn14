@@ -7,6 +7,7 @@
 #include <reserved.h>
 #include <directives.h>
 #include <machinecode.h>
+#include <op_parser.h>
 
 bool processLine(char *line, int lineNumber)
 {
@@ -14,9 +15,10 @@ bool processLine(char *line, int lineNumber)
     char *firstWord, *cmd;
     char *pStart;
     int keepDC, keepIC;
+    const instruction_props *props;
 
     /* check whether it's a comment line and skip it if so */
-    if (startsWith(line, reserved_words[COMMENT]))
+    if (startsWith(line, directives[COMMENT]))
         return true;
 
     /* assume no label */
@@ -26,9 +28,9 @@ bool processLine(char *line, int lineNumber)
     firstWord = extractWord(line, 1, &pStart);
 
     /* handle .define - constant definition */
-    if (strcmp(firstWord, reserved_words[DEFINE]) == 0)
+    if (strcmp(firstWord, directives[DEFINE]) == 0)
     {
-        if (!handle_define(pStart + strlen(reserved_words[DEFINE]), lineNumber))
+        if (!handle_define(pStart + strlen(directives[DEFINE]), lineNumber))
             return false;
     }
 
@@ -40,7 +42,7 @@ bool processLine(char *line, int lineNumber)
         /* get rid of the : */
         firstWord[strlen(firstWord) - 1] = '\0';
 
-        /* make sure the label is in legal format and add it to the symbols map if so */
+        /* make sure the label is in legal format and that it doesn't already exist */
         if (!is_valid_symbol_name(firstWord, lineNumber))
         {
             return false;
@@ -56,12 +58,12 @@ bool processLine(char *line, int lineNumber)
     }
 
     /* .data definition */
-    if (strcmp(cmd, reserved_words[DATA]) == 0)
+    if (strcmp(cmd, directives[DATA]) == 0)
     {
         /* need to save value of DC so we can add the correct address in case of a label */
         keepDC = DC;
 
-        if (!handle_data(pStart + strlen(reserved_words[DATA]), lineNumber))
+        if (!handle_data(pStart + strlen(directives[DATA]), lineNumber))
             return false;
 
         if ((hasLabel == 1) && !add_data_label(firstWord, keepDC))
@@ -71,11 +73,11 @@ bool processLine(char *line, int lineNumber)
     }
 
     /* .string definition */
-    if (strcmp(cmd, reserved_words[STRING]) == 0)
+    if (strcmp(cmd, directives[STRING]) == 0)
     {
         /* need to save value of DC so we can add the correct address in case of a label */
         keepDC = DC;
-        if (!handle_string(pStart + strlen(reserved_words[STRING]), lineNumber))
+        if (!handle_string(pStart + strlen(directives[STRING]), lineNumber))
             return false;
         if ((hasLabel == 1) && !add_data_label(firstWord, keepDC))
             return false;
@@ -83,22 +85,45 @@ bool processLine(char *line, int lineNumber)
     }
 
     /* .entry definition should be handled in 2nd pass */
-    if (strcmp(cmd, reserved_words[ENTRY]) == 0)
+    if (strcmp(cmd, directives[ENTRY]) == 0)
     {
         return true;
     }
 
     /* .extern definition */
-    if (strcmp(cmd, reserved_words[EXTERN]) == 0)
+    if (strcmp(cmd, directives[EXTERN]) == 0)
     {
         /* need to save value of IC so we can add the correct address in case of a label */
         keepIC = IC;
-        if (!handle_extern(pStart + strlen(reserved_words[EXTERN]), lineNumber))
+        if (!handle_extern(pStart + strlen(directives[EXTERN]), lineNumber))
             return false;
         if ((hasLabel == 1) && !add_code_label(firstWord, keepIC))
             return false;
         return true;
     }
+
+    /* done with processing directives. from here on we process instructions */
+
+    /* if the line has a label, add it to the symbols table with the current IC value */
+    if (hasLabel)
+    {
+        add_code_label(firstWord, IC);
+    }
+
+    /* locate the cmd part in the instruction table */
+    props = get_instruction_props(cmd);
+    /* if not found, it's an invalid command */
+    if (props == NULL)
+    {
+        printf(ERR_UNKNOWN_CMD, lineNumber, cmd);
+        return false;
+    }
+
+    if (!parse_operands(pStart + strlen(cmd), lineNumber, props))
+    {
+        return false;
+    }
+
     return true;
 }
 

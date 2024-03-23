@@ -16,7 +16,10 @@ enum SymbolType
     ST_EXTERN
 };
 
-/* describes an entry in the symbols hashtable */
+/**
+ * @brief an entry in the symbols hashtable
+ *
+ */
 typedef struct
 {
     char *name;

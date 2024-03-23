@@ -1,16 +1,24 @@
 {
-    "files.associations": {
-        "stdio.h": "c",
-        "strhelpers.h": "c",
-        "macros.h": "c",
-        "hashtable.h": "c",
-        "util.h": "c",
-        "messages.h": "c",
-        "string.h": "c",
-        "reserved.h": "c",
-        "typeinfo": "c",
-        "stdlib.h": "c",
-        "functional": "c",
-        "random": "c"
-    }
+  "files.associations": {
+    "stdio.h": "c",
+    "strhelpers.h": "c",
+    "macros.h": "c",
+    "hashtable.h": "c",
+    "util.h": "c",
+    "messages.h": "c",
+    "string.h": "c",
+    "reserved.h": "c",
+    "typeinfo": "c",
+    "stdlib.h": "c",
+    "functional": "c",
+    "random": "c",
+    "system_error": "c",
+    "array": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "utility": "c",
+    "firstpass_parsers.h": "c"
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+  "C_Cpp.loggingLevel": "Debug"
 }
