@@ -79,6 +79,19 @@ void delete_unres_sym_list()
     urs_head = NULL; /* Update head to NULL */
 }
 
+void dump_unresolved()
+{
+    struct UnresolvedSymbol *current = urs_head;
+    struct UnresolvedSymbol *nextNode;
+    printf("Unresolved symbols:\n");
+
+    while (current != NULL)
+    {
+        nextNode = current->next;
+        printf("[%s] @ [%d]\n", current->symbol, current->address);
+        current = nextNode;
+    }
+}
 /*
 int main()
 {

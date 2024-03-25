@@ -9,6 +9,8 @@
 #include <machinecode.h>
 #include <op_parser.h>
 
+#define LABEL_SUFFIX ":"
+
 bool processLine(char *line, int lineNumber)
 {
     int hasLabel;
@@ -30,12 +32,11 @@ bool processLine(char *line, int lineNumber)
     /* handle .define - constant definition */
     if (strcmp(firstWord, directives[DEFINE]) == 0)
     {
-        if (!handle_define(pStart + strlen(directives[DEFINE]), lineNumber))
-            return false;
+        return (handle_define(pStart + strlen(directives[DEFINE]), lineNumber));
     }
 
     /* handle label definition - first word ends with : */
-    if (endsWith(firstWord, ":"))
+    if (endsWith(firstWord, LABEL_SUFFIX))
     {
         hasLabel = 1;
 
@@ -50,12 +51,15 @@ bool processLine(char *line, int lineNumber)
     }
 
     /* get the 2nd word if there's a label definition or the 1st word if not */
-    if ((cmd = extractWord(line, (hasLabel + 1), &pStart)) == NULL)
+    cmd = extractWord(line, (hasLabel + 1), &pStart);
+    if (cmd == NULL)
     {
         /* having a label only in a line is not allowed */
         printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
         return false;
     }
+    ltrim(cmd);
+    rtrim(cmd);
 
     /* .data definition */
     if (strcmp(cmd, directives[DATA]) == 0)
@@ -118,7 +122,7 @@ bool processLine(char *line, int lineNumber)
         printf(ERR_UNKNOWN_CMD, lineNumber, cmd);
         return false;
     }
-
+    printf("%s", cmd);
     if (!parse_operands(pStart + strlen(cmd), lineNumber, props))
     {
         return false;
@@ -129,7 +133,7 @@ bool processLine(char *line, int lineNumber)
 
 bool firstPass(FILE *input)
 {
-    bool success = true; /* holds if any errors occured in first-pass */
+    bool success = true; /* tracks if any errors occured in first-pass */
     char line[MAX_LINE_LENGTH];
     int lineNumber;
 
@@ -138,7 +142,7 @@ bool firstPass(FILE *input)
     {
         /* note that we don't have to remove all whitespaces in the beginning and end of the line
         since it was already done in the Precompile step. Also empty lines were skipped in precompile */
-
+        rtrim(line);
         /* process line by line. if one line fails processing we keep going */
         success &= processLine(line, lineNumber);
     }
