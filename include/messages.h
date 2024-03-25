@@ -24,7 +24,7 @@
 #define ERR_MISSING_DEFINE_VALUE "FirstPass:%d: Constant value not specified. Expecting .define name=val\n"
 #define ERR_DEFINE_VALUE_NOT_INT "FirstPass:%d: Value specified for constant must be an integer\n"
 #define ERR_LABEL_WITH_NO_CMD "FirstPass:%d: Label specified with no command following it\n"
-#define ERR_MISSING_VALUE "FirstPass:%d: Missing value in .data definition\n"
+#define ERR_MISSING_VALUE "FirstPass:%d: Missing value in (%s) definition\n"
 #define ERR_CANT_FIND_DEFINE "FirstPass:%d: Cannot find a constant with the name %s\n"
 #define ERR_DATA_SECTION_FULL "FirstPass:%d: Data section is full. Cannot continue.\n"
 #define ERR_MISSING_QUOTES "FirstPass:%d: .string value must be enclosed in quotes (\"\")\n"
@@ -45,4 +45,6 @@
 #define ERR_OP_IS_NOT_DATA "FirstPass:%d: Array name should be a .data or .string label (%s)\n"
 #define ERR_INT_OUT_OF_BOUNDS "FirstPass:%d: Specified integer value is out of bounds (%s). Should be between %d and %d\n"
 #define WARN_LABEL_UNEXPCTED "FirstPass:%d: Misplaced label warning. Label is ignored in .entry and .extern definitons\n"
+#define ERR_CANT_RESOLVE_SYMBOL "SecondPass:%d: Symbol (%s) not found\n"
+
 #endif

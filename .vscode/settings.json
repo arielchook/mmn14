@@ -17,7 +17,8 @@
     "tuple": "c",
     "type_traits": "c",
     "utility": "c",
-    "firstpass_parsers.h": "c"
+    "firstpass_parsers.h": "c",
+    "utils.h": "c"
   },
   "C_Cpp.default.compilerPath": "/usr/bin/gcc",
   "C_Cpp.loggingLevel": "Debug"

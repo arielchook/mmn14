@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <reserved.h>
 #include <machinecode.h>
+#include <entries.h>
 
 /**
  * @brief handle a .define statement. print out error messages and update the symbols table
@@ -87,10 +88,11 @@ bool handle_data(char *dataStmt, int lineNumber)
     for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, ',')) != NULL); valCnt++)
     {
         /* trim whitespaces around each value */
+        /* FIXME: make sure it can handle ,,, */
         ltrim(value);
         if (strlen(value) == 0)
         {
-            printf(ERR_MISSING_VALUE, lineNumber);
+            printf(ERR_MISSING_VALUE, lineNumber, directives[DATA]);
             return false;
         }
         rtrim(value);
@@ -130,7 +132,7 @@ bool handle_string(char *stringStmt, int lineNumber)
     ltrim(stringStmt);
     if (strlen(stringStmt) == 0)
     {
-        printf(ERR_MISSING_VALUE, lineNumber);
+        printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]);
         return false;
     }
     rtrim(stringStmt);
@@ -159,10 +161,12 @@ bool handle_string(char *stringStmt, int lineNumber)
 
 bool handle_extern(char *externStmt, int lineNumber)
 {
+    /* FIXME: there could be more than one label in an .extern statement. */
+
     ltrim(externStmt);
     if (strlen(externStmt) == 0)
     {
-        printf(ERR_MISSING_VALUE, lineNumber);
+        printf(ERR_MISSING_VALUE, lineNumber, directives[EXTERN]);
         return false;
     }
     rtrim(externStmt);
@@ -176,4 +180,16 @@ bool handle_extern(char *externStmt, int lineNumber)
     add_extern(externStmt);
 
     return true;
+}
+
+bool handle_entry(char *entryStmt, int lineNumber)
+{
+    ltrim(entryStmt);
+    if (strlen(entryStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[ENTRY]);
+        return false;
+    }
+    rtrim(entryStmt);
+    return entries_append(entryStmt);
 }

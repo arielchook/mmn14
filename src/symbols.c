@@ -71,9 +71,6 @@ void dump_symbols_table()
             case ST_STRING:
                 printf("(string) %s", (char *)(sb->value));
                 break;
-            case ST_ENTRY:
-                printf("(entry) %s", (char *)(sb->value));
-                break;
             case ST_EXTERN:
                 printf("(extern) %s", (char *)(sb->value));
                 break;
@@ -96,7 +93,7 @@ bool is_valid_symbol_name(char *symName, int lineNumber)
     }
 
     /* check that symbol name starts with a letter */
-    if (!isalpha(symName[0]) || strlen(symName) > MAX_SYMBOL_NAME)
+    if (!isalpha(symName[0]) || strlen(symName) > MAX_SYMBOL_LEN)
     {
         printf(ERR_INVALID_SYMBOL_NAME, lineNumber);
         return false;
@@ -133,31 +130,16 @@ bool add_define(char *name, int value)
     return add_symbol(sb);
 }
 
-bool add_entry(char *name)
-{
-    bool success;
-    SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
-
-    sb->name = name;
-    sb->value = NULL;
-    sb->type = ST_ENTRY;
-
-    /* set the flag to mark there was at least one .entry */
-    if ((success = add_symbol(sb)) == true)
-    {
-        set_machine_code_flag(MC_HAS_ENRTIES);
-    }
-    return success;
-}
-
 bool add_extern(char *name)
 {
     bool success;
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
+    /* create a symbol block for .extern definition */
     sb->name = name;
-    sb->value = NULL;
+    sb->value = NULL; /* .extern has no value */
     sb->type = ST_EXTERN;
+
     /* set the flag to mark there was at least one .extern */
     if ((success = add_symbol(sb)) == true)
     {
@@ -166,22 +148,22 @@ bool add_extern(char *name)
     return success;
 }
 
-bool add_data_label(char *name, int setDC)
+bool add_data_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
     sb->value = safe_malloc(sizeof(int));
-    *(int *)(sb->value) = setDC;
+    *(int *)(sb->value) = DC;
     sb->type = ST_DATA;
     return add_symbol(sb);
 }
 
-bool add_code_label(char *name, int setIC)
+bool add_code_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
     sb->value = safe_malloc(sizeof(int));
-    *(int *)(sb->value) = setIC;
+    *(int *)(sb->value) = IC; /* IC is the current InstructionCounter */
     sb->type = ST_CODE;
     return add_symbol(sb);
 }

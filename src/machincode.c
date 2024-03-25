@@ -3,6 +3,7 @@
 #include <unressym.h>
 #include <symbols.h>
 #include <string.h>
+#include <entries.h>
 
 /**
  * @brief holds the data section for the compiler
@@ -79,6 +80,7 @@ void reset_mc_state()
     /* delete the unresolved symbol list */
     /* TODO: run this after each file processed. maybe call it cleanup? */
     delete_unres_sym_list();
+    entries_delete_list();
     free_symbol_table();
 }
 void set_machine_code_flag(unsigned bitmask)
@@ -176,6 +178,16 @@ bool write_code_word(mc_word *word)
     return true;
 }
 
+bool update_symbol_in_code(uint16_t symbol_address, int address)
+{
+    if (address > IC)
+    {
+        printf("Invalid address specified\n");
+        return false;
+    }
+    write_bits(&codeSection[address], 2, 12, symbol_address);
+    return true;
+}
 void print_binary(mem_word word)
 {
     int j;

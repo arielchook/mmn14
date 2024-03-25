@@ -14,7 +14,7 @@ void append_unersolved_symbol(char *symbol, int address);
  * in the machine code memory
  *
  */
-void resolve_symbols();
+bool resolve_symbols();
 void delete_unres_sym_list();
 
 void dump_unresolved();

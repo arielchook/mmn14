@@ -163,14 +163,13 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
         case ST_EXTERN:
             word->type = WT_DIRECT;
             word->contents.direct.A_R_E = ARE_EXTERN; /* external symbol */
-            word->contents.direct.address = 0;        /* FIXME: what should we put here? */
+            word->contents.direct.address = 0;        /* FIXME: use strdup when keeping the operands names? */
+            word->contents.direct.unresolved = op;    /* this will add the symbol to the unresolved symbol list. even though we */
+                                                      /* we found it. this will cause it to be discovered when we go over the */
+                                                      /* unresolved symbols list and will allow us to generate the .ext file */
             break;
         case ST_DEFINE:
             printf(ERR_DEFINE_DISALLOWED, lineNumber);
-            return false;
-            break;
-        case ST_ENTRY:
-            /* TODO: handle .entry */
             return false;
             break;
         }

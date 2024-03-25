@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utils.h>
-
-/* Head pointer to the unresolved symbol list */
-struct UnresolvedSymbol *urs_head = NULL;
+#include <symbols.h>
+#include <machinecode.h>
 
 /**
  * @brief Define the structure of a node in the linked list. The list contains all symbols that haven't yet been resolved
@@ -15,8 +14,12 @@ struct UnresolvedSymbol
 {
     char *symbol;
     int address;
+    int lineNumber;
     struct UnresolvedSymbol *next;
 };
+
+/* Head pointer to the unresolved symbol list */
+struct UnresolvedSymbol *urs_head = NULL;
 
 /**
  * @brief Function to create a new node
@@ -25,7 +28,7 @@ struct UnresolvedSymbol
  * @param address
  * @return struct UnresolvedSymbol*
  */
-struct UnresolvedSymbol *create_node(char *symbol, int address)
+struct UnresolvedSymbol *create_node(char *symbol, int address, int lineNumber)
 {
     struct UnresolvedSymbol *newNode = (struct UnresolvedSymbol *)safe_malloc(sizeof(struct UnresolvedSymbol));
     newNode->symbol = strdup(symbol);
@@ -35,10 +38,10 @@ struct UnresolvedSymbol *create_node(char *symbol, int address)
 }
 
 /* Function to add a node to the end of the list */
-void append_unersolved_symbol(char *symbol, int address)
+void append_unersolved_symbol(char *symbol, int address, int lineNumber)
 {
     struct UnresolvedSymbol *current;
-    struct UnresolvedSymbol *newNode = create_node(symbol, address);
+    struct UnresolvedSymbol *newNode = create_node(symbol, address, lineNumber);
     if (urs_head == NULL)
     {
         urs_head = newNode;
@@ -52,16 +55,39 @@ void append_unersolved_symbol(char *symbol, int address)
     current->next = newNode;
 }
 
-/* Function to traverse and print the list */
-void resolve_symbols()
+bool resolve_symbols()
 {
     struct UnresolvedSymbol *current = urs_head;
-    printf("Linked List Contents:\n");
+    SymbolBlock *sb;
+
+    /* for each unresolved symbol we bumped into during first pass */
     while (current != NULL)
     {
-        printf("Symbol: %s, Address: %d\n", current->symbol, current->address);
+        /* try and locate it now */
+        sb = find_symbol(current->symbol);
+
+        /* if not found, we have an error */
+        if (sb == NULL)
+        {
+            printf(ERR_CANT_RESOLVE_SYMBOL, current->lineNumber, current->symbol);
+            return false;
+        }
+
+        /* FIXME: what to do about entry/extern ?*/
+        if (sb->type != ST_CODE)
+        {
+        }
+
+        /* update the code section to reflect the address for that symbol */
+        if (!update_symbol_in_code(*(int *)sb->value, current->address))
+        {
+            printf("Error updating symbol\n");
+            return false;
+        }
+
         current = current->next;
     }
+    return true;
 }
 
 /* Function to delete the entire list */

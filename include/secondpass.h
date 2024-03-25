@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool secondPass(FILE *input, FILE *output);
+bool secondPass();
 
 #endif

@@ -8,6 +8,7 @@
 #include <directives.h>
 #include <machinecode.h>
 #include <op_parser.h>
+#include <entries.h>
 
 #define LABEL_SUFFIX ":"
 
@@ -16,7 +17,7 @@ bool processLine(char *line, int lineNumber)
     int hasLabel;
     char *firstWord, *cmd;
     char *pStart;
-    int keepDC, keepIC;
+
     const instruction_props *props;
 
     /* check whether it's a comment line and skip it if so */
@@ -64,13 +65,11 @@ bool processLine(char *line, int lineNumber)
     /* .data definition */
     if (strcmp(cmd, directives[DATA]) == 0)
     {
-        /* need to save value of DC so we can add the correct address in case of a label */
-        keepDC = DC;
-
-        if (!handle_data(pStart + strlen(directives[DATA]), lineNumber))
+        /* if there's label we need to add a new data label to the symbol table with the current address of DC */
+        if ((hasLabel == 1) && !add_data_label(firstWord))
             return false;
 
-        if ((hasLabel == 1) && !add_data_label(firstWord, keepDC))
+        if (!handle_data(pStart + strlen(directives[DATA]), lineNumber))
             return false;
 
         return true;
@@ -79,29 +78,30 @@ bool processLine(char *line, int lineNumber)
     /* .string definition */
     if (strcmp(cmd, directives[STRING]) == 0)
     {
-        /* need to save value of DC so we can add the correct address in case of a label */
-        keepDC = DC;
-        if (!handle_string(pStart + strlen(directives[STRING]), lineNumber))
+        /* if there's a label we need to add a new data label to the symbols table */
+        if ((hasLabel == 1) && !add_data_label(firstWord))
             return false;
-        if ((hasLabel == 1) && !add_data_label(firstWord, keepDC))
+
+        if (!handle_string(pStart + strlen(directives[STRING]), lineNumber))
             return false;
         return true;
     }
 
-    /* .entry definition should be handled in 2nd pass */
+    /* .entry definition - just add it to the list of entries */
+    /* in 2nd pass we will make sure all entries in the list relate to existing symbols */
     if (strcmp(cmd, directives[ENTRY]) == 0)
     {
+        if (!handle_entry(pStart + strlen(directives[ENTRY]), lineNumber))
+            return false;
         return true;
     }
 
     /* .extern definition */
     if (strcmp(cmd, directives[EXTERN]) == 0)
     {
-        /* need to save value of IC so we can add the correct address in case of a label */
-        keepIC = IC;
         if (!handle_extern(pStart + strlen(directives[EXTERN]), lineNumber))
             return false;
-        if ((hasLabel == 1) && !add_code_label(firstWord, keepIC))
+        if ((hasLabel == 1) && !add_code_label(firstWord))
             return false;
         return true;
     }
@@ -111,7 +111,7 @@ bool processLine(char *line, int lineNumber)
     /* if the line has a label, add it to the symbols table with the current IC value */
     if (hasLabel)
     {
-        add_code_label(firstWord, IC);
+        add_code_label(firstWord);
     }
 
     /* locate the cmd part in the instruction table */
