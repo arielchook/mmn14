@@ -6,8 +6,23 @@
 #include <messages.h>
 #include <stdbool.h>
 
-/* Maximum line length in the input file */
-#define MAX_LINE_LENGTH 80
+/* Maximum line length in the input file. 80 characters max + 1 more for the \n */
+#define MAX_LINE_LENGTH 81
+
+/* parsing constants */
+
+#define LABEL_SUFFIX ":"
+
+/* Operands separator character */
+#define OP_SEPARATOR ','
+
+/* Imeediate values must start with this prefix */
+#define IMMEDIATE_VALUE_PREFIX "#"
+
+/* Array subscription character */
+#define ARRAY_OPEN_CHAR '['
+/* Array suffix */
+#define ARRAY_CLOSE_CHAR "]"
 
 void *safe_malloc(int size);
 #define free_if_not_null(x) \

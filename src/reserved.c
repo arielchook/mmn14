@@ -1,6 +1,5 @@
 #include <reserved.h>
 #include <string.h>
-#include <op_parser.h>
 
 const char *directives[] = {"mcr", "endmcr", ".define", ";", ".data", ".string", ".entry", ".extern"};
 

@@ -1,4 +1,4 @@
-#include <entries.h>
+#include <externs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,19 +11,20 @@
  * @brief
  *
  */
-struct EntrySymbol
+struct ExternSymbol
 {
     char *symbol;
-    struct EntrySymbol *next;
+    uint16_t address;
+    struct ExternSymbol *next;
 };
 
-struct EntrySymbol *ent_head = NULL;
-void entries_append(char *symbol)
+struct ExternSymbol *ent_head = NULL;
+void externs_append(char *symbol, uint16_t address)
 {
-    struct EntrySymbol *current;
-    struct EntrySymbol *newNode = (struct EntrySymbol *)safe_malloc(sizeof(struct EntrySymbol));
+    struct ExternSymbol *current;
+    struct ExternSymbol *newNode = (struct ExternSymbol *)safe_malloc(sizeof(struct ExternSymbol));
     newNode->symbol = strdup(symbol);
-
+    newNode->address = address;
     newNode->next = NULL;
     if (ent_head == NULL)
     {
@@ -38,10 +39,10 @@ void entries_append(char *symbol)
     current->next = newNode;
 }
 
-void entries_delete_list()
+void externs_delete_list()
 {
-    struct EntrySymbol *current = ent_head;
-    struct EntrySymbol *nextNode;
+    struct ExternSymbol *current = ent_head;
+    struct ExternSymbol *nextNode;
     while (current != NULL)
     {
         nextNode = current->next;
@@ -52,11 +53,11 @@ void entries_delete_list()
     ent_head = NULL; /* Update head to NULL */
 }
 
-void entries_dump()
+void externs_dump()
 {
-    struct EntrySymbol *current = ent_head;
-    struct EntrySymbol *nextNode;
-    printf("Entry symbols:\n");
+    struct ExternSymbol *current = ent_head;
+    struct ExternSymbol *nextNode;
+    printf("Extern symbols:\n");
 
     while (current != NULL)
     {

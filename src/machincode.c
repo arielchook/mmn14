@@ -1,6 +1,5 @@
 #include <machinecode.h>
 #include <stdio.h>
-#include <unressym.h>
 #include <symbols.h>
 #include <string.h>
 #include <entries.h>
@@ -69,17 +68,26 @@ void dump_data_section()
     }
 }
 
-void reset_mc_state()
+void resetIC()
+{
+    IC = BASE_CODE_ADDRESS;
+}
+void resetDC()
 {
     DC = BASE_DATA_ADDRESS;
-    IC = BASE_CODE_ADDRESS;
+}
+void reset_mc_state()
+{
+    resetDC();
+    resetIC();
+
     /* zero out our memory structures */
     memset(dataSection, 0, sizeof(dataSection));
     memset(codeSection, 0, sizeof(codeSection));
+
     mc_flags = 0;
     /* delete the unresolved symbol list */
     /* TODO: run this after each file processed. maybe call it cleanup? */
-    delete_unres_sym_list();
     entries_delete_list();
     free_symbol_table();
 }
@@ -139,25 +147,25 @@ bool write_code_word(mc_word *word)
         break;
     case WT_DIRECT:
         write_bits(&codeSection[IC], 0, 2, word->contents.direct.A_R_E);
-        if (word->contents.direct.unresolved == NULL)
+        /*if (word->contents.direct.unresolved == NULL)
         {
             write_bits(&codeSection[IC], 2, 12, word->contents.direct.address);
         }
         else
         {
             append_unersolved_symbol(word->contents.direct.unresolved, IC);
-        }
+        }*/
         break;
     case WT_FIXED_INDEX:
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_1);
-        if (word->contents.fixed_index.unresolved == NULL)
+        /*if (word->contents.fixed_index.unresolved == NULL)
         {
             write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.array);
         }
         else
         {
             append_unersolved_symbol(word->contents.fixed_index.unresolved, IC);
-        }
+        }*/
         print_binary(codeSection[IC]);
         IC++;
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_2);

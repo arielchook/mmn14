@@ -3,11 +3,10 @@
 
 #include <stdbool.h>
 
-
-bool entries_append(char *symbol);
+void entries_append(char *symbol);
 
 /**
- * @brief 
+ * @brief
  *
  */
 bool entries_resolve();

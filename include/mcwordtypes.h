@@ -15,7 +15,8 @@ enum addressing_type
     WT_DIRECT = 1,
     WT_FIXED_INDEX = 2,
     WT_DIRECT_REG = 3,
-    WT_INSTRUCTION = 4
+    WT_INSTRUCTION = 4,
+    WT_INVALID
 };
 
 enum abs_rloc_extern
@@ -56,17 +57,15 @@ typedef union
     {
         uint8_t A_R_E;    /* 2-bit ARE */
         uint16_t address; /* 12-bit address of label */
-        char *unresolved; /* address of unresolved symbol if one exists*/
     } direct;
 
     /* fixed index is spanned over 2 memory words */
     struct
     {
-        uint8_t A_R_E_1;  /* 2-bit ARE for the 1st word */
-        uint16_t array;   /* 12-bit address of array */
-        char *unresolved; /* address of unresolved symbol if one exists*/
-        uint8_t A_R_E_2;  /* 2-bit ARE for the 2nd word */
-        uint16_t index;   /* 12-bit array index */
+        uint8_t A_R_E_1; /* 2-bit ARE for the 1st word */
+        uint16_t array;  /* 12-bit address of array */
+        uint8_t A_R_E_2; /* 2-bit ARE for the 2nd word */
+        uint16_t index;  /* 12-bit array index */
     } fixed_index;
 
     /* direct register memory word */

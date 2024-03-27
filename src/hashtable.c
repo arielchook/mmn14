@@ -101,7 +101,7 @@ void *hashtable_get(Hashtable *ht, const char *key)
     return NULL;
 }
 
-void hashtable_iterate(Hashtable *ht, void *step_function(const KeyValuePair))
+void hashtable_iterate(Hashtable *ht, void (*step_function)(const KeyValuePair))
 {
     int i;
     if (ht == NULL)

@@ -47,5 +47,6 @@ bool handle_string(char *stringStmt, int lineNumber);
 
 bool is_valid_symbol_name(char *symName, int lineNumber);
 void dump_symbols_table();
+void update_data_symbols_address();
 
 #endif

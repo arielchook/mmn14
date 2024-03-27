@@ -40,47 +40,6 @@ void free_symbol_table()
     }
 }
 
-void dump_symbols_table()
-{
-    int i;
-    SymbolBlock *sb;
-    if ((symbolsTable == NULL) || (symbolsTable->size == 0))
-    {
-        printf("Symbol table is empty!\n");
-        return;
-    }
-
-    printf("\nSymbols table:\n");
-    for (i = 0; i < symbolsTable->capacity; i++)
-    {
-        if (symbolsTable->table[i].key != NULL)
-        {
-            printf("%s -> ", symbolsTable->table[i].key);
-            sb = (SymbolBlock *)symbolsTable->table[i].value;
-            switch (sb->type)
-            {
-            case ST_DEFINE:
-                printf("(define) %d", *(int *)(sb->value));
-                break;
-            case ST_DATA:
-                printf("(data label) %d", *(int *)(sb->value));
-                break;
-            case ST_CODE:
-                printf("(code label) %d", *(int *)(sb->value));
-                break;
-            case ST_STRING:
-                printf("(string) %s", (char *)(sb->value));
-                break;
-            case ST_EXTERN:
-                printf("(extern) %s", (char *)(sb->value));
-                break;
-            default:
-                printf("unkown symbol type (%d)", sb->type);
-            }
-            printf("\n");
-        }
-    }
-}
 bool is_valid_symbol_name(char *symName, int lineNumber)
 {
     int i;
@@ -166,4 +125,65 @@ bool add_code_label(char *name)
     *(int *)(sb->value) = IC; /* IC is the current InstructionCounter */
     sb->type = ST_CODE;
     return add_symbol(sb);
+}
+
+/**
+ * @brief this funcion is executed for every symbol in the symbols table.
+ * if it's a ST_DATA or ST_STRING it add IC to its address so when written to file
+ * it can be located after the code part properly
+ *
+ * @param kvp
+ */
+void _update_address(const KeyValuePair kvp)
+{
+    SymbolBlock *sb = (SymbolBlock *)kvp.value;
+    if ((sb->type == ST_DATA) || (sb->type == ST_STRING))
+    {
+        *(int *)(sb->value) += IC;
+    }
+}
+void update_data_symbols_address()
+{
+    hashtable_iterate(symbolsTable, _update_address);
+}
+
+void _dump_symbol(const KeyValuePair kvp)
+{
+    SymbolBlock *sb = (SymbolBlock *)kvp.value;
+    printf("%s -> ", kvp.key);
+
+    switch (sb->type)
+    {
+    case ST_DEFINE:
+        printf("(define) %d", *(int *)(sb->value));
+        break;
+    case ST_DATA:
+        printf("(data label) %d", *(int *)(sb->value));
+        break;
+    case ST_CODE:
+        printf("(code label) %d", *(int *)(sb->value));
+        break;
+    case ST_STRING:
+        printf("(string label) %d", *(int *)(sb->value));
+        break;
+    case ST_EXTERN:
+        printf("(extern) %s", (char *)(sb->value));
+        break;
+    default:
+        printf("unkown symbol type (%d)", sb->type);
+    }
+    printf("\n");
+}
+
+void dump_symbols_table()
+{
+    if ((symbolsTable == NULL) || (symbolsTable->size == 0))
+    {
+        printf("Symbol table is empty!\n");
+        return;
+    }
+
+    printf("\nSymbols table:\n");
+
+    hashtable_iterate(symbolsTable, _dump_symbol);
 }

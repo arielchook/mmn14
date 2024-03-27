@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <utils.h>
 #include <hashtable.h>
 #include <messages.h>
 #include <symbols.h>
 #include <reserved.h>
 #include <directives.h>
 #include <machinecode.h>
-#include <op_parser.h>
+#include <fpopparser.h>
 #include <entries.h>
-
-#define LABEL_SUFFIX ":"
 
 bool processLine(char *line, int lineNumber)
 {
@@ -123,7 +122,7 @@ bool processLine(char *line, int lineNumber)
         return false;
     }
     printf("%s", cmd);
-    if (!parse_operands(pStart + strlen(cmd), lineNumber, props))
+    if (!count_operands_words(pStart + strlen(cmd), lineNumber, props))
     {
         return false;
     }
@@ -146,5 +145,14 @@ bool firstPass(FILE *input)
         /* process line by line. if one line fails processing we keep going */
         success &= processLine(line, lineNumber);
     }
+
+    if (success)
+    {
+        /* at this point we have IC set to the end of the code section. since the data section comes
+        right after the code section we should update all the data/string symbols to their correct
+        address by adding IC to each's address */
+        update_data_symbols_address();
+    }
+
     return success;
 }

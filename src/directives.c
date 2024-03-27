@@ -191,5 +191,6 @@ bool handle_entry(char *entryStmt, int lineNumber)
         return false;
     }
     rtrim(entryStmt);
-    return entries_append(entryStmt);
+    entries_append(entryStmt);
+    return true;
 }

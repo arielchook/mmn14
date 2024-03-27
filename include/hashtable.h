@@ -39,5 +39,5 @@ void *hashtable_insert(Hashtable *ht, char *key, void *value);
 /* retrieve an item from the hashtable using a specified key */
 void *hashtable_get(Hashtable *ht, const char *key);
 
-void hashtable_iterate(Hashtable *ht, void *step_function(const KeyValuePair));
+void hashtable_iterate(Hashtable *ht, void (*step_function)(const KeyValuePair));
 #endif

@@ -1,6 +1,8 @@
-#ifndef OP_PARSER_H
-#define OP_PARSER_H
-
+#ifndef FPOPPARSER_H
+#define FPOPPARSER_H
+#include <stdbool.h>
+#include <machinecode.h>
+#include <stdint.h>
 #include <reserved.h>
 
 /* Operands separator character */
@@ -14,6 +16,6 @@
 /* Array suffix */
 #define ARRAY_CLOSE_CHAR "]"
 
-bool parse_operands(char *stmt, int lineNumber, const instruction_props *props);
+bool count_operands_words(char *stmt, int lineNumber, const instruction_props *props);
 
 #endif

@@ -47,6 +47,9 @@ void dump_data_section();
 void print_binary(mem_word word);
 
 void dump_code_section();
+
+void resetIC();
+
 /**
  * @brief resets the state of our machine code compiler.
  * this should be called before processing each file.
