@@ -74,7 +74,9 @@ bool resolve_symbols()
         }
 
         /* FIXME: what to do about entry/extern ?*/
-        if (sb->type != ST_CODE)
+        /* if the symbol is defined as extern, that's ok. it does not need to be
+           resolved in the code */
+        if (sb->type == ST_EXTERN)
         {
         }
 
