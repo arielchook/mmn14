@@ -44,7 +44,6 @@
 #define ERR_DEFINE_DISALLOWED "FirstPass:%d: Cannot use constant (.define) here. Direct addressing expected\n"
 #define ERR_MALFORMED_ARRAY "FirstPass:%d: Malformed array specification. Expected name[index]\n"
 #define ERR_ARR_IND_NEGATIVE "FirstPass:%d: Array index cannot be negative\n"
-#define ERR_OP_IS_NOT_DATA "SecondPass:%d: Array name should be a .data or .string label (%s)\n"
 #define ERR_ARRAY_NOT_FOUND "SecondPass:%d: Array name could not be found(%s)\n"
 #define ERR_INT_OUT_OF_BOUNDS "SecondPass:%d: Specified integer value is out of bounds (%s). Should be between %d and %d\n"
 #define WARN_LABEL_UNEXPCTED "FirstPass:%d: Misplaced label warning. Label is ignored in .entry and .extern definitons\n"

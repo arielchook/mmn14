@@ -6,8 +6,9 @@
 #include <messages.h>
 #include <machinecode.h>
 #include <string.h>
+#include <spopparser.h>
 
-bool processLine(char *line, int lineNumber)
+bool sp_processLine(char *line, int lineNumber)
 {
     int hasLabel;
     char *firstWord, *cmd;
@@ -95,7 +96,7 @@ bool secondPass(FILE *input)
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
         /* process line by line. if one line fails processing we keep going */
-        success &= processLine(line, lineNumber);
+        success &= sp_processLine(line, lineNumber);
     }
     return success;
 }

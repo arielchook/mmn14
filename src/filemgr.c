@@ -6,11 +6,22 @@
 #include <firstpass.h>
 #include <secondpass.h>
 #include <machinecode.h>
+#include <entries.h>
+#include <externs.h>
+
+bool dump_object_file(FILE *f)
+{
+    if (f == NULL)
+        f = stdout;
+    fprintf(f, "%u %u\n", IC, DC);
+
+    return true;
+}
 
 bool processFile(char *fname)
 {
     FILE *asFile, *amFile;
-    /*FILE *entFile, *extFile, *obFile;*/
+    FILE *entFile, *extFile, *obFile;
     char fnameWext[FILENAME_MAX];
 
     /* add .as extension and try to open the input file */
@@ -100,15 +111,54 @@ bool processFile(char *fname)
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
-    /* TODO: write .ent file and .ext file (only if found) */
 
-    /* if (entries_head!=NULL) {
+    /* write entries file only if we have entries in the entry table */
+    if (!entries_is_empty())
+    {
         sprintf(fnameWext, "%s%s", ENT_EXTENSION, fname);
-        write_entries_file();
+        if ((entFile = fopen(fnameWext, "r")) == NULL)
+        {
+            printf(ERR_FILE_CANT_BE_READ, fnameWext);
+            return false;
         }
-    sprintf(fnameWext, "%s%s", EXT_EXTENSION, fname);
-    write_externs_file();
+        entries_dump(entFile);
+        if (fclose(entFile) != 0)
+        {
+            printf(ERR_CLOSING_FILE, fname, ENT_EXTENSION);
+            return false;
+        }
+    }
+
+    /* write externs file only if we have symbols in the externs */
+    if (!externs_is_empty())
+    {
+        sprintf(fnameWext, "%s%s", EXT_EXTENSION, fname);
+        if ((extFile = fopen(fnameWext, "r")) == NULL)
+        {
+            printf(ERR_FILE_CANT_BE_READ, fnameWext);
+            return false;
+        }
+        externs_dump(entFile);
+        if (fclose(extFile) != 0)
+        {
+            printf(ERR_CLOSING_FILE, fname, EXT_EXTENSION);
+            return false;
+        }
+    }
+
+    /* write object file */
     sprintf(fnameWext, "%s%s", OB_EXTENSION, fname);
-    write_object_file();*/
+    if ((obFile = fopen(fnameWext, "r")) == NULL)
+    {
+        printf(ERR_FILE_CANT_BE_READ, fnameWext);
+        return false;
+    }
+    dump_object_file(obFile);
+    if (fclose(obFile) != 0)
+    {
+        printf(ERR_CLOSING_FILE, fname, OB_EXTENSION);
+        return false;
+    }
+
     return true;
 }

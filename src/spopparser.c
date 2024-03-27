@@ -69,19 +69,30 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         return false;
     }
 
-    /* if found, is it a .data or a .string? */
-    if ((sb->type != ST_DATA) && (sb->type != ST_STRING))
+    /* external symbols vs internal symbols get a different handling */
+    switch (sb->type)
     {
-        printf(ERR_OP_IS_NOT_DATA, lineNumber, array_name);
+    case ST_EXTERN:
+        word->contents.fixed_index.A_R_E_1 = ARE_EXTERN; /* external */
+        word->contents.fixed_index.array = 0;
+        word->contents.fixed_index.external_symbol = array_name; /* we keep the name of the symbol so we can */
+                                                                 /* add it to the list of external symbols, when */
+                                                                 /* updating the code section */
+        break;
+    case ST_DATA:
+    case ST_STRING:
+    case ST_CODE:
+        /* first word is the array address */
+        word->contents.fixed_index.A_R_E_1 = ARE_RELOC; /* relocatable */
+        /* store the address of the array label in the word to be written to memory */
+        word->contents.fixed_index.array = *(int *)(sb->value);
+        word->contents.fixed_index.external_symbol = NULL;
+        break;
+    case ST_DEFINE:
+        printf(ERR_DEFINE_DISALLOWED, lineNumber);
         return false;
+        break;
     }
-
-    /* FIXME: could an extern symbol relate to .data/.string? */
-
-    /* store the address of the array label in the word to be written to memory */
-    word->contents.fixed_index.array = *(int *)(sb->value);
-    /* first word is the array address */
-    word->contents.fixed_index.A_R_E_1 = ARE_RELOC; /* relocatable */
 
     /* now, look at the array_index - try to convert to int */
     intValue = strtol(array_index, &ptr, 10);
@@ -150,12 +161,15 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
         word->type = WT_DIRECT;
         word->contents.direct.A_R_E = ARE_RELOC;             /* relocatable symbol */
         word->contents.direct.address = *(int *)(sb->value); /* address of label or data */
+        word->contents.direct.external_symbol = NULL;
         break;
     case ST_EXTERN:
         word->type = WT_DIRECT;
         word->contents.direct.A_R_E = ARE_EXTERN; /* external symbol */
-        word->contents.direct.address = 0;        /* FIXME: use strdup when keeping the operands names? */
-
+        word->contents.direct.address = 0;
+        word->contents.direct.external_symbol = op; /* we keep the name of the symbol so we can */
+                                                    /* add it to the list of external symbols, when */
+                                                    /* updating the code section */
         break;
     case ST_DEFINE:
         printf(ERR_DEFINE_DISALLOWED, lineNumber);
@@ -202,6 +216,7 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
 {
     bool success = true;
     mc_word *word1st = NULL, *word_src = NULL, *word_dest = NULL;
+
     /* get the first operand and second operands (if any). cannot have more since it was checked in first pass */
     char *op_src = extractWordSeparator(stmt, 1, NULL, OP_SEPARATOR);
     char *op_dest = extractWordSeparator(stmt, 2, NULL, OP_SEPARATOR);
@@ -271,15 +286,15 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
             word_src = NULL;
         }
 
-        /* only if there's a source operand */
+        /* only if there's a source operand, write it to the code section */
         if (word_src != NULL)
-        { /* FIXME: check if extern and if so add to the list of externs with IC */
+        {
             write_code_word(word_src);
         }
 
-        /* only if there's a dest operand */
+        /* only if there's a dest operand, write it to the code section */
         if (word_dest != NULL)
-        { /* FIXME: check if extern and if so add to the list of externs with IC */
+        {
             write_code_word(word_dest);
         }
     }

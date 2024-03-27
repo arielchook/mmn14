@@ -18,7 +18,7 @@ struct ExternSymbol
     struct ExternSymbol *next;
 };
 
-struct ExternSymbol *ent_head = NULL;
+struct ExternSymbol *ext_head = NULL;
 void externs_append(char *symbol, uint16_t address)
 {
     struct ExternSymbol *current;
@@ -26,12 +26,12 @@ void externs_append(char *symbol, uint16_t address)
     newNode->symbol = strdup(symbol);
     newNode->address = address;
     newNode->next = NULL;
-    if (ent_head == NULL)
+    if (ext_head == NULL)
     {
-        ent_head = newNode;
+        ext_head = newNode;
         return;
     }
-    current = ent_head;
+    current = ext_head;
     while (current->next != NULL)
     {
         current = current->next;
@@ -41,7 +41,7 @@ void externs_append(char *symbol, uint16_t address)
 
 void externs_delete_list()
 {
-    struct ExternSymbol *current = ent_head;
+    struct ExternSymbol *current = ext_head;
     struct ExternSymbol *nextNode;
     while (current != NULL)
     {
@@ -50,19 +50,29 @@ void externs_delete_list()
         free(current);
         current = nextNode;
     }
-    ent_head = NULL; /* Update head to NULL */
+    ext_head = NULL; /* Update head to NULL */
 }
 
-void externs_dump()
+void externs_dump(FILE *f)
 {
-    struct ExternSymbol *current = ent_head;
-    struct ExternSymbol *nextNode;
-    printf("Extern symbols:\n");
+    struct ExternSymbol *current = ext_head;
 
+    /* if no open file was provided, dump to stdout */
+    if (f == NULL)
+    {
+        f = stdout;
+        fprintf(f, "Extern symbols:\n");
+    }
+
+    /* for each extrnal symbol, print its name and the address of the operand that references it */
     while (current != NULL)
     {
-        nextNode = current->next;
-        printf("[%s]\n", current->symbol);
-        current = nextNode;
+        fprintf(f, "%s %u\n", current->symbol, current->address);
+        current = current->next;
     }
+}
+
+bool externs_is_empty()
+{
+    return ext_head == NULL;
 }

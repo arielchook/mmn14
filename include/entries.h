@@ -2,15 +2,13 @@
 #define ENTRIES_H
 
 #include <stdbool.h>
+#include <stdio.h>
 
 void entries_append(char *symbol);
 
-/**
- * @brief
- *
- */
-bool entries_resolve();
 void entries_delete_list();
 
-void entries_dump();
+void entries_dump(FILE *f);
+
+bool entries_is_empty();
 #endif

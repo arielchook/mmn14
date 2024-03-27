@@ -52,16 +52,28 @@ void entries_delete_list()
     ent_head = NULL; /* Update head to NULL */
 }
 
-void entries_dump()
+void entries_dump(FILE *f)
 {
     struct EntrySymbol *current = ent_head;
-    struct EntrySymbol *nextNode;
-    printf("Entry symbols:\n");
+    SymbolBlock *sb;
 
+    /* if no open file was provided, dump to stdout */
+    if (f == NULL)
+    {
+        f = stdout;
+        fprintf(f, "Entry symbols:\n");
+    }
+
+    /* for each entry symbol, print its name and its address in the code/data section */
     while (current != NULL)
     {
-        nextNode = current->next;
-        printf("[%s]\n", current->symbol);
-        current = nextNode;
+        sb = find_symbol(current->symbol);
+        fprintf(f, "%s %u\n", current->symbol, *(int *)sb->value);
+        current = current->next;
     }
+}
+
+bool entries_is_empty()
+{
+    return ent_head == NULL;
 }

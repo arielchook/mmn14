@@ -3,6 +3,7 @@
 #include <symbols.h>
 #include <string.h>
 #include <entries.h>
+#include <externs.h>
 
 /**
  * @brief holds the data section for the compiler
@@ -147,25 +148,20 @@ bool write_code_word(mc_word *word)
         break;
     case WT_DIRECT:
         write_bits(&codeSection[IC], 0, 2, word->contents.direct.A_R_E);
-        /*if (word->contents.direct.unresolved == NULL)
+        write_bits(&codeSection[IC], 2, 12, word->contents.direct.address);
+        /* if an external symbol was specified, add it to the external symbol list */
+        if (word->contents.direct.external_symbol != NULL)
         {
-            write_bits(&codeSection[IC], 2, 12, word->contents.direct.address);
+            externs_append(word->contents.direct.external_symbol, IC);
         }
-        else
-        {
-            append_unersolved_symbol(word->contents.direct.unresolved, IC);
-        }*/
         break;
     case WT_FIXED_INDEX:
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_1);
-        /*if (word->contents.fixed_index.unresolved == NULL)
+        write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.array);
+        if (word->contents.fixed_index.external_symbol != NULL)
         {
-            write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.array);
+            externs_append(word->contents.fixed_index.external_symbol, IC);
         }
-        else
-        {
-            append_unersolved_symbol(word->contents.fixed_index.unresolved, IC);
-        }*/
         print_binary(codeSection[IC]);
         IC++;
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_2);

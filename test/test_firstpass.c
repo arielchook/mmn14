@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <utils.h>
 #include <machinecode.h>
-#include <unressym.h>
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +19,5 @@ int main(int argc, char *argv[])
     dump_symbols_table();
     dump_data_section();
     dump_code_section();
-    dump_unresolved();
     return success ? 0 : 1;
 }

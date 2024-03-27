@@ -57,6 +57,7 @@ typedef union
     {
         uint8_t A_R_E;    /* 2-bit ARE */
         uint16_t address; /* 12-bit address of label */
+        char *external_symbol;
     } direct;
 
     /* fixed index is spanned over 2 memory words */
@@ -66,6 +67,7 @@ typedef union
         uint16_t array;  /* 12-bit address of array */
         uint8_t A_R_E_2; /* 2-bit ARE for the 2nd word */
         uint16_t index;  /* 12-bit array index */
+        char *external_symbol;
     } fixed_index;
 
     /* direct register memory word */

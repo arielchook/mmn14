@@ -11,7 +11,7 @@
 #include <fpopparser.h>
 #include <entries.h>
 
-bool processLine(char *line, int lineNumber)
+bool fp_processLine(char *line, int lineNumber)
 {
     int hasLabel;
     char *firstWord, *cmd;
@@ -143,7 +143,7 @@ bool firstPass(FILE *input)
         since it was already done in the Precompile step. Also empty lines were skipped in precompile */
         rtrim(line);
         /* process line by line. if one line fails processing we keep going */
-        success &= processLine(line, lineNumber);
+        success &= fp_processLine(line, lineNumber);
     }
 
     if (success)

@@ -6,7 +6,7 @@
 #define AM_EXTENSION ".am"
 #define ENT_EXTENSION ".ent"
 #define EXT_EXTENSION ".ext"
-#define OBJ_EXTENSION ".ob"
+#define OB_EXTENSION ".ob"
 
 bool processFile(char *fname);
 
