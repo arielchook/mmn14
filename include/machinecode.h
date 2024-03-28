@@ -22,10 +22,6 @@ extern int DC;
 #define BASE_CODE_ADDRESS 100
 #define BASE_DATA_ADDRESS 0
 
-/* these flags help maintain state for the machine code compiler */
-#define MC_HAS_EXTERNS 0x1
-#define MC_HAS_ENRTIES 0x2
-
 /**
  * @brief memory word contains 14 bits. we could define a struct with a variable with :14 but since 14 bits are 2 bytes
  * we are using uint16_t (which is unsigned 16 bit) and will handle the bit manipulation in the encoding.
@@ -58,11 +54,10 @@ void resetIC();
 void reset_mc_state();
 
 /**
- * @brief Set/unset flags in the machine code state
+ * @brief cleans up machine code data structures and free memory.
+ * this includes entries and extern lists as well as symbol table
  *
- * @param flag
  */
-void set_machine_code_flag(unsigned flag);
-bool is_mc_flag_set(unsigned flag);
+void cleanup_mc_state();
 
 #endif

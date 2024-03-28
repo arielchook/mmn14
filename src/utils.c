@@ -79,6 +79,7 @@ char *extractWord(char *str, int n, char **pStart)
 {
     return extractWordSeparator(str, n, pStart, ' ');
 }
+
 /* FIXME: doesn't handle 2 consecutive seprators. should return an empty string in such a case */
 char *extractWordSeparator(char *str, int n, char **pStart, char separator)
 {
@@ -152,10 +153,3 @@ char *strdup(const char *str)
 
     return dup_str;
 }
-
-/*
-void main()
-{
-    char *s = "a,,b";
-    printf("[%s]\n", extractWordSeparator(s, 2, NULL, ','));
-}*/

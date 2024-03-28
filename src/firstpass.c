@@ -121,7 +121,9 @@ bool fp_processLine(char *line, int lineNumber)
         printf(ERR_UNKNOWN_CMD, lineNumber, cmd);
         return false;
     }
-    printf("%s", cmd);
+
+    /* count the number of words the current instruction will hold in the code section */
+    /* we also do initial parsing here making sure the number of operands is correct etc.. */
     if (!count_operands_words(pStart + strlen(cmd), lineNumber, props))
     {
         return false;

@@ -137,7 +137,7 @@ bool handle_string(char *stringStmt, int lineNumber)
     }
     rtrim(stringStmt);
 
-    if (!startsWith(stringStmt, "\"") || !endsWith(stringStmt, "\""))
+    if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE))
     {
         printf(ERR_MISSING_QUOTES, lineNumber);
         return false;
@@ -191,6 +191,9 @@ bool handle_entry(char *entryStmt, int lineNumber)
         return false;
     }
     rtrim(entryStmt);
+
+    /* we check the entry statement refers to a valid symbol only in 2nd pass since only then
+    we have the entire symbol table filled up. until then we just add it to the list of entries */
     entries_append(entryStmt);
     return true;
 }

@@ -23,6 +23,7 @@
 #define ARRAY_OPEN_CHAR '['
 /* Array suffix */
 #define ARRAY_CLOSE_CHAR "]"
+#define STR_ENCLOSURE "\""
 
 void *safe_malloc(int size);
 #define free_if_not_null(x) \

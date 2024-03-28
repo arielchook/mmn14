@@ -149,7 +149,7 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
     sb = find_symbol(op);
     if (sb == NULL)
     {
-        printf(ERR_CANT_FIND_LABEL, lineNumber, op);
+        printf(ERR_CANT_RESOLVE_SYMBOL, lineNumber, op);
         return false;
     }
 

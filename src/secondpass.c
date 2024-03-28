@@ -7,6 +7,42 @@
 #include <machinecode.h>
 #include <string.h>
 #include <spopparser.h>
+#include <symbols.h>
+
+bool is_valid_entry(char *entryStmt, int lineNumber)
+{
+    SymbolBlock *sb;
+    /* locate the symbol specified in the .entry statement in the symbol table */
+    ltrim(entryStmt);
+    rtrim(entryStmt);
+    sb = find_symbol(entryStmt);
+
+    /* if no such symbol, it's an error */
+    if (sb == NULL)
+    {
+        printf(ERR_ENTRY_SYMBOL_NONEXISTENT, lineNumber, entryStmt);
+        return false;
+    }
+    /* look at the type of symbol found */
+    switch (sb->type)
+    {
+    /* if it's a .define - it's an error */
+    case ST_DEFINE:
+        printf(ERR_ENTRY_FOR_DEFINE_INVALID, lineNumber, entryStmt);
+        return false;
+        break;
+    /* if it's an external symbol - error. cannot have same symbol as extern and entry */
+    case ST_EXTERN:
+        printf(ERR_ENTRY_EXTERN_SAME_NAME, lineNumber, entryStmt);
+        break;
+    /* any other type is ok */
+    case ST_DATA:
+    case ST_CODE:
+    case ST_STRING:
+        return true;
+    }
+    return true;
+}
 
 bool sp_processLine(char *line, int lineNumber)
 {
@@ -46,28 +82,19 @@ bool sp_processLine(char *line, int lineNumber)
     ltrim(cmd);
     rtrim(cmd);
 
-    /* .data definition - was handled in first pass */
-    if (strcmp(cmd, directives[DATA]) == 0)
+    /* .data and .string definition - was handled in first pass */
+    /* .extern definition - was also handled in first-pass. in second pass we just keep track
+    of the references to external symbols used in the code */
+    if ((strcmp(cmd, directives[DATA]) == 0) || (strcmp(cmd, directives[STRING]) == 0) ||
+        (strcmp(cmd, directives[EXTERN]) == 0))
     {
         return true;
     }
 
-    /* .string definition */
-    if (strcmp(cmd, directives[STRING]) == 0)
-    {
-        return true;
-    }
-
-    /* .entry definition - just add it to the list of entries */
+    /* .entry definition - need to make sure we don't have an extern with the same name */
     if (strcmp(cmd, directives[ENTRY]) == 0)
     {
-        return true;
-    }
-
-    /* .extern definition */
-    if (strcmp(cmd, directives[EXTERN]) == 0)
-    {
-        return true;
+        return is_valid_entry(pStart + strlen(directives[ENTRY]), lineNumber);
     }
 
     /* done with processing directives. from here on we process instructions */

@@ -43,7 +43,6 @@ bool write_signed_value(mem_word *word, int value)
     /* Write the value to the mem_word */
     *word = value;
 
-    /* TODO: handle overflow */
     return true;
 }
 
@@ -55,7 +54,6 @@ bool write_data_section(mem_word value)
     }
     write_signed_value(&dataSection[DC], value);
     DC++;
-    /*dataSection[DC++] = value;*/
     return true;
 }
 
@@ -77,6 +75,7 @@ void resetDC()
 {
     DC = BASE_DATA_ADDRESS;
 }
+
 void reset_mc_state()
 {
     resetDC();
@@ -85,21 +84,14 @@ void reset_mc_state()
     /* zero out our memory structures */
     memset(dataSection, 0, sizeof(dataSection));
     memset(codeSection, 0, sizeof(codeSection));
+}
 
-    mc_flags = 0;
-    /* delete the unresolved symbol list */
-    /* TODO: run this after each file processed. maybe call it cleanup? */
+void cleanup_mc_state()
+{
+    /* delete the entries and externs list as well as the symbol table */
     entries_delete_list();
+    externs_delete_list();
     free_symbol_table();
-}
-void set_machine_code_flag(unsigned bitmask)
-{
-    mc_flags |= bitmask;
-}
-bool is_mc_flag_set(unsigned bitmask)
-{
-    /* this will return true of the bits that are on in the bitmask are also tuend on in the machine code state flags */
-    return (mc_flags & bitmask);
 }
 
 /**
@@ -133,9 +125,6 @@ bool write_code_word(mc_word *word)
     switch (word->type)
     {
     case WT_INSTRUCTION:
-        /*        printf("IC: %u ARE[%u] dest[%u] src[%u] opcode[%u]\n", IC, word->contents.instruction.A_R_E, word->contents.instruction.dest_addressing,
-                       word->contents.instruction.src_addressing, word->contents.instruction.opcode);
-        */
         write_bits(&codeSection[IC], 0, 2, word->contents.instruction.A_R_E);
         write_bits(&codeSection[IC], 2, 2, word->contents.instruction.dest_addressing);
         write_bits(&codeSection[IC], 4, 2, word->contents.instruction.src_addressing);
@@ -149,7 +138,8 @@ bool write_code_word(mc_word *word)
     case WT_DIRECT:
         write_bits(&codeSection[IC], 0, 2, word->contents.direct.A_R_E);
         write_bits(&codeSection[IC], 2, 12, word->contents.direct.address);
-        /* if an external symbol was specified, add it to the external symbol list */
+
+        /* if this word references an external symbol - add it to the list of externs */
         if (word->contents.direct.external_symbol != NULL)
         {
             externs_append(word->contents.direct.external_symbol, IC);
@@ -158,10 +148,12 @@ bool write_code_word(mc_word *word)
     case WT_FIXED_INDEX:
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_1);
         write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.array);
+        /* if this word references an external symbol - add it to the list of externs */
         if (word->contents.fixed_index.external_symbol != NULL)
         {
             externs_append(word->contents.fixed_index.external_symbol, IC);
         }
+        printf("%.4u: ", IC);
         print_binary(codeSection[IC]);
         IC++;
         write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_2);
@@ -177,21 +169,12 @@ bool write_code_word(mc_word *word)
         return false; /* TODO: say something */
     }
     /* advance the instruction counter by 1 */
+    printf("%4u: ", IC);
     print_binary(codeSection[IC]);
     IC++;
     return true;
 }
 
-bool update_symbol_in_code(uint16_t symbol_address, int address)
-{
-    if (address > IC)
-    {
-        printf("Invalid address specified\n");
-        return false;
-    }
-    write_bits(&codeSection[address], 2, 12, symbol_address);
-    return true;
-}
 void print_binary(mem_word word)
 {
     int j;

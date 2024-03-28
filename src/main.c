@@ -3,6 +3,8 @@
 #include <filemgr.h>
 #include <stdlib.h>
 
+#define DEBUG
+
 int main(int argc, char *argv[])
 {
     int fileno;
@@ -17,6 +19,7 @@ int main(int argc, char *argv[])
     for (fileno = 0; fileno < argc; fileno++)
     {
         processFile(argv[fileno]);
+        cleanup_mc_state();
     }
     return 0;
 }

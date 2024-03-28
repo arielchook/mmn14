@@ -91,7 +91,6 @@ bool add_define(char *name, int value)
 
 bool add_extern(char *name)
 {
-    bool success;
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
     /* create a symbol block for .extern definition */
@@ -100,11 +99,7 @@ bool add_extern(char *name)
     sb->type = ST_EXTERN;
 
     /* set the flag to mark there was at least one .extern */
-    if ((success = add_symbol(sb)) == true)
-    {
-        set_machine_code_flag(MC_HAS_EXTERNS);
-    }
-    return success;
+    return add_symbol(sb);
 }
 
 bool add_data_label(char *name)
@@ -130,7 +125,7 @@ bool add_code_label(char *name)
 /**
  * @brief this funcion is executed for every symbol in the symbols table.
  * if it's a ST_DATA or ST_STRING it add IC to its address so when written to file
- * it can be located after the code part properly
+ * it can be placed after the code part properly
  *
  * @param kvp
  */
@@ -142,6 +137,7 @@ void _update_address(const KeyValuePair kvp)
         *(int *)(sb->value) += IC;
     }
 }
+
 void update_data_symbols_address()
 {
     hashtable_iterate(symbolsTable, _update_address);
@@ -167,7 +163,7 @@ void _dump_symbol(const KeyValuePair kvp)
         printf("(string label) %d", *(int *)(sb->value));
         break;
     case ST_EXTERN:
-        printf("(extern) %s", (char *)(sb->value));
+        printf("(extern)");
         break;
     default:
         printf("unkown symbol type (%d)", sb->type);
