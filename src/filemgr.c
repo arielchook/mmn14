@@ -43,6 +43,8 @@ bool processFile(char *fname)
 
     /* resets the state for the compiler */
     reset_mc_state();
+    printf(MSG_PROCESSING_FILE, fname);
+    printf(MSG_PRECOMPILATION, fname, AS_EXTENSION, fname, AM_EXTENSION);
 
     /* run precompiler to generate .am file from .as file */
     if (!precompile(asFile, amFile))
@@ -64,6 +66,9 @@ bool processFile(char *fname)
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
+
+    printf(MSG_FIRST_PASS, fnameWext);
+
     if ((amFile = fopen(fnameWext, "r")) == NULL)
     {
         printf(ERR_FILE_CANT_BE_READ, fnameWext);
@@ -83,6 +88,7 @@ bool processFile(char *fname)
         return false;
     }
 
+    printf(MSG_SECOND_PASS, fnameWext);
     /* Rewind the file pointer back to the beginning of the amFile for the second pass */
     if (fseek(amFile, 0, SEEK_SET) != 0)
     {
@@ -116,6 +122,7 @@ bool processFile(char *fname)
     if (!entries_is_empty())
     {
         sprintf(fnameWext, "%s%s", ENT_EXTENSION, fname);
+        printf(MSG_ENTRIES_FILE, fnameWext);
         if ((entFile = fopen(fnameWext, "r")) == NULL)
         {
             printf(ERR_FILE_CANT_BE_READ, fnameWext);
@@ -133,6 +140,8 @@ bool processFile(char *fname)
     if (!externs_is_empty())
     {
         sprintf(fnameWext, "%s%s", EXT_EXTENSION, fname);
+
+        printf(MSG_EXTERNS_FILE, fnameWext);
         if ((extFile = fopen(fnameWext, "r")) == NULL)
         {
             printf(ERR_FILE_CANT_BE_READ, fnameWext);
@@ -148,6 +157,8 @@ bool processFile(char *fname)
 
     /* write object file */
     sprintf(fnameWext, "%s%s", OB_EXTENSION, fname);
+    printf(MSG_OBJECT_FILE, fnameWext);
+
     if ((obFile = fopen(fnameWext, "r")) == NULL)
     {
         printf(ERR_FILE_CANT_BE_READ, fnameWext);
@@ -160,5 +171,6 @@ bool processFile(char *fname)
         return false;
     }
 
+    printf(MSG_DONE);
     return true;
 }

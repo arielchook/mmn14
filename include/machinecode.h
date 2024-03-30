@@ -15,6 +15,7 @@
 
 /* instruction counter */
 extern int IC;
+/* TODO: do we start the memory array at 100 or always deduct 100 from IC? */
 
 /* data counter */
 extern int DC;
@@ -28,11 +29,11 @@ extern int DC;
  */
 typedef uint16_t mem_word;
 
+uint16_t to_twos_complement(int num);
+
 bool write_data_section(mem_word value);
 
 bool write_code_word(mc_word *word);
-
-bool update_symbol_in_code(uint16_t symbol_address, int address);
 
 /**
  * @brief prints out the contents of the data section

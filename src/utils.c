@@ -153,3 +153,16 @@ char *strdup(const char *str)
 
     return dup_str;
 }
+
+/* FIXME: make sure this works properly */
+void LOG(const char *format, ...)
+{
+#ifdef DEBUG
+    va_list args;
+    va_start(args, format);
+    vfprintf(stdout, format, args);
+    va_end(args);
+#else
+    printf("undefined\n");
+#endif
+}

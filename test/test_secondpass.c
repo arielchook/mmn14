@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
     bool success = true;
     if (argc < 2)
         return 1;
+    LOG("%s %d\n", "yes", 1);
+    exit(1);
     printf("input:%s\n", argv[1]);
     in = fopen(argv[1], "r");
     success = firstPass(in);
@@ -26,6 +28,12 @@ int main(int argc, char *argv[])
     fseek(in, 0, SEEK_SET);
     success = secondPass(in);
     fclose(in);
+    if (!success)
+    {
+        printf("secondpass failed..\n");
+        return 1;
+    }
+
     dump_symbols_table();
     dump_code_section();
     dump_data_section();

@@ -68,7 +68,7 @@ void entries_dump(FILE *f)
     while (current != NULL)
     {
         sb = find_symbol(current->symbol);
-        fprintf(f, "%s %u\n", current->symbol, *(int *)sb->value);
+        fprintf(f, "%s %u\n", current->symbol, sb->value);
         current = current->next;
     }
 }

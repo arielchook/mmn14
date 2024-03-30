@@ -50,4 +50,13 @@
 #define ERR_ENTRY_SYMBOL_NONEXISTENT "SecondPass:%d: Symbol specified in .entry statement not found (%s)\n"
 #define ERR_ENTRY_FOR_DEFINE_INVALID "SecondPass:%d: .entry statement cannot refer to a .define constant (%s)\n"
 #define ERR_ENTRY_EXTERN_SAME_NAME "SecondPass:%d: .entry statement cannot refer to a symbol that was defined as .extern (%s)\n"
+#define ERR_DEFINE_NO_HASHTAG "SecondPass:%d: Cannot use constant (.define) here. Did you mean #%s?\n"
+#define MSG_PROCESSING_FILE "Processing %s:\n"
+#define MSG_PRECOMPILATION "Precompilation step %s%s->%s%s:\n"
+#define MSG_FIRST_PASS "First pass %s:\n"
+#define MSG_SECOND_PASS "Second pass %s:\n"
+#define MSG_ENTRIES_FILE "Generating entries file %s:\n"
+#define MSG_EXTERNS_FILE "Generating extern file %s:\n"
+#define MSG_OBJECT_FILE "Generating object file %s:\n"
+#define MSG_DONE "Done.\n"
 #endif

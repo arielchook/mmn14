@@ -23,12 +23,11 @@ enum SymbolType
 typedef struct
 {
     char *name;
-    void *value;
+    uint16_t value;
     enum SymbolType type; /* the type of symbol. we support .define, .data and .string */
 } SymbolBlock;
 
 bool add_define(char *name, int value);
-bool add_data(char *name, int value);
 bool add_string(char *name, char *value);
 bool add_extern(char *name);
 

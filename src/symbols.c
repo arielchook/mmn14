@@ -36,6 +36,7 @@ void free_symbol_table()
 {
     if (symbolsTable != NULL)
     {
+        /* FIXME: hashtable_destroy frees the key and the value but the value contains the key. no issue here?*/
         hashtable_destroy(symbolsTable);
     }
 }
@@ -83,8 +84,7 @@ bool add_define(char *name, int value)
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
     sb->name = name;
-    sb->value = safe_malloc(sizeof(int));
-    *(int *)(sb->value) = value;
+    sb->value = to_twos_complement(value);
     sb->type = ST_DEFINE;
     return add_symbol(sb);
 }
@@ -95,7 +95,7 @@ bool add_extern(char *name)
 
     /* create a symbol block for .extern definition */
     sb->name = name;
-    sb->value = NULL; /* .extern has no value */
+    sb->value = 0; /* .extern has no value */
     sb->type = ST_EXTERN;
 
     /* set the flag to mark there was at least one .extern */
@@ -106,8 +106,7 @@ bool add_data_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
-    sb->value = safe_malloc(sizeof(int));
-    *(int *)(sb->value) = DC;
+    sb->value = DC;
     sb->type = ST_DATA;
     return add_symbol(sb);
 }
@@ -116,8 +115,7 @@ bool add_code_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
-    sb->value = safe_malloc(sizeof(int));
-    *(int *)(sb->value) = IC; /* IC is the current InstructionCounter */
+    sb->value = IC; /* IC is the current InstructionCounter */
     sb->type = ST_CODE;
     return add_symbol(sb);
 }
@@ -134,7 +132,7 @@ void _update_address(const KeyValuePair kvp)
     SymbolBlock *sb = (SymbolBlock *)kvp.value;
     if ((sb->type == ST_DATA) || (sb->type == ST_STRING))
     {
-        *(int *)(sb->value) += IC;
+        sb->value += IC;
     }
 }
 
@@ -151,16 +149,16 @@ void _dump_symbol(const KeyValuePair kvp)
     switch (sb->type)
     {
     case ST_DEFINE:
-        printf("(define) %d", *(int *)(sb->value));
+        printf("(define) %d", sb->value);
         break;
     case ST_DATA:
-        printf("(data label) %d", *(int *)(sb->value));
+        printf("(data label) %d", sb->value);
         break;
     case ST_CODE:
-        printf("(code label) %d", *(int *)(sb->value));
+        printf("(code label) %d", sb->value);
         break;
     case ST_STRING:
-        printf("(string label) %d", *(int *)(sb->value));
+        printf("(string label) %d", sb->value);
         break;
     case ST_EXTERN:
         printf("(extern)");

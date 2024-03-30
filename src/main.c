@@ -2,9 +2,7 @@
 #include <messages.h>
 #include <filemgr.h>
 #include <stdlib.h>
-
-#define DEBUG
-
+#include <machinecode.h>
 int main(int argc, char *argv[])
 {
     int fileno;

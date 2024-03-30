@@ -5,8 +5,13 @@
 #include <stdio.h>
 #include <messages.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdarg.h>
 
-/* Maximum line length in the input file. 80 characters max + 1 more for the \n */
+#define DEBUG
+
+/* Maximum line length in the input file + 1 more for the \n */
+/* TODO: test with line at maximum length */
 #define MAX_LINE_LENGTH 81
 
 /* parsing constants */
@@ -45,4 +50,7 @@ int numWords(const char *str);
 char *extractWord(char *str, int n, char **pStart);
 char *extractWordSeparator(char *str, int n, char **pStart, char separator);
 char *strdup(const char *str);
+
+void LOG(const char *format, ...);
+
 #endif

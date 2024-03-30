@@ -99,6 +99,10 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         success = false;
     }
 
+    /* advance IC by one word for the instruction */
+    /* TODO: implement increaseIC() in machinecode*/
+    IC += 1;
+
     if (success)
     {
         /* if we have only 1 operand, it's the dest operand */
@@ -113,6 +117,7 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
     if (success && op_src != NULL)
     {
         src_at = parse_op_addressing_type(op_src, props->op_src_addr_rules, lineNumber);
+
         /* advance the instruction counter (IC) by the number of words based on the command and the source opreand */
         if ((success = (src_at != WT_INVALID)))
         {
@@ -136,6 +141,7 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
     if (success && op_dest != NULL)
     {
         dest_at = parse_op_addressing_type(op_dest, props->op_dest_addr_rules, lineNumber);
+
         if ((success = (dest_at != WT_INVALID)))
         {
             /* advance the instruction counter (IC) by the number of words based on the command and the dest opreand */
@@ -160,6 +166,5 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
             }
         }
     }
-
     return success;
 }

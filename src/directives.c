@@ -111,7 +111,11 @@ bool handle_data(char *dataStmt, int lineNumber)
             }
 
             /* at this point we found a constant with that name. use its value */
-            intValue = *(int *)(sb->value);
+            intValue = sb->value;
+        }
+        else
+        {
+            intValue = to_twos_complement(intValue);
         }
 
         /* write the value to the data section */

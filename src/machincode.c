@@ -18,6 +18,19 @@ int DC = BASE_DATA_ADDRESS;
 
 unsigned mc_flags = 0;
 
+uint16_t to_twos_complement(int num)
+{
+    if (num < 0)
+    {
+        /* Determine the mask to set the leading bits to 1 */
+        uint16_t mask = 1 << (MC_ADDR_SPACE_BITS - 1);
+        /* Perform bitwise OR with the mask to set the leading bits to 1 */
+        return (num & ((1 << MC_ADDR_SPACE_BITS) - 1)) | mask;
+    }
+    /* If the number is non-negative, return as is */
+    return num;
+}
+
 /**
  * @brief Function to write a signed integer value in two's complement form using 12 bits into a 14-bit mem_word
  *
@@ -31,17 +44,8 @@ bool write_signed_value(mem_word *word, int value)
     if (word == NULL)
         return false;
 
-    /* Clamp value to fit within 12 bits */
-    value &= 0xFFF;
-
-    /* Sign-extend the value if negative */
-    if (value & 0x800)
-    {
-        value |= 0xF000;
-    }
-
     /* Write the value to the mem_word */
-    *word = value;
+    *word = to_twos_complement(value);
 
     return true;
 }
@@ -179,7 +183,7 @@ void print_binary(mem_word word)
 {
     int j;
     /* Print binary representation with spaces between each bit */
-    for (j = MC_WORD_SIZE_BITS; j >= 0; j--)
+    for (j = MC_WORD_SIZE_BITS - 1; j >= 0; j--)
     {
         printf("%2d ", (word >> j) & 1);
     }

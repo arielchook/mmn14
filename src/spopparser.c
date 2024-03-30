@@ -10,6 +10,7 @@
 bool handle_immediate(char *op, int lineNumber, mc_word *word)
 {
     int intValue;
+    uint16_t twoc_intValue;
     char *ptr;
     SymbolBlock *sb;
 
@@ -30,19 +31,23 @@ bool handle_immediate(char *op, int lineNumber, mc_word *word)
         }
 
         /* at this point we found a constant with that name. use its value */
-        intValue = *(int *)(sb->value);
+        twoc_intValue = sb->value;
     }
-
-    /* make sure the int value provided can be represented in memory */
-    if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
+    else
     {
-        printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, op, MIN_VALUE, MAX_VALUE);
-        return false;
+        /* make sure the int value provided can be represented in memory */
+        if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
+        {
+            printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, op, MIN_VALUE, MAX_VALUE);
+            return false;
+        }
+        /* conver to two-complement */
+        twoc_intValue = to_twos_complement(intValue);
     }
 
     word->type = WT_IMMEDIATE;
     word->contents.immediate.A_R_E = ARE_ABS;
-    word->contents.immediate.value = intValue;
+    word->contents.immediate.value = twoc_intValue;
     return true;
 }
 
@@ -85,7 +90,7 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         /* first word is the array address */
         word->contents.fixed_index.A_R_E_1 = ARE_RELOC; /* relocatable */
         /* store the address of the array label in the word to be written to memory */
-        word->contents.fixed_index.array = *(int *)(sb->value);
+        word->contents.fixed_index.array = sb->value;
         word->contents.fixed_index.external_symbol = NULL;
         break;
     case ST_DEFINE:
@@ -108,8 +113,14 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         }
 
         /* at this point we found a constant with that name. use its value */
-        intValue = *(int *)(sb->value);
+        intValue = sb->value;
+
+        /* the value from the define is given in 2 complement. make sure the sign bit is not negative */
+        if ((sb->value & (1 << 13)) != 0)
+            intValue = -1;
     }
+
+    /* TODO: test with negative array index */
     /* array index must be non negative */
     if (intValue < 0)
     {
@@ -159,8 +170,8 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
     case ST_STRING:
     case ST_CODE:
         word->type = WT_DIRECT;
-        word->contents.direct.A_R_E = ARE_RELOC;             /* relocatable symbol */
-        word->contents.direct.address = *(int *)(sb->value); /* address of label or data */
+        word->contents.direct.A_R_E = ARE_RELOC;   /* relocatable symbol */
+        word->contents.direct.address = sb->value; /* address of label or data */
         word->contents.direct.external_symbol = NULL;
         break;
     case ST_EXTERN:
@@ -172,7 +183,7 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
                                                     /* updating the code section */
         break;
     case ST_DEFINE:
-        printf(ERR_DEFINE_DISALLOWED, lineNumber);
+        printf(ERR_DEFINE_NO_HASHTAG, lineNumber, op);
         return false;
         break;
     }
@@ -267,7 +278,7 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
             /* if op is direct reg need to store the register number in source reg */
             if (word_dest->type == WT_DIRECT_REG)
             {
-                word_src->contents.direct_reg.dest = word_src->contents.direct_reg.regnum;
+                word_dest->contents.direct_reg.dest = word_dest->contents.direct_reg.regnum;
             }
         }
     }
