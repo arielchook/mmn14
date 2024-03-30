@@ -10,12 +10,12 @@
 
 int main(int argc, char *argv[])
 {
+
     FILE *in;
     bool success = true;
     if (argc < 2)
         return 1;
-    LOG("%s %d\n", "yes", 1);
-    exit(1);
+
     printf("input:%s\n", argv[1]);
     in = fopen(argv[1], "r");
     success = firstPass(in);

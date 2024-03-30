@@ -61,7 +61,7 @@ void externs_dump(FILE *f)
     if (f == NULL)
     {
         f = stdout;
-        fprintf(f, "Extern symbols:\n");
+        LOG("Extern symbols:\n");
     }
 
     /* for each extrnal symbol, print its name and the address of the operand that references it */

@@ -13,8 +13,8 @@ bool dump_object_file(FILE *f)
 {
     if (f == NULL)
         f = stdout;
-    fprintf(f, "%u %u\n", IC, DC);
-
+    fprintf(f, "%u %u\n", getIC(), getDC());
+    /* TODO: write contents of object file from code section+data section */
     return true;
 }
 
@@ -25,7 +25,7 @@ bool processFile(char *fname)
     char fnameWext[FILENAME_MAX];
 
     /* add .as extension and try to open the input file */
-    sprintf(fnameWext, "%s%s", AS_EXTENSION, fname);
+    sprintf(fnameWext, "%s%s", fname, AS_EXTENSION);
     if ((asFile = fopen(fnameWext, "r")) == NULL)
     {
         printf(ERR_FILE_CANT_BE_READ, fnameWext);
@@ -34,15 +34,13 @@ bool processFile(char *fname)
 
     /* add .am extension and try to open the macro output file.
     no need to allocate a new file name since it's the same length */
-    sprintf(fnameWext, "%s%s", AM_EXTENSION, fname);
+    sprintf(fnameWext, "%s%s", fname, AM_EXTENSION);
     if ((amFile = fopen(fnameWext, "w")) == NULL)
     {
         printf(ERR_FILE_CANT_BE_WRITTEN, fnameWext);
         return false;
     }
 
-    /* resets the state for the compiler */
-    reset_mc_state();
     printf(MSG_PROCESSING_FILE, fname);
     printf(MSG_PRECOMPILATION, fname, AS_EXTENSION, fname, AM_EXTENSION);
 
@@ -66,6 +64,9 @@ bool processFile(char *fname)
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
+
+    /* resets the state for the compiler */
+    reset_mc_state();
 
     printf(MSG_FIRST_PASS, fnameWext);
 
@@ -121,11 +122,11 @@ bool processFile(char *fname)
     /* write entries file only if we have entries in the entry table */
     if (!entries_is_empty())
     {
-        sprintf(fnameWext, "%s%s", ENT_EXTENSION, fname);
+        sprintf(fnameWext, "%s%s", fname, ENT_EXTENSION);
         printf(MSG_ENTRIES_FILE, fnameWext);
-        if ((entFile = fopen(fnameWext, "r")) == NULL)
+        if ((entFile = fopen(fnameWext, "w")) == NULL)
         {
-            printf(ERR_FILE_CANT_BE_READ, fnameWext);
+            printf(ERR_FILE_CANT_BE_WRITTEN, fnameWext);
             return false;
         }
         entries_dump(entFile);
@@ -139,12 +140,12 @@ bool processFile(char *fname)
     /* write externs file only if we have symbols in the externs */
     if (!externs_is_empty())
     {
-        sprintf(fnameWext, "%s%s", EXT_EXTENSION, fname);
+        sprintf(fnameWext, "%s%s", fname, EXT_EXTENSION);
 
         printf(MSG_EXTERNS_FILE, fnameWext);
-        if ((extFile = fopen(fnameWext, "r")) == NULL)
+        if ((extFile = fopen(fnameWext, "w")) == NULL)
         {
-            printf(ERR_FILE_CANT_BE_READ, fnameWext);
+            printf(ERR_FILE_CANT_BE_WRITTEN, fnameWext);
             return false;
         }
         externs_dump(entFile);
@@ -156,12 +157,12 @@ bool processFile(char *fname)
     }
 
     /* write object file */
-    sprintf(fnameWext, "%s%s", OB_EXTENSION, fname);
+    sprintf(fnameWext, "%s%s", fname, OB_EXTENSION);
     printf(MSG_OBJECT_FILE, fnameWext);
 
-    if ((obFile = fopen(fnameWext, "r")) == NULL)
+    if ((obFile = fopen(fnameWext, "w")) == NULL)
     {
-        printf(ERR_FILE_CANT_BE_READ, fnameWext);
+        printf(ERR_FILE_CANT_BE_WRITTEN, fnameWext);
         return false;
     }
     dump_object_file(obFile);

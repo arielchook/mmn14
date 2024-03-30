@@ -116,6 +116,7 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         intValue = sb->value;
 
         /* the value from the define is given in 2 complement. make sure the sign bit is not negative */
+        /* TODO: use a define instead of 13 */
         if ((sb->value & (1 << 13)) != 0)
             intValue = -1;
     }
@@ -200,7 +201,10 @@ bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *w
         printf(ERR_EMPTY_OPERAND, lineNumber);
     }
     rtrim(op);
-    printf("|%s", op);
+
+    /* debug log each operand */
+    LOG("|%s", op);
+
     /* 1. immediate addressing */
     if (startsWith(op, IMMEDIATE_VALUE_PREFIX))
     {
@@ -226,7 +230,7 @@ bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *w
 bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
 {
     bool success = true;
-    mc_word *word1st = NULL, *word_src = NULL, *word_dest = NULL;
+    mc_word *word_instruction = NULL, *word_src = NULL, *word_dest = NULL;
 
     /* get the first operand and second operands (if any). cannot have more since it was checked in first pass */
     char *op_src = extractWordSeparator(stmt, 1, NULL, OP_SEPARATOR);
@@ -243,10 +247,10 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
     we need to prepare the source operand word and dest operand word for memory encoding */
 
     /* first word is the instruction word. it will always exist */
-    word1st = safe_malloc(sizeof(mc_word));
-    word1st->type = WT_INSTRUCTION;
-    word1st->contents.instruction.A_R_E = ARE_ABS;
-    word1st->contents.instruction.opcode = props->opcode;
+    word_instruction = safe_malloc(sizeof(mc_word));
+    word_instruction->type = WT_INSTRUCTION;
+    word_instruction->contents.instruction.A_R_E = ARE_ABS;
+    word_instruction->contents.instruction.opcode = props->opcode;
 
     /* is there a source operand ? */
     if (success && op_src != NULL)
@@ -256,7 +260,7 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
         if (success)
         {
             /* update the source operand addressing type */
-            word1st->contents.instruction.src_addressing = word_src->type;
+            word_instruction->contents.instruction.src_addressing = word_src->type;
 
             /* if op is direct reg need to store the register number in source reg */
             if (word_src->type == WT_DIRECT_REG)
@@ -273,7 +277,7 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
         if (success)
         {
             /* update the dest operand addressing type */
-            word1st->contents.instruction.dest_addressing = word_dest->type;
+            word_instruction->contents.instruction.dest_addressing = word_dest->type;
 
             /* if op is direct reg need to store the register number in source reg */
             if (word_dest->type == WT_DIRECT_REG)
@@ -282,15 +286,19 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
             }
         }
     }
-    printf("\n");
+
+    /* debug log newline after printed the entire command */
+    LOG("\n");
+
     if (success)
     {
         /* now that we've parsed everything, time to write it to memory */
         /* first word is the instruction word. always gets written */
-        write_code_word(word1st);
+        serialize_code_mc_word(word_instruction);
 
         /* there's a special case where we have both source and dest operands and they are both registers */
-        if ((word_src != NULL) && (word_src->type == WT_DIRECT_REG) && (word_dest != NULL && (word_dest->type == WT_DIRECT_REG)))
+        if ((word_src != NULL) && (word_src->type == WT_DIRECT_REG) &&
+            (word_dest != NULL && (word_dest->type == WT_DIRECT_REG)))
         {
             /* we store both registers in one word and so eliminate the word_src */
             word_dest->contents.direct_reg.src = word_src->contents.direct_reg.src;
@@ -300,18 +308,18 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
         /* only if there's a source operand, write it to the code section */
         if (word_src != NULL)
         {
-            write_code_word(word_src);
+            serialize_code_mc_word(word_src);
         }
 
         /* only if there's a dest operand, write it to the code section */
         if (word_dest != NULL)
         {
-            write_code_word(word_dest);
+            serialize_code_mc_word(word_dest);
         }
     }
 
     /* cleanup */
-    free_if_not_null(word1st);
+    free_if_not_null(word_instruction);
     free_if_not_null(word_src);
     free_if_not_null(word_dest);
 

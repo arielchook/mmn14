@@ -80,6 +80,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
 bool handle_data(char *dataStmt, int lineNumber)
 {
     int valCnt, intValue;
+    uint16_t twoc_intValue;
     SymbolBlock *sb;
     char *ptr;
     char *value;
@@ -111,17 +112,17 @@ bool handle_data(char *dataStmt, int lineNumber)
             }
 
             /* at this point we found a constant with that name. use its value */
-            intValue = sb->value;
+            twoc_intValue = sb->value;
         }
         else
         {
-            intValue = to_twos_complement(intValue);
+            twoc_intValue = to_twos_complement(intValue);
         }
 
         /* write the value to the data section */
-        if (!write_data_section(intValue))
+        if (!serialize_data_section(twoc_intValue))
         {
-            printf(ERR_DATA_SECTION_FULL, lineNumber);
+            printf(ERR_DATA_SECTION_FULL); /* TODO: should we exit here? */
             return false;
         }
     }
@@ -153,9 +154,10 @@ bool handle_string(char *stringStmt, int lineNumber)
     for (stringStmt++; stringStmt <= stringEnd; stringStmt++)
     {
         /* write the value to the data section */
-        if (!write_data_section(*stringStmt))
+        if (!serialize_data_section(*stringStmt))
         {
-            printf(ERR_DATA_SECTION_FULL, lineNumber);
+            /* FIXME: exit? */
+            printf(ERR_DATA_SECTION_FULL);
             return false;
         }
     }
@@ -175,7 +177,7 @@ bool handle_extern(char *externStmt, int lineNumber)
     }
     rtrim(externStmt);
 
-    /* make sure entry name is valid and that there are no duplicate symbols */
+    /* make sure extern name is valid and that there are no duplicate symbols */
     if (!is_valid_symbol_name(externStmt, lineNumber))
     {
         return false;
@@ -195,6 +197,7 @@ bool handle_entry(char *entryStmt, int lineNumber)
         return false;
     }
     rtrim(entryStmt);
+    /* TODO: make sure there is no entry and extern in the same file */
 
     /* we check the entry statement refers to a valid symbol only in 2nd pass since only then
     we have the entire symbol table filled up. until then we just add it to the list of entries */

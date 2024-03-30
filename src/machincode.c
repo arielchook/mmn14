@@ -11,12 +11,14 @@
  */
 mem_word dataSection[DATA_SECTION_SIZE];
 
-mem_word codeSection[DATA_SECTION_SIZE];
+mem_word codeSection[CODE_SECTION_SIZE];
 
-int IC = BASE_CODE_ADDRESS;
-int DC = BASE_DATA_ADDRESS;
+/* instruction counter */
+mem_word IC;
+/* TODO: do we start the memory array at 100 or always deduct 100 from IC? */
 
-unsigned mc_flags = 0;
+/* data counter */
+mem_word DC;
 
 uint16_t to_twos_complement(int num)
 {
@@ -31,43 +33,66 @@ uint16_t to_twos_complement(int num)
     return num;
 }
 
-/**
- * @brief Function to write a signed integer value in two's complement form using 12 bits into a 14-bit mem_word
- *
- * @param word
- * @param value
- * @return true
- * @return false
- */
-bool write_signed_value(mem_word *word, int value)
+bool serialize_data_section(mem_word value)
 {
-    if (word == NULL)
-        return false;
-
-    /* Write the value to the mem_word */
-    *word = to_twos_complement(value);
-
-    return true;
+    write_data_word(DC, to_twos_complement(value)); /* FIXME: do we need to run to_twos_complement again? */
+    return advanceDC(1);
 }
 
-bool write_data_section(mem_word value)
+int getDC() { return DC; }
+int getIC() { return IC; }
+bool advanceDC(int howmuch)
 {
-    if (DC >= DATA_SECTION_SIZE)
+    DC += howmuch;
+    if (DC > DATA_SECTION_SIZE)
     {
+        printf(ERR_DATA_SECTION_FULL);
         return false;
     }
-    write_signed_value(&dataSection[DC], value);
-    DC++;
     return true;
+}
+bool advanceIC(int howmuch)
+{
+    IC += howmuch;
+    if (IC > CODE_SECTION_SIZE)
+    {
+        printf(ERR_CODE_SECTION_FULL);
+        return false;
+    }
+    return true;
+}
+void write_code_word(int address, mem_word value)
+{
+    codeSection[address - BASE_CODE_ADDRESS] = value;
+}
+mem_word *code_word_at(int address)
+{
+    return &codeSection[address - BASE_CODE_ADDRESS];
+}
+mem_word read_code_word(int address)
+{
+    return codeSection[address - BASE_CODE_ADDRESS];
+}
+void write_data_word(int address, mem_word value)
+{
+    dataSection[address - BASE_DATA_ADDRESS] = value;
+}
+mem_word read_data_word(int address)
+{
+    return dataSection[address - BASE_DATA_ADDRESS];
+}
+mem_word *data_word_at(int address)
+{
+    return &dataSection[address - BASE_DATA_ADDRESS];
 }
 
 void dump_data_section()
 {
     int i = 0;
-    printf("\nData section:\n");
-    for (i = 0; i < DC; i++)
+    LOG("\nData section:\n");
+    for (i = BASE_DATA_ADDRESS; i < DC; i++)
     {
-        printf("%.4d: [%d]\n", i, dataSection[i]);
+        LOG("%.4d: [%d]\n", i, read_data_word(i));
     }
 }
 
@@ -122,90 +147,99 @@ void write_bits(mem_word *word, int start_bit, int num_bits, uint16_t value)
     *word |= (value & ((1 << num_bits) - 1)) << start_bit;
 }
 
-bool write_code_word(mc_word *word)
+bool serialize_code_mc_word(mc_word *word)
 {
+    mem_word *word_at_IC;
     if (word == NULL)
         return false;
+    word_at_IC = code_word_at(IC);
     switch (word->type)
     {
     case WT_INSTRUCTION:
-        write_bits(&codeSection[IC], 0, 2, word->contents.instruction.A_R_E);
-        write_bits(&codeSection[IC], 2, 2, word->contents.instruction.dest_addressing);
-        write_bits(&codeSection[IC], 4, 2, word->contents.instruction.src_addressing);
-        write_bits(&codeSection[IC], 6, 4, word->contents.instruction.opcode);
-        write_bits(&codeSection[IC], 10, 4, 0); /* unused. set to 0 */
+        write_bits(word_at_IC, 0, 2, word->contents.instruction.A_R_E);
+        write_bits(word_at_IC, 2, 2, word->contents.instruction.dest_addressing);
+        write_bits(word_at_IC, 4, 2, word->contents.instruction.src_addressing);
+        write_bits(word_at_IC, 6, 4, word->contents.instruction.opcode);
+        write_bits(word_at_IC, 10, 4, 0); /* unused. set to 0 */
         break;
     case WT_IMMEDIATE:
-        write_bits(&codeSection[IC], 0, 2, word->contents.immediate.A_R_E);
-        write_bits(&codeSection[IC], 2, 12, word->contents.immediate.value);
+        write_bits(word_at_IC, 0, 2, word->contents.immediate.A_R_E);
+        write_bits(word_at_IC, 2, 12, word->contents.immediate.value);
         break;
     case WT_DIRECT:
-        write_bits(&codeSection[IC], 0, 2, word->contents.direct.A_R_E);
-        write_bits(&codeSection[IC], 2, 12, word->contents.direct.address);
+        write_bits(word_at_IC, 0, 2, word->contents.direct.A_R_E);
+        write_bits(word_at_IC, 2, 12, word->contents.direct.address);
 
         /* if this word references an external symbol - add it to the list of externs */
         if (word->contents.direct.external_symbol != NULL)
         {
-            externs_append(word->contents.direct.external_symbol, IC);
+            externs_append(word->contents.direct.external_symbol, getIC());
         }
         break;
     case WT_FIXED_INDEX:
-        write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_1);
-        write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.array);
+        write_bits(word_at_IC, 0, 2, word->contents.fixed_index.A_R_E_1);
+        write_bits(word_at_IC, 2, 12, word->contents.fixed_index.array);
         /* if this word references an external symbol - add it to the list of externs */
         if (word->contents.fixed_index.external_symbol != NULL)
         {
-            externs_append(word->contents.fixed_index.external_symbol, IC);
+            externs_append(word->contents.fixed_index.external_symbol, getIC());
         }
-        printf("%.4u: ", IC);
-        print_binary(codeSection[IC]);
-        IC++;
-        write_bits(&codeSection[IC], 0, 2, word->contents.fixed_index.A_R_E_2);
-        write_bits(&codeSection[IC], 2, 12, word->contents.fixed_index.index);
+
+        LOG_AS_BINARY(getIC(), read_code_word(IC));
+
+        /* advance the instruction counter by 1, since a fixed index addressing takes 2 words */
+        advanceIC(1);
+        word_at_IC = code_word_at(IC);
+        write_bits(word_at_IC, 0, 2, word->contents.fixed_index.A_R_E_2);
+        write_bits(word_at_IC, 2, 12, word->contents.fixed_index.index);
         break;
     case WT_DIRECT_REG:
-        write_bits(&codeSection[IC], 0, 2, word->contents.direct_reg.A_R_E);
-        write_bits(&codeSection[IC], 2, 3, word->contents.direct_reg.dest);
-        write_bits(&codeSection[IC], 5, 3, word->contents.direct_reg.src);
-        write_bits(&codeSection[IC], 8, 6, 0);
+        write_bits(word_at_IC, 0, 2, word->contents.direct_reg.A_R_E);
+        write_bits(word_at_IC, 2, 3, word->contents.direct_reg.dest);
+        write_bits(word_at_IC, 5, 3, word->contents.direct_reg.src);
+        write_bits(word_at_IC, 8, 6, 0);
         break;
     default:
-        return false; /* TODO: say something */
+        return false;
     }
+
+    /* debug print the word in memory */
+    LOG_AS_BINARY(getIC(), read_code_word(IC));
+
     /* advance the instruction counter by 1 */
-    printf("%4u: ", IC);
-    print_binary(codeSection[IC]);
-    IC++;
+    advanceIC(1);
     return true;
 }
 
-void print_binary(mem_word word)
+void LOG_AS_BINARY(mem_word address, mem_word word)
 {
+#ifdef DEBUG
     int j;
+    LOG("%.4u: ", address);
+
     /* Print binary representation with spaces between each bit */
     for (j = MC_WORD_SIZE_BITS - 1; j >= 0; j--)
     {
-        printf("%2d ", (word >> j) & 1);
+        LOG("%2d ", (word >> j) & 1);
     }
-    printf("\t(%x)", word);
-    printf("\n");
+    LOG("\t(%x)\n", word);
+#endif
 }
 
 void dump_code_section()
 {
     int i;
-    printf("Code section:\n");
-    printf("\t");
+    LOG("Code section:\n\t");
+    LOG("\t");
     /* Iterate over each element in the array */
     for (i = MC_WORD_SIZE_BITS - 1; i >= 0; i--)
     {
-        printf("%2d ", i);
+        LOG("%2d ", i);
     }
-    printf("\n");
+    LOG("\n");
 
     for (i = BASE_CODE_ADDRESS; i < IC; i++)
     {
-        printf("%.4d:\t", i);
-        print_binary(codeSection[i]);
+        LOG_AS_BINARY(i, read_code_word(i));
     }
 }

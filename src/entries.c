@@ -61,7 +61,7 @@ void entries_dump(FILE *f)
     if (f == NULL)
     {
         f = stdout;
-        fprintf(f, "Entry symbols:\n");
+        LOG("Entry symbols:\n");
     }
 
     /* for each entry symbol, print its name and its address in the code/data section */

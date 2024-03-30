@@ -106,7 +106,7 @@ bool add_data_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
-    sb->value = DC;
+    sb->value = getDC();
     sb->type = ST_DATA;
     return add_symbol(sb);
 }
@@ -115,7 +115,7 @@ bool add_code_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = name;
-    sb->value = IC; /* IC is the current InstructionCounter */
+    sb->value = getIC(); /* IC is the current InstructionCounter */
     sb->type = ST_CODE;
     return add_symbol(sb);
 }
@@ -132,7 +132,7 @@ void _update_address(const KeyValuePair kvp)
     SymbolBlock *sb = (SymbolBlock *)kvp.value;
     if ((sb->type == ST_DATA) || (sb->type == ST_STRING))
     {
-        sb->value += IC;
+        sb->value += getIC();
     }
 }
 
@@ -144,40 +144,40 @@ void update_data_symbols_address()
 void _dump_symbol(const KeyValuePair kvp)
 {
     SymbolBlock *sb = (SymbolBlock *)kvp.value;
-    printf("%s -> ", kvp.key);
+    LOG("%s -> ", kvp.key);
 
     switch (sb->type)
     {
     case ST_DEFINE:
-        printf("(define) %d", sb->value);
+        LOG("(define) %d", sb->value);
         break;
     case ST_DATA:
-        printf("(data label) %d", sb->value);
+        LOG("(data label) %d", sb->value);
         break;
     case ST_CODE:
-        printf("(code label) %d", sb->value);
+        LOG("(code label) %d", sb->value);
         break;
     case ST_STRING:
-        printf("(string label) %d", sb->value);
+        LOG("(string label) %d", sb->value);
         break;
     case ST_EXTERN:
-        printf("(extern)");
+        LOG("(extern)");
         break;
     default:
-        printf("unkown symbol type (%d)", sb->type);
+        LOG("unkown symbol type (%d)", sb->type);
     }
-    printf("\n");
+    LOG("\n");
 }
 
 void dump_symbols_table()
 {
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
     {
-        printf("Symbol table is empty!\n");
+        LOG("Symbol table is empty!\n");
         return;
     }
 
-    printf("\nSymbols table:\n");
+    LOG("\nSymbols table:\n");
 
     hashtable_iterate(symbolsTable, _dump_symbol);
 }

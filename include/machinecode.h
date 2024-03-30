@@ -5,23 +5,20 @@
 #include <stdint.h>
 #include <mcwordtypes.h>
 
+/* each machine code word is 14 bits */
 #define MC_WORD_SIZE_BITS 14
+
+/* each memory word is 14 bits. however, we use 2 bits for A,R,E. this means we are left with
+only 12 bits to represent an address or a value. */
 #define MC_ADDR_SPACE_BITS (MC_WORD_SIZE_BITS - 2)
-#define MEMORY_SIZE (2 ^ MC_ADDR_SPACE_BITS)           /* 4096 */
-#define MIN_VALUE (-(2 ^ (MC_ADDR_SPACE_BITS - 1)))    /* -2048 */
-#define MAX_VALUE ((2 ^ (MC_ADDR_SPACE_BITS - 1)) - 1) /* 2047 */
+#define MEMORY_SIZE (1 << MC_ADDR_SPACE_BITS) /* 4096 */
 
-#define DATA_SECTION_SIZE MC_ADDR_SPACE_BITS
+#define MIN_VALUE (-(1 << (MC_ADDR_SPACE_BITS - 1)))    /* -2048 */
+#define MAX_VALUE ((1 << (MC_ADDR_SPACE_BITS - 1)) - 1) /* 2047 */
 
-/* instruction counter */
-extern int IC;
-/* TODO: do we start the memory array at 100 or always deduct 100 from IC? */
-
-/* data counter */
-extern int DC;
-
-#define BASE_CODE_ADDRESS 100
-#define BASE_DATA_ADDRESS 0
+/* max data section size and code section size (depends on our address space) */
+#define DATA_SECTION_SIZE MEMORY_SIZE
+#define CODE_SECTION_SIZE MEMORY_SIZE
 
 /**
  * @brief memory word contains 14 bits. we could define a struct with a variable with :14 but since 14 bits are 2 bytes
@@ -29,11 +26,26 @@ extern int DC;
  */
 typedef uint16_t mem_word;
 
+#define BASE_CODE_ADDRESS 100
+#define BASE_DATA_ADDRESS 0
+
+int getDC();
+int getIC();
+bool advanceIC(int howmuch);
+bool advanceDC(int howmuch);
+void write_code_word(int address, mem_word value);
+
+mem_word read_code_word(int address);
+
+void write_data_word(int address, mem_word value);
+
+mem_word read_data_word(int address);
+
 uint16_t to_twos_complement(int num);
 
-bool write_data_section(mem_word value);
+bool serialize_data_section(mem_word value);
 
-bool write_code_word(mc_word *word);
+bool serialize_code_mc_word(mc_word *word);
 
 /**
  * @brief prints out the contents of the data section
@@ -41,7 +53,7 @@ bool write_code_word(mc_word *word);
  */
 void dump_data_section();
 
-void print_binary(mem_word word);
+void LOG_AS_BINARY(mem_word address, mem_word word);
 
 void dump_code_section();
 

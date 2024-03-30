@@ -101,7 +101,10 @@ bool sp_processLine(char *line, int lineNumber)
 
     /* locate the cmd part in the instruction table */
     props = get_instruction_props(cmd);
-    printf("%s", cmd);
+
+    /* debug log the command */
+    LOG("%s", cmd);
+
     if (!parse_operands(pStart + strlen(cmd), lineNumber, props))
     {
         return false;

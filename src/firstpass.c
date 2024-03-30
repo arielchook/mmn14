@@ -89,7 +89,7 @@ bool fp_processLine(char *line, int lineNumber)
     /* .entry definition - just add it to the list of entries */
     /* in 2nd pass we will make sure all entries in the list relate to existing symbols */
     if (strcmp(cmd, directives[ENTRY]) == 0)
-    {
+    { /* TODO: can we have a label before .entry? */
         if (!handle_entry(pStart + strlen(directives[ENTRY]), lineNumber))
             return false;
         return true;
@@ -100,7 +100,7 @@ bool fp_processLine(char *line, int lineNumber)
     {
         if (!handle_extern(pStart + strlen(directives[EXTERN]), lineNumber))
             return false;
-        if ((hasLabel == 1) && !add_code_label(firstWord))
+        if ((hasLabel == 1) && !add_code_label(firstWord)) /* TODO: can we have a label before .extern? */
             return false;
         return true;
     }

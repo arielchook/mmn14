@@ -9,8 +9,6 @@
 
 enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, int lineNumber)
 {
-    char *array_name, *array_index;
-
     /* make sure it's not empty */
     ltrim(op);
     if (strlen(op) == 0)
@@ -45,8 +43,8 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
         op[strlen(op) - 1] = '\0';
 
         /* extract the array name and the array index */
-        if (((array_name = extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR)) == NULL) ||
-            ((array_index = extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR)) == NULL))
+        if ((extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR) == NULL) ||
+            (extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR) == NULL))
         {
             printf(ERR_MALFORMED_ARRAY, lineNumber);
             return WT_INVALID;
@@ -83,6 +81,7 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
 {
     bool success = true;
     enum addressing_type src_at, dest_at;
+    int mem_words_count = 0;
 
     /* get the first operand, second operand and 3rd operand if such */
     char *op_src = extractWordSeparator(stmt, 1, NULL, OP_SEPARATOR);
@@ -99,9 +98,8 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         success = false;
     }
 
-    /* advance IC by one word for the instruction */
-    /* TODO: implement increaseIC() in machinecode*/
-    IC += 1;
+    /* 1 word needs to be coutned for the instruction word */
+    mem_words_count += 1;
 
     if (success)
     {
@@ -126,10 +124,10 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
             case WT_IMMEDIATE:
             case WT_DIRECT:
             case WT_DIRECT_REG:
-                IC += 1;
+                mem_words_count += 1;
                 break;
             case WT_FIXED_INDEX:
-                IC += 2;
+                mem_words_count += 2;
                 break;
             default:
                 break;
@@ -149,22 +147,26 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
             {
             case WT_IMMEDIATE:
             case WT_DIRECT:
-                IC += 1;
+                mem_words_count += 1;
                 break;
             /* special case - if we have a src operand and it's direct reg we store both registers in the same word */
             case WT_DIRECT_REG:
                 if (src_at != WT_DIRECT_REG)
                 {
-                    IC += 1;
+                    mem_words_count += 1;
                 }
                 break;
             case WT_FIXED_INDEX:
-                IC += 2;
+                mem_words_count += 2;
                 break;
             default:
                 break;
             }
         }
     }
+
+    /* now that we counted how many words the command will hold in machine code we should advance the
+    instruction coutner accordingly */
+    advanceIC(mem_words_count);
     return success;
 }

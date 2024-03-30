@@ -155,6 +155,13 @@ char *strdup(const char *str)
 }
 
 /* FIXME: make sure this works properly */
+/**
+ * @brief log function used for debugging. this only works if DEBUG is defined. note that this could not be implemented
+ * using a macro (i.e. #define) since in ansi-c macros with variable number of params is not supported.
+ *
+ * @param format format string just like printf's
+ * @param ... variable number of params
+ */
 void LOG(const char *format, ...)
 {
 #ifdef DEBUG
@@ -163,6 +170,6 @@ void LOG(const char *format, ...)
     vfprintf(stdout, format, args);
     va_end(args);
 #else
-    printf("undefined\n");
+    /* do nothing */
 #endif
 }
