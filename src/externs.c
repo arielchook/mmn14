@@ -1,78 +1,54 @@
 #include <externs.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <utils.h>
 #include <symbols.h>
-#include <machinecode.h>
-#include <stdint.h>
+#include <linkedlist.h>
 
-/**
- * @brief
- *
- */
-struct ExternSymbol
-{
-    char *symbol;
-    uint16_t address;
-    struct ExternSymbol *next;
-};
-
-struct ExternSymbol *ext_head = NULL;
+LinkedList *externs = NULL;
 void externs_append(char *symbol, uint16_t address)
 {
-    struct ExternSymbol *current;
-    struct ExternSymbol *newNode = (struct ExternSymbol *)safe_malloc(sizeof(struct ExternSymbol));
-    newNode->symbol = strdup(symbol);
-    newNode->address = address;
-    newNode->next = NULL;
-    if (ext_head == NULL)
+    char *symbol_space_address;
+
+    if (externs == NULL)
     {
-        ext_head = newNode;
-        return;
+        externs = linked_list_create();
     }
-    current = ext_head;
-    while (current->next != NULL)
-    {
-        current = current->next;
-    }
-    current->next = newNode;
+    /* we only need this for printing to the .ext file at the end of secondpass
+    therefore each entry in the list is a string in the form of:
+    extern_name address */
+    symbol_space_address = safe_malloc(sizeof(symbol) + 6);
+    sprintf(symbol_space_address, "%s %.4u", symbol, address);
+    linked_list_append(externs, symbol_space_address);
 }
 
 void externs_delete_list()
 {
-    struct ExternSymbol *current = ext_head;
-    struct ExternSymbol *nextNode;
-    while (current != NULL)
+    if (externs != NULL)
     {
-        nextNode = current->next;
-        free(current->symbol); /* Free the dynamically allocated memory for the symbol */
-        free(current);
-        current = nextNode;
+        linked_list_delete(externs);
+        externs = NULL;
     }
-    ext_head = NULL; /* Update head to NULL */
+}
+
+void _dump_extern(void *data, FILE *f)
+{
+    char *symbol_and_address = (char *)data;
+    fprintf(f, "%s\n", symbol_and_address);
 }
 
 void externs_dump(FILE *f)
 {
-    struct ExternSymbol *current = ext_head;
-
     /* if no open file was provided, dump to stdout */
     if (f == NULL)
     {
         f = stdout;
-        LOG("Extern symbols:\n");
+        LOG("External symbols:\n");
     }
-
-    /* for each extrnal symbol, print its name and the address of the operand that references it */
-    while (current != NULL)
-    {
-        fprintf(f, "%s %u\n", current->symbol, current->address);
-        current = current->next;
-    }
+    linked_list_traverse_to_file(externs, _dump_extern, f);
 }
 
 bool externs_is_empty()
 {
-    return ext_head == NULL;
+    return externs == NULL;
 }

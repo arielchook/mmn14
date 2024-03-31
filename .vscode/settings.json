@@ -19,7 +19,10 @@
     "utility": "c",
     "firstpass_parsers.h": "c",
     "utils.h": "c",
-    "machinecode.h": "c"
+    "machinecode.h": "c",
+    "entries.h": "c",
+    "string": "c",
+    "string_view": "c"
   },
   "C_Cpp.default.compilerPath": "/usr/bin/g++",
   "C_Cpp.loggingLevel": "Debug"

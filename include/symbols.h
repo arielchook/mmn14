@@ -5,7 +5,12 @@
 #include <hashtable.h>
 #include <utils.h>
 
-#define MAX_SYMBOL_LEN 31
+#define MAX_SYMBOL_LEN 31 /*!< maximum length for a symbol name */
+
+/**
+ * @brief enum for the symbols supported in our symbol table
+ *
+ */
 enum SymbolType
 {
     ST_DEFINE,
@@ -24,18 +29,18 @@ typedef struct
 {
     char *name;
     uint16_t value;
-    enum SymbolType type; /* the type of symbol. we support .define, .data and .string */
+    enum SymbolType type; /*<! the type of this entry symbol  */
 } SymbolBlock;
 
 bool add_define(char *name, int value);
 bool add_string(char *name, char *value);
 bool add_extern(char *name);
 
-/* Finds a symbol in the macro hashtable and returns it */
-SymbolBlock *find_symbol(char *name);
-
 bool add_data_label(char *name);
 bool add_code_label(char *name);
+
+/* Finds a symbol in the macro hashtable and returns it */
+SymbolBlock *find_symbol(char *name);
 
 /* Frees all memory allocated for the macro hashtable */
 void free_symbol_table();

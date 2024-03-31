@@ -3,47 +3,16 @@
 #include <string.h>
 #include <precomp.h>
 #include <utils.h>
-
-/* this is the macro hashtable. it maps a macro name to an array of lines of code */
-static Hashtable *macroTable = NULL;
-
-bool add_macro(MacroBlock *m)
-{
-    MacroBlock *old;
-
-    if (macroTable == NULL)
-    {
-        macroTable = hashtable_create();
-    }
-    old = hashtable_insert(macroTable, m->name, m);
-    return (old == NULL);
-}
-
-MacroBlock *find_macro(char *name)
-{
-    /* if no macroTable it means no macros */
-    if (macroTable == NULL)
-    {
-        return NULL;
-    }
-    return hashtable_get(macroTable, name);
-}
-
-void free_macro_table()
-{
-    if (macroTable != NULL)
-        hashtable_destroy(macroTable);
-}
+#include <macros.h>
 
 /* TODO: check conflict between marco names and symbols (unsure if needed) */
-/* TODO: change it to "if.. return false;" */
 bool precompile(FILE *input, FILE *output)
 {
     bool success = true;
     bool inMacro = false;
     MacroBlock *m;
     char line[MAX_LINE_LENGTH];
-    int lineNumber = 1, i;
+    int lineNumber = 1;
     char *macroName, *firstWord;
     int num_words;
 
@@ -94,12 +63,9 @@ bool precompile(FILE *input, FILE *output)
                 inMacro = true;
                 m = safe_malloc(sizeof(MacroBlock));
                 m->name = macroName;
-                /* m->lines is an array of strings containing the macro lines */
-                m->lines = safe_malloc(MAX_LINE_LENGTH * MAX_LINES_IN_MACRO);
-                m->num_lines = 0;
             }
-            /* check if it's an endmcr command */
         }
+        /* check if it's an endmcr command */
         else if (strcmp(firstWord, directives[ENDMCR]) == 0)
         {
             /* make sure it's the only command in the line */
@@ -126,28 +92,20 @@ bool precompile(FILE *input, FILE *output)
             /* are we inside a macro definition? if so, just accumulate the macro lines */
             if (inMacro)
             {
-                m->lines[m->num_lines] = strdup(line);
-                m->num_lines++;
-
-                /* not inside a macro definition. check if we are calling a macro */
+                macro_add_line(m, line);
             }
+            /* not inside a macro definition. check if we are calling a macro */
             else
             {
                 /* calling a macro can only be done with one word in the line */
                 /* search for that macro */
                 if (num_words == 1 && (m = find_macro(firstWord)) != NULL)
                 {
-                    /* write the macro lines to output */
-                    for (i = 0; i < m->num_lines; i++)
-                    {
-                        fputs(m->lines[i], output);
-                        fputs("\n", output);
-                    }
+                    macro_write_lines(m, output);
                 }
                 else
                 {
-                    fputs(line, output);
-                    fputs("\n", output);
+                    fprintf(output, "%s\n", line);
                 }
             }
         }

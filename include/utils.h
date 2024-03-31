@@ -14,21 +14,14 @@
 /* TODO: test with line at maximum length */
 #define MAX_LINE_LENGTH 81
 
-/* parsing constants */
-
-#define LABEL_SUFFIX ":"
-
-/* Operands separator character */
-#define OP_SEPARATOR ','
-
-/* Imeediate values must start with this prefix */
-#define IMMEDIATE_VALUE_PREFIX "#"
-
-/* Array subscription character */
-#define ARRAY_OPEN_CHAR '['
-/* Array suffix */
-#define ARRAY_CLOSE_CHAR "]"
-#define STR_ENCLOSURE "\""
+/** parsing constants */
+#define LABEL_SUFFIX ":"           /*!< label definition suffix character */
+#define EQUAL_SEPARATOR '='        /*!< separator in name=value */
+#define OP_SEPARATOR ','           /*!< operands separator character */
+#define IMMEDIATE_VALUE_PREFIX "#" /*!< Immediate values must start with this prefix */
+#define ARRAY_OPEN_CHAR '['        /*!< Array subscription character */
+#define ARRAY_CLOSE_CHAR "]"       /*!< Array suffix */
+#define STR_ENCLOSURE "\""         /*!< strings enclosure characters */
 
 void *safe_malloc(int size);
 #define free_if_not_null(x) \
@@ -51,6 +44,12 @@ char *extractWord(char *str, int n, char **pStart);
 char *extractWordSeparator(char *str, int n, char **pStart, char separator);
 char *strdup(const char *str);
 
+/**
+ * @brief debug logging function. prints to standard output only if the DEBUG symbol is defined
+ *
+ * @param format
+ * @param ...
+ */
 void LOG(const char *format, ...);
 
 #endif

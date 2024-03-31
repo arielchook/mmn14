@@ -4,76 +4,46 @@
 #include <string.h>
 #include <utils.h>
 #include <symbols.h>
-#include <machinecode.h>
-#include <stdint.h>
+#include <linkedlist.h>
 
-/**
- * @brief
- *
- */
-struct EntrySymbol
-{
-    char *symbol;
-    struct EntrySymbol *next;
-};
-
-struct EntrySymbol *ent_head = NULL;
+LinkedList *entries = NULL;
 void entries_append(char *symbol)
 {
-    struct EntrySymbol *current;
-    struct EntrySymbol *newNode = (struct EntrySymbol *)safe_malloc(sizeof(struct EntrySymbol));
-    newNode->symbol = strdup(symbol);
-
-    newNode->next = NULL;
-    if (ent_head == NULL)
+    if (entries == NULL)
     {
-        ent_head = newNode;
-        return;
+        entries = linked_list_create();
     }
-    current = ent_head;
-    while (current->next != NULL)
-    {
-        current = current->next;
-    }
-    current->next = newNode;
+    linked_list_append(entries, strdup(symbol));
 }
 
 void entries_delete_list()
 {
-    struct EntrySymbol *current = ent_head;
-    struct EntrySymbol *nextNode;
-    while (current != NULL)
+    if (entries != NULL)
     {
-        nextNode = current->next;
-        free(current->symbol); /* Free the dynamically allocated memory for the symbol */
-        free(current);
-        current = nextNode;
+        linked_list_delete(entries);
+        entries = NULL;
     }
-    ent_head = NULL; /* Update head to NULL */
+}
+
+void _dump_entry(void *data, FILE *f)
+{
+    char *symbol = (char *)data;
+    SymbolBlock *sb = find_symbol(symbol);
+    fprintf(f, "%s %u\n", symbol, sb->value);
 }
 
 void entries_dump(FILE *f)
 {
-    struct EntrySymbol *current = ent_head;
-    SymbolBlock *sb;
-
     /* if no open file was provided, dump to stdout */
     if (f == NULL)
     {
         f = stdout;
         LOG("Entry symbols:\n");
     }
-
-    /* for each entry symbol, print its name and its address in the code/data section */
-    while (current != NULL)
-    {
-        sb = find_symbol(current->symbol);
-        fprintf(f, "%s %u\n", current->symbol, sb->value);
-        current = current->next;
-    }
+    linked_list_traverse_to_file(entries, _dump_entry, f);
 }
 
 bool entries_is_empty()
 {
-    return ent_head == NULL;
+    return entries == NULL;
 }

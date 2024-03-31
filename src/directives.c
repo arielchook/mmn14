@@ -29,7 +29,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
     rtrim(symbolStmt);
 
     /* is it in the format name=val ? */
-    if ((defName = extractWordSeparator(symbolStmt, 1, NULL, '=')) == NULL)
+    if ((defName = extractWordSeparator(symbolStmt, 1, NULL, EQUAL_SEPARATOR)) == NULL)
     {
         printf(ERR_MISSING_EQUAL, lineNumber);
         return false;
@@ -50,7 +50,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
     }
 
     /* look for the value in the name=val */
-    if ((defVal = extractWordSeparator(symbolStmt, 2, NULL, '=')) == NULL)
+    if ((defVal = extractWordSeparator(symbolStmt, 2, NULL, EQUAL_SEPARATOR)) == NULL)
     {
         printf(ERR_MISSING_DEFINE_VALUE, lineNumber);
         return false;
@@ -197,7 +197,6 @@ bool handle_entry(char *entryStmt, int lineNumber)
         return false;
     }
     rtrim(entryStmt);
-    /* TODO: make sure there is no entry and extern in the same file */
 
     /* we check the entry statement refers to a valid symbol only in 2nd pass since only then
     we have the entire symbol table filled up. until then we just add it to the list of entries */

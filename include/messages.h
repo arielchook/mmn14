@@ -1,20 +1,16 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#define ERR_USAGE "Usage: %s <file1> [<file2> .. <fileN>]\nWhere file1..fileN are .as files\n"
-#define ERR_FILE_CANT_BE_READ "%s: file could not be opened for reading\n"
-#define ERR_FILE_CANT_BE_WRITTEN "%s: cannot open file for writing\n"
-#define ERR_MEM_ALLOC_FAILED "Memory allocation failed.\n"
-
-/* Error messages for the pre-processing step */
+/* Error messages for the pre-compile step */
 #define PP_ERR_NO_NESTED_MACROS "Precomp:%d:Nested macros are not allowed\n"
 #define PP_ERR_EXTRA_CHARS "Precomp:%d:Extraneous characters after macro name\n"
 #define PP_ERR_INVALID_MACRO_NAME "Precomp:%d:invalid macro name specified\n"
 #define PP_ERR_RESERVED_WORD "Precomp:%d:Cannot use reserved word as a macro name(%s)\n"
 #define PP_ERR_EXTRA_ENDMCR "Precomp:%d:Extraneous characters after endmcr command\n"
 #define PP_ERR_ENDMCR_MISLOCATION "Precomp:%d:endmcr encountered but not inside macro definition\n"
+#define ERR_CLOSING_FILE "Precomp:Error closing input file (%s%s)\n"
 
-/* Error messages for first pass step */
+/** Error messages for first pass step */
 #define ERR_MISSING_DEFINE "FirstPass:%d: Invalid .define statement. Expecting: .define name=val\n"
 #define ERR_MISSING_EQUAL "FirstPass:%d: Invalid .define statement. Missing equal (=) sign\n"
 #define ERR_MISSING_DEFINE_NAME "FirstPass:%d: Missing constant name in .define statement. Expecting: .define name=val\n"
@@ -25,13 +21,8 @@
 #define ERR_DEFINE_VALUE_NOT_INT "FirstPass:%d: Value specified for constant must be an integer\n"
 #define ERR_LABEL_WITH_NO_CMD "FirstPass:%d: Label specified with no command following it\n"
 #define ERR_MISSING_VALUE "FirstPass:%d: Missing value in (%s) definition\n"
-#define ERR_CANT_FIND_DEFINE "SecondPass:%d: Cannot find a constant with the name %s\n"
-#define ERR_DATA_SECTION_FULL "Critical error - data section is full. Cannot continue.\n"
-#define ERR_CODE_SECTION_FULL "Critical error - code section is full. Cannot continue.\n"
 #define ERR_MISSING_QUOTES "FirstPass:%d: .string value must be enclosed in quotes (\"\")\n"
-#define ERR_CLOSING_FILE "Precomp:Error closing input file (%s%s)\n"
-#define ERR_FSEEK_FILE "SecondPass:Error seeking back to the beginning of input file (%s%s)\n"
-#define ERR_FOUND_IN_PRECOMP "Erros found in precompilation. Cannot continue...\n"
+#define ERR_FOUND_IN_PRECOMP "Errors found in precompilation. Cannot continue...\n"
 #define ERR_FOUND_IN_FIRSTPASS "Errors found in first-pass. Cannot continue...\n"
 #define ERR_FOUND_IN_SECONDPASS "Errors found in second-pass. Cannot continue...\n"
 #define ERR_UNKNOWN_CMD "FirstPass:%d: Unknown command (%s)\n"
@@ -44,6 +35,10 @@
 #define ERR_DEFINE_DISALLOWED "FirstPass:%d: Cannot use constant (.define) here. Direct addressing expected\n"
 #define ERR_MALFORMED_ARRAY "FirstPass:%d: Malformed array specification. Expected name[index]\n"
 #define ERR_ARR_IND_NEGATIVE "FirstPass:%d: Array index cannot be negative\n"
+
+/** Error messages for second pass step */
+#define ERR_FSEEK_FILE "SecondPass:Error seeking back to the beginning of input file (%s%s)\n"
+#define ERR_CANT_FIND_DEFINE "SecondPass:%d: Cannot find a constant with the name %s\n"
 #define ERR_ARRAY_NOT_FOUND "SecondPass:%d: Array name could not be found(%s)\n"
 #define ERR_INT_OUT_OF_BOUNDS "SecondPass:%d: Specified integer value is out of bounds (%s). Should be between %d and %d\n"
 #define WARN_LABEL_UNEXPCTED "FirstPass:%d: Misplaced label warning. Label is ignored in .entry and .extern definitons\n"
@@ -52,6 +47,8 @@
 #define ERR_ENTRY_FOR_DEFINE_INVALID "SecondPass:%d: .entry statement cannot refer to a .define constant (%s)\n"
 #define ERR_ENTRY_EXTERN_SAME_NAME "SecondPass:%d: .entry statement cannot refer to a symbol that was defined as .extern (%s)\n"
 #define ERR_DEFINE_NO_HASHTAG "SecondPass:%d: Cannot use constant (.define) here. Did you mean #%s?\n"
+
+/** General messages */
 #define MSG_PROCESSING_FILE "Processing %s:\n"
 #define MSG_PRECOMPILATION "Precompilation step %s%s->%s%s:\n"
 #define MSG_FIRST_PASS "First pass %s:\n"
@@ -61,3 +58,11 @@
 #define MSG_OBJECT_FILE "Generating object file %s:\n"
 #define MSG_DONE "Done.\n"
 #endif
+
+/** General error messages */
+#define ERR_DATA_SECTION_FULL "Critical error - data section is full. Cannot continue.\n"
+#define ERR_CODE_SECTION_FULL "Critical error - code section is full. Cannot continue.\n"
+#define ERR_USAGE "Usage: %s <file1> [<file2> .. <fileN>]\nWhere file1..fileN are .as files\n"
+#define ERR_FILE_CANT_BE_READ "%s: file could not be opened for reading\n"
+#define ERR_FILE_CANT_BE_WRITTEN "%s: cannot open file for writing\n"
+#define ERR_MEM_ALLOC_FAILED "Memory allocation failed.\n"

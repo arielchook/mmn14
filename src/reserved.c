@@ -1,8 +1,17 @@
 #include <reserved.h>
 #include <string.h>
 
+/**
+ * @brief constant array of directive keywords supported by the assembler
+ *
+ */
 const char *directives[] = {"mcr", "endmcr", ".define", ";", ".data", ".string", ".entry", ".extern"};
 
+/**
+ * @brief constant array of instruction_props which holds for each supported command the number of operands required,
+ * the opcode, the addressing types supported for source and dest operands.
+ *
+ */
 const instruction_props instruction_table[] = {
     {"mov", 0, 2, AR_ALL, (AR_DRCT | AR_FXIND | AR_DRREG)},
     {"cmp", 1, 2, AR_ALL, AR_ALL},

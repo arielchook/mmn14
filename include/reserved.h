@@ -5,7 +5,10 @@
 #include <utils.h>
 #include <stdint.h>
 
-/* enum and a static array containing all directives */
+/**
+ * @brief enum and a static array containing all supported directives
+ *
+ */
 enum
 {
     MCR = 0,
@@ -35,13 +38,13 @@ typedef struct
     uint8_t op_dest_addr_rules; /* Addressing rules for dest operand */
 } instruction_props;
 
-/* bit mask for the allowed addressing rules in each command/instruction */
-#define AR_IMDT 0x1  /* Immediate */
-#define AR_DRCT 0x2  /* Direct*/
-#define AR_FXIND 0x4 /* Fixed index*/
-#define AR_DRREG 0x8 /* Direct register */
-#define AR_ALL (AR_IMDT | AR_DRCT | AR_FXIND | AR_DRREG)
-#define AR_NA 0
+/** bit mask for the allowed addressing types in each command/instruction */
+#define AR_IMDT 0x1                                      /*!< Immediate */
+#define AR_DRCT 0x2                                      /*!< Direct*/
+#define AR_FXIND 0x4                                     /*!< Fixed index*/
+#define AR_DRREG 0x8                                     /*!< Direct register */
+#define AR_ALL (AR_IMDT | AR_DRCT | AR_FXIND | AR_DRREG) /*!< All addressing types supported */
+#define AR_NA 0                                          /*!< None of the addressing types allwoed */
 
 /**
  * @brief Get the properties for a given command
