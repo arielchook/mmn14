@@ -44,6 +44,7 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
         printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
         return false;
     }
+
     ltrim(cmd);
     rtrim(cmd);
 
@@ -121,6 +122,9 @@ bool fp_process_line(char *line, int lineNumber)
     char *firstWord = NULL, *cmd = NULL;
     char *pStart;
 
+    /* debug print the line we process */
+    LOG("%d:%s\n", lineNumber, line);
+
     /* check whether it's a comment line and skip it if so */
     if (startsWith(line, directives[COMMENT]))
         return true;
@@ -130,11 +134,13 @@ bool fp_process_line(char *line, int lineNumber)
 
     /* examine the first word in the line */
     firstWord = extractWord(line, 1, &pStart);
+
     /* handle label definition - first word ends with : */
     if (endsWith(firstWord, LABEL_SUFFIX))
     {
         hasLabel = 1;
     }
+
     /* get the 2nd word if there's a label definition or the 1st word if not */
     cmd = extractWord(line, (hasLabel + 1), &pStart);
 
@@ -160,6 +166,7 @@ bool firstPass(FILE *input)
         /* note that we don't have to remove all whitespaces in the beginning and end of the line
         since it was already done in the Precompile step. Also empty lines were skipped in precompile */
         rtrim(line);
+
         /* process line by line. if one line fails processing we keep going */
         success &= fp_process_line(line, lineNumber);
     }

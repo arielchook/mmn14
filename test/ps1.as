@@ -26,6 +26,9 @@ L1: inc L3
 END: hlt
 .define len = 4
 STR: .string "abcdef"
+jmp L1
 LIST: .data 6, -9, len
-K: .data 22
 .extern L3 
+jmp L1
+K: .data 22
+jmp L1

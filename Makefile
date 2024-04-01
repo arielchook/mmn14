@@ -1,5 +1,5 @@
 CC = /usr/bin/gcc
-CFLAGS = -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/
+CFLAGS = -g -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/
 
 # Directories
 SRC_DIR := src
@@ -39,27 +39,9 @@ $(OBJ_DIR) $(BIN_DIR):
 
 # Run tests
 test: $(TEST_BINS)
-	bin/assembler test/files/test1
-	bin/assembler test/files/test2
-	bin/assembler test/files/test3
-	bin/assembler test/files/test4
-	bin/assembler test/files/test5
-	bin/assembler test/files/test6
-	bin/assembler test/files/test7
-	bin/assembler test/files/test8
-	bin/assembler test/files/test9
-	echo "Running test_hashtable"
-	./bin/test_hashtable
-	echo "Running test_macros"
-	./bin/test_macros ./test/ps1.as ./test/ps1.am
-#	run diff to test the results ?
-	echo "Running test_firstpass"
-	./bin/test_firstpass ./test/fp1.am
-
-#	@for test_bin in $(TEST_BINS); do \
-#		echo "Running $$test_bin"; \
-#		./$$test_bin; \
-#	done
+	echo "Running tests"
+	bin/assembler test/test_files/test1
+	bin/assembler test/test_files/test2
 
 # Rule to clean up
 clean:

@@ -62,6 +62,12 @@ bool precompile(FILE *input, FILE *output)
                 printf(PP_ERR_RESERVED_WORD, lineNumber, line);
                 success = false;
             }
+            /* make sure this macro doesn't already exists */
+            if (success && find_macro(macroName))
+            {
+                printf(PP_ERR_DUPLICATE_MACRO, lineNumber, macroName);
+                success = false;
+            }
             /* if all good we have mcr <macro_name>  */
             if (success)
             {

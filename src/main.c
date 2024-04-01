@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     }
 
     /* We process each file given in arguments independently */
-    for (fileno = 0; fileno < argc; fileno++)
+    for (fileno = 1; fileno < argc; fileno++)
     {
         processFile(argv[fileno]);
         cleanup_mc_state();

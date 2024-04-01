@@ -2,3 +2,7 @@ obj/*
 bin/*
 test/*.am
 test/test.c
+*.ob
+*.am
+*.ent
+*.ext

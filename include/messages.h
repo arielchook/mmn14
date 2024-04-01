@@ -9,6 +9,7 @@
 #define PP_ERR_EXTRA_ENDMCR "Precomp:%d:Extraneous characters after endmcr command\n"
 #define PP_ERR_ENDMCR_MISLOCATION "Precomp:%d:endmcr encountered but not inside macro definition\n"
 #define PP_ERR_EXTRA_MACRO "Precomp:%d:Extraneous characters when calling a macro. Should only be the macro name in the line\n"
+#define PP_ERR_DUPLICATE_MACRO "Precomp:%d:Duplicate macro redefinition(%s) \n"
 #define ERR_CLOSING_FILE "Precomp:Error closing input file (%s%s)\n"
 
 /** Error messages for first pass step */
@@ -53,13 +54,13 @@
 #define ERR_DEFINE_NO_HASHTAG "SecondPass:%d: Cannot use constant (.define) here. Did you mean #%s?\n"
 
 /** General messages */
-#define MSG_PROCESSING_FILE "Processing %s:\n"
-#define MSG_PRECOMPILATION "Precompilation step %s%s->%s%s:\n"
-#define MSG_FIRST_PASS "First pass %s:\n"
-#define MSG_SECOND_PASS "Second pass %s:\n"
-#define MSG_ENTRIES_FILE "Generating entries file %s:\n"
-#define MSG_EXTERNS_FILE "Generating extern file %s:\n"
-#define MSG_OBJECT_FILE "Generating object file %s:\n"
+#define MSG_PROCESSING_FILE "Processing %s.\n"
+#define MSG_PRECOMPILATION "Precompilation step %s%s -> %s%s.\n"
+#define MSG_FIRST_PASS "First pass %s.\n"
+#define MSG_SECOND_PASS "Second pass %s.\n"
+#define MSG_ENTRIES_FILE "Generating entries file %s.\n"
+#define MSG_EXTERNS_FILE "Generating extern file %s.\n"
+#define MSG_OBJECT_FILE "Generating object file %s.\n"
 #define MSG_DONE "Done.\n"
 #endif
 
