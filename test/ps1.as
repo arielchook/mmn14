@@ -1,4 +1,4 @@
-; file ps.as
+; check that duplicates entries are not allowed
 .entry LIST
 .extern W
 .define sz = 2  
@@ -11,7 +11,7 @@ avi
 mcr papa
 endmcr
 LOOP: jmp W
- prn #-5
+        prn     #-5         
  mov STR[5], STR[2]
  sub r1, r4
  cmp K, #sz

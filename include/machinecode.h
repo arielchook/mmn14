@@ -26,10 +26,16 @@ only 12 bits to represent an address or a value. */
  */
 typedef uint16_t mem_word;
 
-#define BASE_CODE_ADDRESS 100
+#define BASE_CODE_ADDRESS 100 /*!< code section starts at this address */
 #define BASE_DATA_ADDRESS 0
 
+/**
+ * @brief return the data counter
+ *
+ * @return int data counter
+ */
 int getDC();
+
 int getIC();
 bool advanceIC(int howmuch);
 bool advanceDC(int howmuch);

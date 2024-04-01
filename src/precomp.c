@@ -19,7 +19,6 @@ bool precompile(FILE *input, FILE *output)
     /* get the next line from input file, until we reach EOF  */
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
-
         /* remove leading and trailing whitespaces*/
         ltrim(line);
         /* skip empty lines */

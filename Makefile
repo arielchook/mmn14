@@ -39,6 +39,15 @@ $(OBJ_DIR) $(BIN_DIR):
 
 # Run tests
 test: $(TEST_BINS)
+	bin/assembler test/files/test1
+	bin/assembler test/files/test2
+	bin/assembler test/files/test3
+	bin/assembler test/files/test4
+	bin/assembler test/files/test5
+	bin/assembler test/files/test6
+	bin/assembler test/files/test7
+	bin/assembler test/files/test8
+	bin/assembler test/files/test9
 	echo "Running test_hashtable"
 	./bin/test_hashtable
 	echo "Running test_macros"

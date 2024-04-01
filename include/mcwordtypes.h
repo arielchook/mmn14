@@ -52,7 +52,6 @@ typedef union
     } immediate;
 
     /* direct addressing memory word */
-
     struct
     {
         uint8_t A_R_E;    /* 2-bit ARE */

@@ -98,7 +98,7 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         success = false;
     }
 
-    /* 1 word needs to be coutned for the instruction word */
+    /* 1 word needs to be counted for the instruction word */
     mem_words_count += 1;
 
     if (success)
