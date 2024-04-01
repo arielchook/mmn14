@@ -8,11 +8,13 @@
 #define PP_ERR_RESERVED_WORD "Precomp:%d:Cannot use reserved word as a macro name(%s)\n"
 #define PP_ERR_EXTRA_ENDMCR "Precomp:%d:Extraneous characters after endmcr command\n"
 #define PP_ERR_ENDMCR_MISLOCATION "Precomp:%d:endmcr encountered but not inside macro definition\n"
+#define PP_ERR_EXTRA_MACRO "Precomp:%d:Extraneous characters when calling a macro. Should only be the macro name in the line\n"
 #define ERR_CLOSING_FILE "Precomp:Error closing input file (%s%s)\n"
 
 /** Error messages for first pass step */
 #define ERR_MISSING_DEFINE "FirstPass:%d: Invalid .define statement. Expecting: .define name=val\n"
 #define ERR_MISSING_EQUAL "FirstPass:%d: Invalid .define statement. Missing equal (=) sign\n"
+#define ERR_DEFINE_WITH_LABEL "FirstPass:%d: .define statement cannot have a label.\n"
 #define ERR_MISSING_DEFINE_NAME "FirstPass:%d: Missing constant name in .define statement. Expecting: .define name=val\n"
 #define ERR_DUP_SYMBOL "FirstPass:%d: Duplicate symbol definition (%s)\n"
 #define ERR_RESERVED_WORD "FirstPass:%d: Cannot use a reserved word for symbol name\n"
@@ -21,6 +23,8 @@
 #define ERR_DEFINE_VALUE_NOT_INT "FirstPass:%d: Value specified for constant must be an integer\n"
 #define ERR_LABEL_WITH_NO_CMD "FirstPass:%d: Label specified with no command following it\n"
 #define ERR_MISSING_VALUE "FirstPass:%d: Missing value in (%s) definition\n"
+#define ERR_LABEL_BEFORE_ENTRY "FirstPass:%d: .entry statement cannot have a label\n"
+#define ERR_LABEL_BEFORE_EXTERN "FirstPass:%d: .extern statement cannot have a label\n"
 #define ERR_MISSING_QUOTES "FirstPass:%d: .string value must be enclosed in quotes (\"\")\n"
 #define ERR_FOUND_IN_PRECOMP "Errors found in precompilation. Cannot continue...\n"
 #define ERR_FOUND_IN_FIRSTPASS "Errors found in first-pass. Cannot continue...\n"

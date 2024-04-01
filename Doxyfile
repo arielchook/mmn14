@@ -1,0 +1,26 @@
+# Doxyfile
+
+# Set source code directory
+
+INPUT = include src
+
+# Set recursive mode to YES to search for all source files in subdirectories
+
+RECURSIVE = YES
+
+# Set output directory for documentation
+
+OUTPUT_DIRECTORY = doc
+
+# Set output format to PDF
+
+GENERATE_PDF = YES
+
+# Set PDF settings
+
+USE_PDFLATEX = YES
+PDF_HYPERLINKS = YES
+LATEX_BATCHMODE = YES
+GENERATE_LATEX = YES
+LATEX_CMD_NAME = pdflatex
+LATEX_HIDE_INDICES = YES

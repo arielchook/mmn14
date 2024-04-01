@@ -17,6 +17,8 @@ void *safe_malloc(int size)
 void ltrim(char *str)
 {
     int i = 0;
+    if (str == NULL)
+        return;
     while (isspace(str[i]))
     {
         i++;
@@ -28,6 +30,9 @@ void ltrim(char *str)
 void rtrim(char *str)
 {
     int i = strlen(str) - 1;
+    if (str == NULL)
+        return;
+
     while (i >= 0 && isspace(str[i]))
     {
         i--;
@@ -51,26 +56,6 @@ int endsWith(const char *str, const char *suffix)
         return 0;
     }
     return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
-}
-
-int numWords(const char *str)
-{
-    int count = 0;
-    int inWord = 0;
-    while (*str)
-    {
-        if (isspace(*str))
-        {
-            inWord = 0;
-        }
-        else if (!inWord)
-        {
-            inWord = 1;
-            count++;
-        }
-        str++;
-    }
-    return count;
 }
 
 /* Function to extract the n-th word from a string

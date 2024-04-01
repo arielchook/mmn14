@@ -36,8 +36,7 @@ void rtrim(char *str);
 int startsWith(const char *str, const char *prefix);
 /* Check if a string ends with a given suffix */
 int endsWith(const char *str, const char *suffix);
-/* Returns the number of words in a line*/
-int numWords(const char *str);
+
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */
 char *extractWord(char *str, int n, char **pStart);

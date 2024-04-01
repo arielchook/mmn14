@@ -6,22 +6,22 @@
 #include <symbols.h>
 #include <linkedlist.h>
 
-LinkedList *entries = NULL;
+LinkedList *entries_list = NULL;
 void entries_append(char *symbol)
 {
-    if (entries == NULL)
+    if (entries_list == NULL)
     {
-        entries = linked_list_create();
+        entries_list = linked_list_create();
     }
-    linked_list_append(entries, strdup(symbol));
+    linked_list_append(entries_list, strdup(symbol));
 }
 
 void entries_delete_list()
 {
-    if (entries != NULL)
+    if (entries_list != NULL)
     {
-        linked_list_delete(entries);
-        entries = NULL;
+        linked_list_delete(entries_list, true);
+        entries_list = NULL;
     }
 }
 
@@ -40,10 +40,10 @@ void entries_dump(FILE *f)
         f = stdout;
         LOG("Entry symbols:\n");
     }
-    linked_list_traverse_to_file(entries, _dump_entry, f);
+    linked_list_traverse_to_file(entries_list, _dump_entry, f);
 }
 
 bool entries_is_empty()
 {
-    return entries == NULL;
+    return entries_list == NULL;
 }

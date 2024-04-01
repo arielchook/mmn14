@@ -34,7 +34,7 @@ void linked_list_append(LinkedList *list, void *data)
 }
 
 /* Function to delete the entire linked list */
-void linked_list_delete(LinkedList *list)
+void linked_list_delete(LinkedList *list, bool free_data)
 {
     Node *current = list->head;
     Node *next;
@@ -42,6 +42,8 @@ void linked_list_delete(LinkedList *list)
     while (current != NULL)
     {
         next = current->next;
+        if (free_data)
+            free_if_not_null(current->data);
         free(current);
         current = next;
     }

@@ -44,26 +44,9 @@ bool is_valid_entry(char *entryStmt, int lineNumber)
     return true;
 }
 
-bool sp_processLine(char *line, int lineNumber)
+bool sp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasLabel, int lineNumber)
 {
-    int hasLabel;
-    char *firstWord, *cmd;
-    char *pStart;
-
     const instruction_props *props;
-
-    /* remove trailing whitespaces (including \n) */
-    rtrim(line);
-
-    /* check whether it's a comment line and skip it if so */
-    if (startsWith(line, directives[COMMENT]))
-        return true;
-
-    /* assume no label */
-    hasLabel = 0;
-
-    /* examine the first word in the line */
-    firstWord = extractWord(line, 1, &pStart);
 
     /* .define - was already handled in first pass */
     if (strcmp(firstWord, directives[DEFINE]) == 0)
@@ -71,14 +54,6 @@ bool sp_processLine(char *line, int lineNumber)
         return true;
     }
 
-    /* handle label definition - first word ends with : */
-    if (endsWith(firstWord, LABEL_SUFFIX))
-    {
-        hasLabel = 1;
-    }
-
-    /* get the 2nd word if there's a label definition or the 1st word if not */
-    cmd = extractWord(line, (hasLabel + 1), &pStart);
     ltrim(cmd);
     rtrim(cmd);
 
@@ -105,12 +80,43 @@ bool sp_processLine(char *line, int lineNumber)
     /* debug log the command */
     LOG("%s", cmd);
 
-    if (!parse_operands(pStart + strlen(cmd), lineNumber, props))
+    return parse_operands(pStart + strlen(cmd), lineNumber, props);
+}
+
+bool sp_process_line(char *line, int lineNumber)
+{
+    int hasLabel;
+    char *firstWord, *cmd;
+    char *pStart;
+    bool success;
+
+    /* remove trailing whitespaces (including \n) */
+    rtrim(line);
+
+    /* check whether it's a comment line and skip it if so */
+    if (startsWith(line, directives[COMMENT]))
+        return true;
+
+    /* assume no label */
+    hasLabel = 0;
+
+    /* examine the first word in the line */
+    firstWord = extractWord(line, 1, &pStart);
+    /* handle label definition - first word ends with : */
+    if (endsWith(firstWord, LABEL_SUFFIX))
     {
-        return false;
+        hasLabel = 1;
     }
 
-    return true;
+    /* get the 2nd word if there's a label definition or the 1st word if not */
+    cmd = extractWord(line, (hasLabel + 1), &pStart);
+
+    success = sp_process_line_internal(firstWord, cmd, pStart, hasLabel, lineNumber);
+
+    free_if_not_null(firstWord);
+    free_if_not_null(cmd);
+
+    return success;
 }
 
 bool secondPass(FILE *input)
@@ -126,7 +132,7 @@ bool secondPass(FILE *input)
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
         /* process line by line. if one line fails processing we keep going */
-        success &= sp_processLine(line, lineNumber);
+        success &= sp_process_line(line, lineNumber);
     }
     return success;
 }

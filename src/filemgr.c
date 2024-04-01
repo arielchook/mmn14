@@ -54,14 +54,14 @@ bool processFile(char *fname)
     /* we don't need access to the .as file anymore - close file */
     if (fclose(asFile) != 0)
     {
-        printf(ERR_CLOSING_FILE, fname, AS_EXTENSION);
+        printf(PP_ERR_CLOSING_FILE, fname, AS_EXTENSION);
         return false;
     }
 
     /* close the .am file and reopen it for for reading */
     if (fclose(amFile) != 0)
     {
-        printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
+        printf(PP_ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
 
@@ -83,7 +83,7 @@ bool processFile(char *fname)
 
         if (fclose(amFile) != 0)
         {
-            printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
+            printf(PP_ERR_CLOSING_FILE, fname, AM_EXTENSION);
         }
 
         return false;
@@ -96,7 +96,7 @@ bool processFile(char *fname)
         printf(ERR_FSEEK_FILE, fname, AM_EXTENSION);
         if (fclose(amFile) != 0)
         {
-            printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
+            printf(PP_ERR_CLOSING_FILE, fname, AM_EXTENSION);
         }
         return false;
     }
@@ -107,7 +107,7 @@ bool processFile(char *fname)
 
         if (fclose(amFile) != 0)
         {
-            printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
+            printf(PP_ERR_CLOSING_FILE, fname, AM_EXTENSION);
         }
         return false;
     }
@@ -115,7 +115,7 @@ bool processFile(char *fname)
     /* done with input files */
     if (fclose(amFile) != 0)
     {
-        printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
+        printf(PP_ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
 
@@ -132,7 +132,7 @@ bool processFile(char *fname)
         entries_dump(entFile);
         if (fclose(entFile) != 0)
         {
-            printf(ERR_CLOSING_FILE, fname, ENT_EXTENSION);
+            printf(PP_ERR_CLOSING_FILE, fname, ENT_EXTENSION);
             return false;
         }
     }
@@ -151,7 +151,7 @@ bool processFile(char *fname)
         externs_dump(entFile);
         if (fclose(extFile) != 0)
         {
-            printf(ERR_CLOSING_FILE, fname, EXT_EXTENSION);
+            printf(PP_ERR_CLOSING_FILE, fname, EXT_EXTENSION);
             return false;
         }
     }
@@ -168,7 +168,7 @@ bool processFile(char *fname)
     dump_object_file(obFile);
     if (fclose(obFile) != 0)
     {
-        printf(ERR_CLOSING_FILE, fname, OB_EXTENSION);
+        printf(PP_ERR_CLOSING_FILE, fname, OB_EXTENSION);
         return false;
     }
 
