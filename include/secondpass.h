@@ -1,8 +1,7 @@
 #ifndef SECONDPASS_H
 #define SECONDPASS_H
 
-#include <stdio.h>
-#include <stdbool.h>
+#include <utils.h>
 
 bool secondPass(FILE *input);
 

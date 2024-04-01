@@ -14,7 +14,7 @@ unsigned long hash(const char *str)
     return hash;
 }
 
-Hashtable *hashtable_create()
+Hashtable *hashtable_create(void)
 {
     Hashtable *ht = (Hashtable *)safe_malloc(sizeof(Hashtable));
     ht->table = (KeyValuePair *)safe_malloc(sizeof(KeyValuePair) * INITIAL_SIZE);

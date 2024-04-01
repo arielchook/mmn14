@@ -1,6 +1,5 @@
 #include <hashtable.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <utils.h>
 #include <symbols.h>
 #include <ctype.h>
 #include <reserved.h>
@@ -32,7 +31,7 @@ SymbolBlock *find_symbol(char *name)
 }
 
 /* Frees all memory allocated for the symbol hashtable */
-void free_symbol_table()
+void free_symbol_table(void)
 {
     if (symbolsTable != NULL)
     {
@@ -136,7 +135,7 @@ void _update_address(const KeyValuePair kvp)
     }
 }
 
-void update_data_symbols_address()
+void update_data_symbols_address(void)
 {
     hashtable_iterate(symbolsTable, _update_address);
 }
@@ -169,7 +168,7 @@ void _dump_symbol(const KeyValuePair kvp)
     LOG("\n");
 }
 
-void dump_symbols_table()
+void dump_symbols_table(void)
 {
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
     {

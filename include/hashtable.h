@@ -29,7 +29,7 @@ typedef struct
 } Hashtable;
 
 /* creates the hashtable data structure */
-Hashtable *hashtable_create();
+Hashtable *hashtable_create(void);
 /* destroy the hashtable data structure and free all memory */
 void hashtable_destroy(Hashtable *ht);
 

@@ -4,7 +4,7 @@
 #include <linkedlist.h>
 
 /* Function to initialize a new linked list */
-LinkedList *linked_list_create()
+LinkedList *linked_list_create(void)
 {
     LinkedList *list = (LinkedList *)safe_malloc(sizeof(LinkedList));
     list->head = NULL;

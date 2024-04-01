@@ -1,5 +1,5 @@
 CC = /usr/bin/gcc
-CFLAGS = -ansi -Wall -pedantic -Iinclude/
+CFLAGS = -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/
 
 # Directories
 SRC_DIR := src

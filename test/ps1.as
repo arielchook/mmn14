@@ -25,7 +25,7 @@ L1: inc L3
  papa
 END: hlt
 .define len = 4
-STR: .string “abcdef”
+STR: .string "abcdef"
 LIST: .data 6, -9, len
 K: .data 22
 .extern L3 

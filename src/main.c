@@ -1,8 +1,9 @@
-#include <stdio.h>
+#include <utils.h>
 #include <messages.h>
 #include <filemgr.h>
 #include <stdlib.h>
 #include <machinecode.h>
+
 int main(int argc, char *argv[])
 {
     int fileno;

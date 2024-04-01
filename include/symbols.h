@@ -43,14 +43,14 @@ bool add_code_label(char *name);
 SymbolBlock *find_symbol(char *name);
 
 /* Frees all memory allocated for the macro hashtable */
-void free_symbol_table();
+void free_symbol_table(void);
 
 bool handle_define(char *defineStmt, int lineNumber);
 bool handle_data(char *dataStmt, int lineNumber);
 bool handle_string(char *stringStmt, int lineNumber);
 
 bool is_valid_symbol_name(char *symName, int lineNumber);
-void dump_symbols_table();
-void update_data_symbols_address();
+void dump_symbols_table(void);
+void update_data_symbols_address(void);
 
 #endif

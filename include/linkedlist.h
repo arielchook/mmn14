@@ -1,7 +1,6 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
-#include <stdio.h>
-#include <stdbool.h>
+#include <utils.h>
 
 /* Define the structure for a node in the linked list */
 typedef struct Node
@@ -17,7 +16,7 @@ typedef struct
 } LinkedList;
 
 /* Function to initialize a new linked list */
-LinkedList *linked_list_create();
+LinkedList *linked_list_create(void);
 void linked_list_append(LinkedList *list, void *data);
 void linked_list_delete(LinkedList *list, bool free_data);
 void linked_list_traverse_to_file(LinkedList *list, void (*func)(void *, FILE *), FILE *output);

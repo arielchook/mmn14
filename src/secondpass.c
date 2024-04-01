@@ -1,6 +1,5 @@
 #include <secondpass.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <utils.h>
 #include <utils.h>
 #include <reserved.h>
 #include <messages.h>

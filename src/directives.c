@@ -86,7 +86,7 @@ bool handle_data(char *dataStmt, int lineNumber)
     char *value;
 
     ltrim(dataStmt);
-    for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, ',')) != NULL); valCnt++)
+    for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, OP_SEPARATOR)) != NULL); valCnt++)
     {
         /* trim whitespaces around each value */
         /* FIXME: make sure it can handle ,,, */

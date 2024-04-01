@@ -1,6 +1,5 @@
-#include <filemgr.h>
-#include <messages.h>
 #include <utils.h>
+#include <messages.h>
 #include <string.h>
 #include <precomp.h>
 #include <firstpass.h>
@@ -8,6 +7,7 @@
 #include <machinecode.h>
 #include <entries.h>
 #include <externs.h>
+#include <filemgr.h>
 
 bool dump_object_file(FILE *f)
 {
