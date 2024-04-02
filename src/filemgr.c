@@ -65,6 +65,8 @@ bool processFile(char *fname)
         return false;
     }
 
+    printf(MSG_DONE);
+
     /* resets the state for the compiler */
     reset_mc_state();
 
@@ -88,6 +90,8 @@ bool processFile(char *fname)
 
         return false;
     }
+
+    printf(MSG_DONE);
 
     printf(MSG_SECOND_PASS, fnameWext);
     /* Rewind the file pointer back to the beginning of the amFile for the second pass */
@@ -118,6 +122,7 @@ bool processFile(char *fname)
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
         return false;
     }
+    printf(MSG_DONE);
 
     /* write entries file only if we have entries in the entry table */
     if (!entries_is_empty())
@@ -135,6 +140,7 @@ bool processFile(char *fname)
             printf(ERR_CLOSING_FILE, fname, ENT_EXTENSION);
             return false;
         }
+        printf(MSG_DONE);
     }
 
     /* write externs file only if we have symbols in the externs */
@@ -154,6 +160,7 @@ bool processFile(char *fname)
             printf(ERR_CLOSING_FILE, fname, EXT_EXTENSION);
             return false;
         }
+        printf(MSG_DONE);
     }
 
     /* write object file */

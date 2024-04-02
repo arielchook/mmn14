@@ -115,13 +115,11 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         /* at this point we found a constant with that name. use its value */
         intValue = sb->value;
 
-        /* the value from the define is given in 2 complement. make sure the sign bit is not negative */
-        /* TODO: use a define instead of 13 */
-        if ((sb->value & (1 << 13)) != 0)
+        /* the value from the define is given in 2 complement. make sure it's positive since it's an array index */
+        if ((sb->value & MIN_VALUE) != 0)
             intValue = -1;
     }
 
-    /* TODO: test with negative array index */
     /* array index must be non negative */
     if (intValue < 0)
     {

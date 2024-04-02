@@ -64,6 +64,13 @@ bool handle_define(char *symbolStmt, int lineNumber)
         return false;
     }
 
+    /* value must be in the range we can represent in memory */
+    if ((value < MIN_VALUE) || (value > MAX_VALUE))
+    {
+        printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, defVal, MIN_VALUE, MAX_VALUE);
+        return false;
+    }
+
     /* store it in the symbols table if all is ok */
     add_define(defName, value);
 
@@ -116,6 +123,12 @@ bool handle_data(char *dataStmt, int lineNumber)
         }
         else
         {
+            /* make sure the int value provided can be represented in memory */
+            if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
+            {
+                printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, value, MIN_VALUE, MAX_VALUE);
+                return false;
+            }
             twoc_intValue = to_twos_complement(intValue);
         }
 
