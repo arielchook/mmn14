@@ -59,7 +59,7 @@ bool precompile(FILE *input, FILE *output)
             /* check whether macro name is a reserved word */
             if (success && is_reserved_word(macroName))
             {
-                printf(PP_ERR_RESERVED_WORD, lineNumber, line);
+                printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
                 success = false;
             }
             /* make sure this macro doesn't already exists */
