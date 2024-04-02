@@ -17,6 +17,7 @@ MAIN_SRC := $(SRC_DIR)/main.c
 # Find all test source files
 TEST_SRCS := $(wildcard $(TEST_DIR)/*.c)
 TEST_BINS := $(patsubst $(TEST_DIR)/%.c,$(BIN_DIR)/%,$(TEST_SRCS))
+TEST_FILES := $(patsubst %.as,%,$(wildcard test/test_files/*.as))
 
 # Main target
 all: assembler $(TEST_BINS)
@@ -39,9 +40,15 @@ $(OBJ_DIR) $(BIN_DIR):
 
 # Run tests
 test: $(TEST_BINS)
-	echo "Running tests"
-	bin/assembler test/test_files/test1
-	bin/assembler test/test_files/test2
+	@echo "Cleaning up test results"
+	@rm -f $(filter-out %.as,$(wildcard test/test_files/*))
+	@echo "Running tests"
+	@for test_file in $(TEST_FILES); do \
+		echo "*********************** Running $$test_file ***********************"; \
+		head -n 1 "$$test_file.as"; \
+		echo "*****************************************************************************"; \
+		bin/assembler $$test_file; \
+	done
 
 # Rule to clean up
 clean:
