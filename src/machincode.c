@@ -15,7 +15,6 @@ mem_word codeSection[CODE_SECTION_SIZE];
 
 /* instruction counter */
 mem_word IC;
-/* TODO: do we start the memory array at 100 or always deduct 100 from IC? */
 
 /* data counter */
 mem_word DC;

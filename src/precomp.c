@@ -5,7 +5,6 @@
 #include <utils.h>
 #include <macros.h>
 
-/* TODO: check conflict between marco names and symbols (unsure if needed) */
 bool precompile(FILE *input, FILE *output)
 {
     bool success = true;
@@ -15,7 +14,6 @@ bool precompile(FILE *input, FILE *output)
     int lineNumber = 1;
     char *macroName, *firstWord, *anythingElse;
 
-    /* TODO: do we keep processing the file if come across an error? */
     /* get the next line from input file, until we reach EOF  */
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
