@@ -73,7 +73,7 @@ bool precompile(FILE *input, FILE *output)
             {
                 inMacro = true;
                 m = safe_malloc(sizeof(MacroBlock));
-                m->name = macroName;
+                m->name = strdup(macroName);
             }
         }
 
@@ -98,6 +98,7 @@ bool precompile(FILE *input, FILE *output)
             if (success)
             {
                 add_macro(m);
+                m = NULL;
                 inMacro = false;
             }
         }
@@ -134,12 +135,22 @@ bool precompile(FILE *input, FILE *output)
                 }
             }
         }
+
+        /* free any dynamically allocated memory in this loop cycle */
+        free_if_not_null(firstWord);
+        free_if_not_null(macroName);
+        free_if_not_null(anythingElse);
+    }
+
+    /* just in case we exited the loop in the middle of a macro */
+    if (m != NULL)
+    {
+        free_if_not_null(m->name);
+        free_if_not_null(m);
     }
 
     /* free memory */
     free_macro_table();
-    free_if_not_null(firstWord);
-    free_if_not_null(macroName);
-    free_if_not_null(anythingElse);
+
     return success;
 }

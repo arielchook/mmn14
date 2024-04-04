@@ -17,7 +17,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
 {
     char *defName, *defVal;
     char *ptr;
-    long value;
+    int value;
 
     /* trim the statement */
     ltrim(symbolStmt);
@@ -29,7 +29,9 @@ bool handle_define(char *symbolStmt, int lineNumber)
     rtrim(symbolStmt);
 
     /* is it in the format name=val ? */
-    if ((defName = extractWordSeparator(symbolStmt, 1, NULL, EQUAL_SEPARATOR)) == NULL)
+    defName = extractWordSeparator(symbolStmt, 1, NULL, EQUAL_SEPARATOR);
+
+    if (defName == NULL)
     {
         printf(ERR_MISSING_EQUAL, lineNumber);
         return false;
@@ -39,6 +41,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
     if (strlen(defName) == 0)
     {
         printf(ERR_MISSING_DEFINE_NAME, lineNumber);
+        free_if_not_null(defName);
         return false;
     }
     rtrim(defName);
@@ -46,6 +49,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
     /* make sure constant name is valid */
     if (!is_valid_symbol_name(defName, lineNumber))
     {
+        free_if_not_null(defName);
         return false;
     }
 
@@ -58,21 +62,29 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
     /* try to convert to int */
     value = strtol(defVal, &ptr, 10);
+
+    /* we don't need defVal anymore */
+    free_if_not_null(defVal);
+
     if (*ptr != '\0')
     {
         printf(ERR_DEFINE_VALUE_NOT_INT, lineNumber);
+        free_if_not_null(defName);
+
         return false;
     }
 
     /* value must be in the range we can represent in memory */
     if ((value < MIN_VALUE) || (value > MAX_VALUE))
     {
-        printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, defVal, MIN_VALUE, MAX_VALUE);
+        printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, value, MIN_VALUE, MAX_VALUE);
+        free_if_not_null(defName);
         return false;
     }
 
     /* store it in the symbols table if all is ok */
     add_define(defName, value);
+    free_if_not_null(defName);
 
     return true;
 }
@@ -101,6 +113,7 @@ bool handle_data(char *dataStmt, int lineNumber)
         if (strlen(value) == 0)
         {
             printf(ERR_MISSING_VALUE, lineNumber, directives[DATA]);
+            free_if_not_null(value);
             return false;
         }
         rtrim(value);
@@ -115,6 +128,8 @@ bool handle_data(char *dataStmt, int lineNumber)
             if (sb == NULL || sb->type != ST_DEFINE)
             {
                 printf(ERR_CANT_FIND_DEFINE, lineNumber, value);
+                free_if_not_null(value);
+
                 return false;
             }
 
@@ -126,11 +141,14 @@ bool handle_data(char *dataStmt, int lineNumber)
             /* make sure the int value provided can be represented in memory */
             if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
             {
-                printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, value, MIN_VALUE, MAX_VALUE);
+                printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, intValue, MIN_VALUE, MAX_VALUE);
                 return false;
             }
             twoc_intValue = to_twos_complement(intValue);
         }
+
+        /* don't need it anymore */
+        free_if_not_null(value);
 
         /* write the value to the data section */
         if (!serialize_data_section(twoc_intValue))

@@ -58,7 +58,10 @@ void _free_macro_lines(const KeyValuePair kvp)
 {
     MacroBlock *mb = (MacroBlock *)kvp.value;
     if (mb->lines_list != NULL)
+    {
         linked_list_delete(mb->lines_list, true);
+        mb->lines_list = NULL;
+    }
 }
 void free_macro_table(void)
 {

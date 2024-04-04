@@ -9,6 +9,9 @@
 
 enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, int lineNumber)
 {
+    char *array_name, *array_index;
+    bool improper_format;
+
     /* make sure it's not empty */
     ltrim(op);
     if (strlen(op) == 0)
@@ -43,8 +46,16 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
         op[strlen(op) - 1] = '\0';
 
         /* extract the array name and the array index */
-        if ((extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR) == NULL) ||
-            (extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR) == NULL))
+        array_name = extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR);
+        array_index = extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR);
+        /* if either doesn't exist, it's an improper format*/
+        improper_format = (array_name == NULL) || (array_index == NULL);
+
+        /* free memory from parsing */
+        free_if_not_null(array_name);
+        free_if_not_null(array_index);
+
+        if (improper_format)
         {
             printf(ERR_MALFORMED_ARRAY, lineNumber);
             return WT_INVALID;
@@ -168,5 +179,10 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
     /* now that we counted how many words the command will hold in machine code we should advance the
     instruction coutner accordingly */
     advanceIC(mem_words_count);
+
+    free_if_not_null(op_src);
+    free_if_not_null(op_dest);
+    free_if_not_null(more_ops);
+
     return success;
 }

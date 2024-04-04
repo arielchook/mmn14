@@ -90,7 +90,7 @@ void dump_data_section(void)
 {
     int i = 0;
     LOG("\nData section:\n");
-    for (i = BASE_DATA_ADDRESS; i < DC; i++)
+    for (i = BASE_DATA_ADDRESS; i < getDC(); i++)
     {
         LOG("%.4d: [%d]\n", i, read_data_word(i));
     }
@@ -238,7 +238,7 @@ void dump_code_section(void)
     }
     LOG("\n");
 
-    for (i = BASE_CODE_ADDRESS; i < IC; i++)
+    for (i = BASE_CODE_ADDRESS; i < getIC(); i++)
     {
         LOG_AS_BINARY(i, read_code_word(i));
     }

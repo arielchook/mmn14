@@ -29,7 +29,10 @@
 void *safe_malloc(int size);
 #define free_if_not_null(x) \
     if (x != NULL)          \
-        free(x);
+    {                       \
+        free(x);            \
+        x = NULL;           \
+    }
 
 /* Trim whitespace characters from the beginning of a string */
 void ltrim(char *str);

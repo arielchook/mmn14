@@ -38,7 +38,7 @@ bool handle_immediate(char *op, int lineNumber, mc_word *word)
         /* make sure the int value provided can be represented in memory */
         if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
         {
-            printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, op, MIN_VALUE, MAX_VALUE);
+            printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, intValue, MIN_VALUE, MAX_VALUE);
             return false;
         }
         /* conver to two-complement */
@@ -71,6 +71,8 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
     if ((sb == NULL))
     {
         printf(ERR_ARRAY_NOT_FOUND, lineNumber, array_name);
+        free_if_not_null(array_name);
+        free_if_not_null(array_index);
         return false;
     }
 
@@ -95,6 +97,8 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         break;
     case ST_DEFINE:
         printf(ERR_DEFINE_DISALLOWED, lineNumber);
+        free_if_not_null(array_name);
+        free_if_not_null(array_index);
         return false;
         break;
     }
@@ -109,6 +113,8 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
         if (sb == NULL || sb->type != ST_DEFINE)
         {
             printf(ERR_CANT_FIND_DEFINE, lineNumber, array_index);
+            free_if_not_null(array_name);
+            free_if_not_null(array_index);
             return false;
         }
 
@@ -124,15 +130,18 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
     if (intValue < 0)
     {
         printf(ERR_ARR_IND_NEGATIVE, lineNumber);
+        free_if_not_null(array_name);
+        free_if_not_null(array_index);
         return false;
     }
-
-    /* FIXME: check for out bounds? */
 
     /* second word is the array index */
     word->type = WT_FIXED_INDEX;
     word->contents.fixed_index.A_R_E_2 = ARE_ABS; /* absolute */
     word->contents.fixed_index.index = intValue;
+
+    free_if_not_null(array_name);
+    free_if_not_null(array_index);
     return true;
 }
 
@@ -300,7 +309,7 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
         {
             /* we store both registers in one word and so eliminate the word_src */
             word_dest->contents.direct_reg.src = word_src->contents.direct_reg.src;
-            word_src = NULL;
+            free_if_not_null(word_src);
         }
 
         /* only if there's a source operand, write it to the code section */
@@ -317,6 +326,8 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
     }
 
     /* cleanup */
+    free_if_not_null(op_src);
+    free_if_not_null(op_dest);
     free_if_not_null(word_instruction);
     free_if_not_null(word_src);
     free_if_not_null(word_dest);
