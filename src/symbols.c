@@ -35,7 +35,6 @@ void free_symbol_table(void)
 {
     if (symbolsTable != NULL)
     {
-        /* FIXME: hashtable_destroy frees the key and the value but the value contains the key. no issue here?*/
         hashtable_destroy(symbolsTable);
     }
 }

@@ -41,7 +41,7 @@
 #define ERR_FSEEK_FILE "SecondPass:Error seeking back to the beginning of input file (%s%s)\n"
 #define ERR_CANT_FIND_DEFINE "Error:%d: Cannot find a constant with the name %s\n"
 #define ERR_ARRAY_NOT_FOUND "Error:%d: Array name could not be found(%s)\n"
-#define ERR_INT_OUT_OF_BOUNDS "Error:%d: Specified value is out of bounds (%s). Should be between %d and %d\n"
+#define ERR_INT_OUT_OF_BOUNDS "Error:%d: Specified value is out of bounds (%d). Should be between %d and %d\n"
 #define WARN_LABEL_UNEXPCTED "Error:%d: Misplaced label warning. Label is ignored in .entry and .extern definitons\n"
 #define ERR_CANT_RESOLVE_SYMBOL "Error:%d: Symbol (%s) not found\n"
 #define ERR_ENTRY_SYMBOL_NONEXISTENT "Error:%d: Symbol specified in .entry statement not found (%s)\n"
