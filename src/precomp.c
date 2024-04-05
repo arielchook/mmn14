@@ -8,9 +8,9 @@
 /**
  * @brief Precompiles the given input file by processing macros and writing the result to the output file.
  *
- * This function reads the input file line by line. It looks for macro definitions starting with 'mcr' 
- * and ends with 'endmcr'. While processing macro definitions, it checks for errors like nested macros 
- * or invalid macro names. If a line calls a defined macro, it expands that macro. All other lines are 
+ * This function reads the input file line by line. It looks for macro definitions starting with 'mcr'
+ * and ends with 'endmcr'. While processing macro definitions, it checks for errors like nested macros
+ * or invalid macro names. If a line calls a defined macro, it expands that macro. All other lines are
  * copied to the output file as-is. The function also handles trimming whitespace and skipping empty lines.
  *
  * @param input Pointer to a FILE object that represents the input file to be precompiled.
@@ -19,18 +19,20 @@
  */
 bool precompile(FILE *input, FILE *output)
 {
-    bool success = true; /* Indicates the success of the precompilation process. */
-    bool inMacro = false; /* Flag to track if currently within a macro definition. */
-    MacroBlock *m; /* Pointer to hold the current macro block being defined. */
-    char line[MAX_LINE_LENGTH]; /* Buffer to hold the current line from the input file. */
+    bool success = true;                        /* Indicates the success of the precompilation process. */
+    bool inMacro = false;                       /* Flag to track if currently within a macro definition. */
+    MacroBlock *m;                              /* Pointer to hold the current macro block being defined. */
+    char line[MAX_LINE_LENGTH];                 /* Buffer to hold the current line from the input file. */
     char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
+    int lineNumber;
 
     /* Loop through each line in the input file. */
-    for (int lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
+    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
         ltrim(line); /* Trim leading whitespace. */
-        if (strlen(line) == 0) continue; /* Skip empty lines. */
-        rtrim(line); /* Trim trailing whitespace. */
+        if (strlen(line) == 0)
+            continue; /* Skip empty lines. */
+        rtrim(line);  /* Trim trailing whitespace. */
 
         /* Parse the current line into key components. */
         firstWord = extractWord(line, 1, NULL);
@@ -146,11 +148,10 @@ bool precompile(FILE *input, FILE *output)
         free_if_not_null(m);
     }
 
-/* free any dynamically allocated memory in this loop cycle */
-        free_if_not_null(firstWord);
-        free_if_not_null(macroName);
-        free_if_not_null(anythingElse);
-    
+    /* free any dynamically allocated memory in this loop cycle */
+    free_if_not_null(firstWord);
+    free_if_not_null(macroName);
+    free_if_not_null(anythingElse);
 
     /* just in case we exited the loop in the middle of a macro */
     if (m != NULL)
