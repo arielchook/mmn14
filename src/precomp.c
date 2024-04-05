@@ -5,7 +5,6 @@
 #include <utils.h>
 #include <macros.h>
 
-<<<<<<< HEAD
 /**
  * @brief Precompiles the given input file by processing macros and writing the result to the output file.
  *
@@ -18,8 +17,6 @@
  * @param output Pointer to a FILE object where the precompiled output will be written.
  * @return True if precompilation is successful without any errors, false otherwise.
  */
-=======
->>>>>>> 4c0df01dc4903eb50ef41da95108145a796012c5
 bool precompile(FILE *input, FILE *output)
 {
     bool success = true; /* Indicates the success of the precompilation process. */
@@ -28,13 +25,8 @@ bool precompile(FILE *input, FILE *output)
     char line[MAX_LINE_LENGTH]; /* Buffer to hold the current line from the input file. */
     char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
 
-<<<<<<< HEAD
     /* Loop through each line in the input file. */
     for (int lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
-=======
-    /* get the next line from input file, until we reach EOF  */
-    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
->>>>>>> 4c0df01dc4903eb50ef41da95108145a796012c5
     {
         ltrim(line); /* Trim leading whitespace. */
         if (strlen(line) == 0) continue; /* Skip empty lines. */
@@ -68,10 +60,6 @@ bool precompile(FILE *input, FILE *output)
             }
             else if (success && is_reserved_word(macroName))
             {
-<<<<<<< HEAD
-                /* Error handling for using a reserved word as a macro name. */
-                printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
-=======
                 printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
                 success = false;
             }
@@ -79,7 +67,6 @@ bool precompile(FILE *input, FILE *output)
             if (success && find_macro(macroName))
             {
                 printf(PP_ERR_DUPLICATE_MACRO, lineNumber, macroName);
->>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
                 success = false;
             }
 
@@ -159,21 +146,21 @@ bool precompile(FILE *input, FILE *output)
         free_if_not_null(m);
     }
 
-<<<<<<< HEAD
-    /* Clean up resources at the end. */
-    free_macro_table(); /* Free all stored macro definitions. */
-    free_if_not_null(firstWord);
-    free_if_not_null(macroName);
-    free_if_not_null(anythingElse);
-<<<<<<< HEAD
+/* free any dynamically allocated memory in this loop cycle */
+        free_if_not_null(firstWord);
+        free_if_not_null(macroName);
+        free_if_not_null(anythingElse);
+    
 
-    return success; /* Return the success status of the precompilation. */
-=======
-=======
+    /* just in case we exited the loop in the middle of a macro */
+    if (m != NULL)
+    {
+        free_if_not_null(m->name);
+        free_if_not_null(m);
+    }
+
     /* free memory */
     free_macro_table();
 
->>>>>>> 4c0df01dc4903eb50ef41da95108145a796012c5
     return success;
->>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
 }
