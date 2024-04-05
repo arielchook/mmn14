@@ -4,10 +4,22 @@
 #include <stdlib.h>
 #include <machinecode.h>
 
+/** 
+ * @brief Main function for the assembler program.
+ * 
+ * This function serves as the entry point for the assembler program. It checks for input files
+ * provided as command-line arguments and processes each file independently. After processing
+ * each file, it cleans up the machine code state in preparation for the next file.
+ * 
+ * @param argc The count of command-line arguments.
+ * @param argv The array of command-line arguments.
+ * @return Returns 0 on successful completion.
+ */
 int main(int argc, char *argv[])
 {
     int fileno;
-    /* make sure the user passed at least one parameter to the program */
+
+    /* Make sure the user passed at least one parameter to the program */
     if (argc < 2)
     {
         printf(ERR_USAGE, argv[0]);
