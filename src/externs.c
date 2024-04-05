@@ -22,7 +22,7 @@ void externs_append(char *symbol, uint16_t address)
     linked_list_append(externs_list, extern_space_address);
 }
 
-void externs_delete_list()
+void externs_delete_list(void)
 {
     if (externs_list != NULL)
     {

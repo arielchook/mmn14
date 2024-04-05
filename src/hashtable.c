@@ -14,10 +14,11 @@ unsigned long hash(const char *str)
     return hash;
 }
 
-Hashtable *hashtable_create()
+Hashtable *hashtable_create(void)
 {
     Hashtable *ht = (Hashtable *)safe_malloc(sizeof(Hashtable));
     ht->table = (KeyValuePair *)safe_malloc(sizeof(KeyValuePair) * INITIAL_SIZE);
+    memset(ht->table, 0, sizeof(KeyValuePair) * INITIAL_SIZE);
     ht->size = 0;
     ht->capacity = INITIAL_SIZE;
     return ht;
@@ -98,6 +99,7 @@ void *hashtable_get(Hashtable *ht, const char *key)
         }
         index = (index + 1) % ht->capacity;
     }
+
     return NULL;
 }
 

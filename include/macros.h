@@ -6,7 +6,7 @@
 #ifndef MACROS_H
 #define MACROS_H
 #include <linkedlist.h>
-#include <stdbool.h>
+#include <utils.h>
 #include <stdio.h>
 
 /**
@@ -42,7 +42,7 @@ MacroBlock *find_macro(char *name);
  * the linked list implemented for the macro's lines.
  *
  */
-void free_macro_table();
+void free_macro_table(void);
 
 /**
  * @brief Adds a line to a given macro. Each macro's lines are implemented in a linkedlist.

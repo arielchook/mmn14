@@ -60,8 +60,18 @@ bool precompile(FILE *input, FILE *output)
             }
             else if (success && is_reserved_word(macroName))
             {
+<<<<<<< HEAD
                 /* Error handling for using a reserved word as a macro name. */
                 printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
+=======
+                printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
+                success = false;
+            }
+            /* make sure this macro doesn't already exists */
+            if (success && find_macro(macroName))
+            {
+                printf(PP_ERR_DUPLICATE_MACRO, lineNumber, macroName);
+>>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
                 success = false;
             }
 
@@ -133,6 +143,10 @@ bool precompile(FILE *input, FILE *output)
     free_if_not_null(firstWord);
     free_if_not_null(macroName);
     free_if_not_null(anythingElse);
+<<<<<<< HEAD
 
     return success; /* Return the success status of the precompilation. */
+=======
+    return success;
+>>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
 }

@@ -1,5 +1,5 @@
 CC = /usr/bin/gcc
-CFLAGS = -ansi -Wall -pedantic -Iinclude/
+CFLAGS = -g -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/
 
 # Directories
 SRC_DIR := src
@@ -17,6 +17,7 @@ MAIN_SRC := $(SRC_DIR)/main.c
 # Find all test source files
 TEST_SRCS := $(wildcard $(TEST_DIR)/*.c)
 TEST_BINS := $(patsubst $(TEST_DIR)/%.c,$(BIN_DIR)/%,$(TEST_SRCS))
+TEST_FILES := $(patsubst %.as,%,$(wildcard test/test_files/*.as))
 
 # Main target
 all: assembler $(TEST_BINS)
@@ -39,27 +40,15 @@ $(OBJ_DIR) $(BIN_DIR):
 
 # Run tests
 test: $(TEST_BINS)
-	bin/assembler test/files/test1
-	bin/assembler test/files/test2
-	bin/assembler test/files/test3
-	bin/assembler test/files/test4
-	bin/assembler test/files/test5
-	bin/assembler test/files/test6
-	bin/assembler test/files/test7
-	bin/assembler test/files/test8
-	bin/assembler test/files/test9
-	echo "Running test_hashtable"
-	./bin/test_hashtable
-	echo "Running test_macros"
-	./bin/test_macros ./test/ps1.as ./test/ps1.am
-#	run diff to test the results ?
-	echo "Running test_firstpass"
-	./bin/test_firstpass ./test/fp1.am
-
-#	@for test_bin in $(TEST_BINS); do \
-#		echo "Running $$test_bin"; \
-#		./$$test_bin; \
-#	done
+	@echo "Cleaning up test results"
+	@rm -f $(filter-out %.as,$(wildcard test/test_files/*))
+	@echo "Running tests"
+	@for test_file in $(TEST_FILES); do \
+		echo "*********************** Running $$test_file ***********************"; \
+		head -n 1 "$$test_file.as"; \
+		echo "*****************************************************************************"; \
+		bin/assembler $$test_file; \
+	done
 
 # Rule to clean up
 clean:

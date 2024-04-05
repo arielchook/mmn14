@@ -139,7 +139,6 @@ char *strdup(const char *str)
     return dup_str;
 }
 
-/* FIXME: make sure this works properly */
 /**
  * @brief log function used for debugging. this only works if DEBUG is defined. note that this could not be implemented
  * using a macro (i.e. #define) since in ansi-c macros with variable number of params is not supported.

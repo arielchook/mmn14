@@ -16,7 +16,7 @@ void entries_append(char *symbol)
     linked_list_append(entries_list, strdup(symbol));
 }
 
-void entries_delete_list()
+void entries_delete_list(void)
 {
     if (entries_list != NULL)
     {
@@ -43,7 +43,7 @@ void entries_dump(FILE *f)
     linked_list_traverse_to_file(entries_list, _dump_entry, f);
 }
 
-bool entries_is_empty()
+bool entries_is_empty(void)
 {
     return entries_list == NULL;
 }

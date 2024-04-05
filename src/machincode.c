@@ -39,8 +39,8 @@ bool serialize_data_section(mem_word value)
     return advanceDC(1);
 }
 
-int getDC() { return DC; }
-int getIC() { return IC; }
+int getDC(void) { return DC; }
+int getIC(void) { return IC; }
 bool advanceDC(int howmuch)
 {
     DC += howmuch;
@@ -86,7 +86,7 @@ mem_word *data_word_at(int address)
     return &dataSection[address - BASE_DATA_ADDRESS];
 }
 
-void dump_data_section()
+void dump_data_section(void)
 {
     int i = 0;
     LOG("\nData section:\n");
@@ -96,16 +96,16 @@ void dump_data_section()
     }
 }
 
-void resetIC()
+void resetIC(void)
 {
     IC = BASE_CODE_ADDRESS;
 }
-void resetDC()
+void resetDC(void)
 {
     DC = BASE_DATA_ADDRESS;
 }
 
-void reset_mc_state()
+void reset_mc_state(void)
 {
     resetDC();
     resetIC();
@@ -115,7 +115,7 @@ void reset_mc_state()
     memset(codeSection, 0, sizeof(codeSection));
 }
 
-void cleanup_mc_state()
+void cleanup_mc_state(void)
 {
     /* delete the entries and externs list as well as the symbol table */
     entries_delete_list();
@@ -226,7 +226,7 @@ void LOG_AS_BINARY(mem_word address, mem_word word)
 #endif
 }
 
-void dump_code_section()
+void dump_code_section(void)
 {
     int i;
     LOG("Code section:\n\t");

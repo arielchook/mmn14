@@ -1,8 +1,7 @@
 #ifndef MACHINECODE_H
 #define MACHINECODE_H
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <utils.h>
 #include <mcwordtypes.h>
 
 /* each machine code word is 14 bits */
@@ -34,9 +33,9 @@ typedef uint16_t mem_word;
  *
  * @return int data counter
  */
-int getDC();
+int getDC(void);
 
-int getIC();
+int getIC(void);
 bool advanceIC(int howmuch);
 bool advanceDC(int howmuch);
 void write_code_word(int address, mem_word value);
@@ -57,26 +56,26 @@ bool serialize_code_mc_word(mc_word *word);
  * @brief prints out the contents of the data section
  *
  */
-void dump_data_section();
+void dump_data_section(void);
 
 void LOG_AS_BINARY(mem_word address, mem_word word);
 
-void dump_code_section();
+void dump_code_section(void);
 
-void resetIC();
+void resetIC(void);
 
 /**
  * @brief resets the state of our machine code compiler.
  * this should be called before processing each file.
  *
  */
-void reset_mc_state();
+void reset_mc_state(void);
 
 /**
  * @brief cleans up machine code data structures and free memory.
  * this includes entries and extern lists as well as symbol table
  *
  */
-void cleanup_mc_state();
+void cleanup_mc_state(void);
 
 #endif

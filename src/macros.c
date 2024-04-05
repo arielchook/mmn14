@@ -108,6 +108,7 @@ void _free_macro_lines(const KeyValuePair kvp)
     if (mb->lines_list != NULL)
         linked_list_delete(mb->lines_list, true);
 }
+<<<<<<< HEAD
 
 /**
  * @brief Frees the global macro table and all associated resources.
@@ -116,10 +117,20 @@ void _free_macro_lines(const KeyValuePair kvp)
  * Then, it destroys the macro table itself.
  */
 void free_macro_table()
+=======
+void free_macro_table(void)
+>>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
 {
     if (macroTable == NULL)
         return;
 
+<<<<<<< HEAD
     hashtable_iterate(macroTable, _free_macro_lines); /* Free the lines linked list for each macro. */
     hashtable_destroy(macroTable); /* Free the macro table. */
+=======
+    /* delete the lines linkedlist for each macro first*/
+    hashtable_iterate(macroTable, _free_macro_lines);
+    /* delete the macro hashtable */
+    hashtable_destroy(macroTable);
+>>>>>>> 31a7347c0bac360fcdad3d812862453b5b11564d
 }

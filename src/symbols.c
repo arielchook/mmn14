@@ -1,6 +1,5 @@
 #include <hashtable.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <utils.h>
 #include <symbols.h>
 #include <ctype.h>
 #include <reserved.h>
@@ -32,7 +31,7 @@ SymbolBlock *find_symbol(char *name)
 }
 
 /* Frees all memory allocated for the symbol hashtable */
-void free_symbol_table()
+void free_symbol_table(void)
 {
     if (symbolsTable != NULL)
     {
@@ -44,7 +43,6 @@ void free_symbol_table()
 bool is_valid_symbol_name(char *symName, int lineNumber)
 {
     int i;
-
     /* check whether symbol name is a reserved word */
     if (is_reserved_word(symName))
     {
@@ -83,7 +81,7 @@ bool add_define(char *name, int value)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
-    sb->name = name;
+    sb->name = strdup(name);
     sb->value = to_twos_complement(value);
     sb->type = ST_DEFINE;
     return add_symbol(sb);
@@ -94,7 +92,7 @@ bool add_extern(char *name)
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
     /* create a symbol block for .extern definition */
-    sb->name = name;
+    sb->name = strdup(name);
     sb->value = 0; /* .extern has no value */
     sb->type = ST_EXTERN;
 
@@ -105,7 +103,7 @@ bool add_extern(char *name)
 bool add_data_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
-    sb->name = name;
+    sb->name = strdup(name);
     sb->value = getDC();
     sb->type = ST_DATA;
     return add_symbol(sb);
@@ -114,7 +112,7 @@ bool add_data_label(char *name)
 bool add_code_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
-    sb->name = name;
+    sb->name = strdup(name);
     sb->value = getIC(); /* IC is the current InstructionCounter */
     sb->type = ST_CODE;
     return add_symbol(sb);
@@ -136,7 +134,7 @@ void _update_address(const KeyValuePair kvp)
     }
 }
 
-void update_data_symbols_address()
+void update_data_symbols_address(void)
 {
     hashtable_iterate(symbolsTable, _update_address);
 }
@@ -144,8 +142,8 @@ void update_data_symbols_address()
 void _dump_symbol(const KeyValuePair kvp)
 {
     SymbolBlock *sb = (SymbolBlock *)kvp.value;
-    LOG("%s -> ", kvp.key);
 
+    LOG("%s -> ", kvp.key);
     switch (sb->type)
     {
     case ST_DEFINE:
@@ -169,7 +167,7 @@ void _dump_symbol(const KeyValuePair kvp)
     LOG("\n");
 }
 
-void dump_symbols_table()
+void dump_symbols_table(void)
 {
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
     {

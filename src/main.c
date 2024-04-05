@@ -1,8 +1,9 @@
-#include <stdio.h>
+#include <utils.h>
 #include <messages.h>
 #include <filemgr.h>
 #include <stdlib.h>
 #include <machinecode.h>
+
 int main(int argc, char *argv[])
 {
     int fileno;
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
     }
 
     /* We process each file given in arguments independently */
-    for (fileno = 0; fileno < argc; fileno++)
+    for (fileno = 1; fileno < argc; fileno++)
     {
         processFile(argv[fileno]);
         cleanup_mc_state();

@@ -29,7 +29,7 @@ typedef struct
 } Hashtable;
 
 /* creates the hashtable data structure */
-Hashtable *hashtable_create();
+Hashtable *hashtable_create(void);
 /* destroy the hashtable data structure and free all memory */
 void hashtable_destroy(Hashtable *ht);
 
@@ -40,4 +40,5 @@ void *hashtable_insert(Hashtable *ht, char *key, void *value);
 void *hashtable_get(Hashtable *ht, const char *key);
 
 void hashtable_iterate(Hashtable *ht, void (*step_function)(const KeyValuePair));
+
 #endif

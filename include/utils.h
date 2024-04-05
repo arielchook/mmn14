@@ -4,12 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <messages.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdarg.h>
 
 #define DEBUG
 
+/* defines for bool */
+#define bool uint8_t
+#define true 1
+#define false 0
 /* Maximum line length in the input file + 1 more for the \n */
 /* TODO: test with line at maximum length */
 #define MAX_LINE_LENGTH 81

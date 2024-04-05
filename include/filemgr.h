@@ -1,6 +1,6 @@
 #ifndef FILEMGR_H
 #define FILEMGR_H
-#include <stdbool.h>
+#include <utils.h>
 
 #define AS_EXTENSION ".as"   /*!< file extension for a source file after precompilation */
 #define AM_EXTENSION ".am"   /*!< file extension for a source file containing macros */
