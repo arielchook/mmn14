@@ -30,7 +30,6 @@
 bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasLabel, int lineNumber)
 {
     const instruction_props *props;
-
     /* Handle .define directive - constant definition */
     if (strcmp(firstWord, directives[DEFINE]) == 0)
     {
