@@ -153,7 +153,7 @@ bool handle_data(char *dataStmt, int lineNumber)
         /* write the value to the data section */
         if (!serialize_data_section(twoc_intValue))
         {
-            printf(ERR_DATA_SECTION_FULL); /* TODO: should we exit here? */
+            printf(ERR_DATA_SECTION_FULL);
             return false;
         }
     }
@@ -187,7 +187,6 @@ bool handle_string(char *stringStmt, int lineNumber)
         /* write the value to the data section */
         if (!serialize_data_section(*stringStmt))
         {
-            /* FIXME: exit? */
             printf(ERR_DATA_SECTION_FULL);
             return false;
         }
