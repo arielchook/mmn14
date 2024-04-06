@@ -1,4 +1,3 @@
-
 #include <fpopparser.h>
 #include <reserved.h>
 #include <messages.h>
@@ -7,9 +6,23 @@
 #include <mcwordtypes.h>
 #include <machinecode.h>
 
+/** 
+ * @brief Parses the addressing type of an operand based on given rules.
+ * 
+ * This function determines the addressing type of the provided operand by analyzing its syntax.
+ * It supports immediate, direct, fixed index, and direct register addressing modes.
+ * 
+ * @param op The operand to parse.
+ * @param address_rules The addressing rules that apply to this operand.
+ * @param lineNumber The current line number in the source file for error reporting.
+ * @return The addressing type enum value for the operand. Returns WT_INVALID if the addressing type is disallowed or malformed.
+ */
 enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, int lineNumber)
 {
-    /* make sure it's not empty */
+    char *array_name, *array_index;
+    bool improper_format;
+
+    /* Make sure the operand is not empty */
     ltrim(op);
     if (strlen(op) == 0)
     {
@@ -17,10 +30,10 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     }
     rtrim(op);
 
-    /* immediate addressing */
+    /* Immediate addressing */
     if (startsWith(op, IMMEDIATE_VALUE_PREFIX))
     {
-        /* is immediate addressing allowed for this operand? */
+        /* Is immediate addressing allowed for this operand? */
         if (!(address_rules & AR_IMDT))
         {
             printf(ERR_IMDT_DISALLOWED, lineNumber);
@@ -29,34 +42,42 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
         return WT_IMMEDIATE;
     }
 
-    /* fixed index addressing */
+    /* Fixed index addressing */
     if (endsWith(op, ARRAY_CLOSE_CHAR))
     {
-        /* is fixed index addressing allowed for this operand? */
+        /* Is fixed index addressing allowed for this operand? */
         if (!(address_rules & AR_FXIND))
         {
             printf(ERR_FXIND_DISALLOWED, lineNumber);
             return WT_INVALID;
         }
 
-        /* chop the ']' */
+        /* Chop the ']' */
         op[strlen(op) - 1] = '\0';
 
-        /* extract the array name and the array index */
-        if ((extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR) == NULL) ||
-            (extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR) == NULL))
+        /* Extract the array name and the array index */
+        array_name = extractWordSeparator(op, 1, NULL, ARRAY_OPEN_CHAR);
+        array_index = extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR);
+        /* If either doesn't exist, it's an improper format */
+        improper_format = (array_name == NULL) || (array_index == NULL);
+
+        /* Free memory from parsing */
+        free_if_not_null(array_name);
+        free_if_not_null(array_index);
+
+        if (improper_format)
         {
             printf(ERR_MALFORMED_ARRAY, lineNumber);
             return WT_INVALID;
         }
 
-        return WT_FIXED_INDEX; /* fixed index addressing is 2 words - one for the label and another for the index */
+        return WT_FIXED_INDEX; /* Fixed index addressing is 2 words - one for the label and another for the index */
     }
 
-    /* direct register addressing */
+    /* Direct register addressing */
     if (is_register(op))
     {
-        /* is register addressing allowed for this operand? */
+        /* Is register addressing allowed for this operand? */
         if (!(address_rules & AR_DRREG))
         {
             printf(ERR_DRREG_DISALLOWED, lineNumber);
@@ -65,9 +86,8 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
         return WT_DIRECT_REG;
     }
 
-    /* if none of the above it means it's direct addressing */
-
-    /* is direct addressing allowed for this operand? */
+    /* If none of the above, it means it's direct addressing */
+    /* Is direct addressing allowed for this operand? */
     if (!(address_rules & AR_DRCT))
     {
         printf(ERR_DIRECT_DISALLOWED, lineNumber);
@@ -77,33 +97,41 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     return WT_DIRECT;
 }
 
+/** 
+ * @brief Counts the number of memory words needed for the operands of a statement.
+ * 
+ * Analyzes the operands of a machine code instruction to determine how many memory words
+ * are required for them, considering the instruction properties and addressing modes.
+ * 
+ * @param stmt The assembly statement containing the operands.
+ * @param lineNumber The current line number in the source file for error reporting.
+ * @param props The properties of the instruction, including allowed addressing modes.
+ * @return True if the operands are valid and processed successfully, False otherwise.
+ */
 bool count_operands_words(char *stmt, int lineNumber, const instruction_props *props)
 {
     bool success = true;
     enum addressing_type src_at, dest_at;
     int mem_words_count = 0;
 
-    /* get the first operand, second operand and 3rd operand if such */
+    /* Get the first operand, second operand, and 3rd operand if such exists */
     char *op_src = extractWordSeparator(stmt, 1, NULL, OP_SEPARATOR);
     char *op_dest = extractWordSeparator(stmt, 2, NULL, OP_SEPARATOR);
     char *more_ops = extractWordSeparator(stmt, 3, NULL, OP_SEPARATOR);
 
-    /* if any of the following applies we have more operands than we should:
-    1. more than 2 operands or
-    2. required number of operands for the command is 1 and there are 2 or
-    3. required number of operands for the command is 0 and there is more than 0 */
+    /* Check for excessive operands */
     if ((more_ops != NULL) || ((op_dest != NULL) && (props->num_operands < 2)) || ((op_src != NULL) && (props->num_operands < 1)))
     {
         printf(ERR_NUM_OPERANDS, lineNumber, props->instruction);
         success = false;
     }
 
-    /* 1 word needs to be counted for the instruction word */
+    /* One word needs to be counted for the instruction word */
     mem_words_count += 1;
 
     if (success)
     {
-        /* if we have only 1 operand, it's the dest operand */
+        /* If we have only 1 operand, it's the dest operand */
         if (props->num_operands == 1)
         {
             op_dest = op_src;
@@ -111,12 +139,12 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         }
     }
 
-    /* is there a source operand ? */
+    /* Is there a source operand? */
     if (success && op_src != NULL)
     {
         src_at = parse_op_addressing_type(op_src, props->op_src_addr_rules, lineNumber);
 
-        /* advance the instruction counter (IC) by the number of words based on the command and the source opreand */
+        /* Advance the instruction counter (IC) by the number of words based on the command and the source operand */
         if ((success = (src_at != WT_INVALID)))
         {
             switch (src_at)
@@ -135,21 +163,21 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         }
     }
 
-    /* is there a dest operand ? */
+    /* Is there a dest operand? */
     if (success && op_dest != NULL)
     {
         dest_at = parse_op_addressing_type(op_dest, props->op_dest_addr_rules, lineNumber);
 
         if ((success = (dest_at != WT_INVALID)))
         {
-            /* advance the instruction counter (IC) by the number of words based on the command and the dest opreand */
+            /* Advance the instruction counter (IC) by the number of words based on the command and the dest operand */
             switch (dest_at)
             {
             case WT_IMMEDIATE:
             case WT_DIRECT:
                 mem_words_count += 1;
                 break;
-            /* special case - if we have a src operand and it's direct reg we store both registers in the same word */
+            /* Special case - if we have a src operand and it's direct reg we store both registers in the same word */
             case WT_DIRECT_REG:
                 if (src_at != WT_DIRECT_REG)
                 {
@@ -165,8 +193,14 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
         }
     }
 
-    /* now that we counted how many words the command will hold in machine code we should advance the
-    instruction coutner accordingly */
+    /* Now that we counted how many words the command will hold in machine code we should advance the
+       instruction counter accordingly */
     advanceIC(mem_words_count);
+
+    free_if_not_null(op_src);
+    free_if_not_null(op_dest);
+    free_if_not_null(more_ops);
+
     return success;
 }
+

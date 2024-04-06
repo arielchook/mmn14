@@ -5,59 +5,62 @@
 #include <utils.h>
 #include <macros.h>
 
-/* TODO: check conflict between marco names and symbols (unsure if needed) */
+/**
+ * @brief Precompiles the given input file by processing macros and writing the result to the output file.
+ *
+ * This function reads the input file line by line. It looks for macro definitions starting with 'mcr'
+ * and ends with 'endmcr'. While processing macro definitions, it checks for errors like nested macros
+ * or invalid macro names. If a line calls a defined macro, it expands that macro. All other lines are
+ * copied to the output file as-is. The function also handles trimming whitespace and skipping empty lines.
+ *
+ * @param input Pointer to a FILE object that represents the input file to be precompiled.
+ * @param output Pointer to a FILE object where the precompiled output will be written.
+ * @return True if precompilation is successful without any errors, false otherwise.
+ */
 bool precompile(FILE *input, FILE *output)
 {
-    bool success = true;
-    bool inMacro = false;
-    MacroBlock *m;
-    char line[MAX_LINE_LENGTH];
-    int lineNumber = 1;
-    char *macroName, *firstWord, *anythingElse;
+    bool success = true;                        /* Indicates the success of the precompilation process. */
+    bool inMacro = false;                       /* Flag to track if currently within a macro definition. */
+    MacroBlock *m;                              /* Pointer to hold the current macro block being defined. */
+    char line[MAX_LINE_LENGTH];                 /* Buffer to hold the current line from the input file. */
+    char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
+    int lineNumber;
 
-    /* TODO: do we keep processing the file if come across an error? */
-    /* get the next line from input file, until we reach EOF  */
+    /* Loop through each line in the input file. */
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
-        /* remove leading and trailing whitespaces*/
-        ltrim(line);
-        /* skip empty lines */
+        ltrim(line); /* Trim leading whitespace. */
         if (strlen(line) == 0)
-        {
-            continue;
-        }
-        rtrim(line);
+            continue; /* Skip empty lines. */
+        rtrim(line);  /* Trim trailing whitespace. */
 
-        /* extract the first 3 words in the line */
+        /* Parse the current line into key components. */
         firstWord = extractWord(line, 1, NULL);
         macroName = extractWord(line, 2, NULL);
         anythingElse = extractWord(line, 3, NULL);
 
-        /* is it a macro definition*/
+        /* Check if the line is a macro definition start ('mcr'). */
         if (strcmp(firstWord, directives[MCR]) == 0)
         {
             if (inMacro)
             {
+                /* Error handling for nested macros. */
                 printf(PP_ERR_NO_NESTED_MACROS, lineNumber);
                 success = false;
             }
-
-            /* make sure we only have mcr and the macro name and nothing else */
-            if (success && (anythingElse != NULL))
+            else if (success && anythingElse != NULL)
             {
+                /* Error handling for additional characters after macro name. */
                 printf(PP_ERR_EXTRA_CHARS, lineNumber);
                 success = false;
             }
-
-            /* do we have a macro name? */
-            if (success && (macroName == NULL))
+            else if (success && macroName == NULL)
             {
+                /* Error handling for missing macro name. */
                 printf(PP_ERR_INVALID_MACRO_NAME, lineNumber);
                 success = false;
             }
-
-            /* check whether macro name is a reserved word */
-            if (success && is_reserved_word(macroName))
+            else if (success && is_reserved_word(macroName))
             {
                 printf(PP_ERR_RESERVED_WORD, lineNumber, macroName);
                 success = false;
@@ -68,78 +71,97 @@ bool precompile(FILE *input, FILE *output)
                 printf(PP_ERR_DUPLICATE_MACRO, lineNumber, macroName);
                 success = false;
             }
-            /* if all good we have mcr <macro_name>  */
+
             if (success)
             {
+                /* Start of a new macro definition. */
                 inMacro = true;
                 m = safe_malloc(sizeof(MacroBlock));
-                m->name = macroName;
+                m->name = strdup(macroName);
             }
         }
-
-        /* check if it's an endmcr command */
         else if (strcmp(firstWord, directives[ENDMCR]) == 0)
         {
-            /* make sure it's the only command in the line. (macroName holds the 2nd word) */
+            /* Check if the line is the end of a macro definition ('endmcr'). */
             if (macroName != NULL)
             {
+                /* Error handling for extra characters after 'endmcr'. */
                 printf(PP_ERR_EXTRA_ENDMCR, lineNumber);
                 success = false;
             }
-
-            /* make sure we are inside a macro definition */
-            if (success && !inMacro)
+            else if (!inMacro)
             {
+                /* Error handling for 'endmcr' without a corresponding 'mcr'. */
                 printf(PP_ERR_ENDMCR_MISLOCATION, lineNumber);
                 success = false;
             }
 
-            /* all good - add the macro to the macro table */
             if (success)
             {
+                /* Successfully ending a macro definition. */
                 add_macro(m);
+                m = NULL;
                 inMacro = false;
             }
         }
         else
         {
-            /* are we inside a macro definition? if so, just accumulate the macro lines */
+            /* Process lines within macro definitions or expand macros. */
             if (inMacro)
             {
+                /* Accumulate lines within a macro definition. */
                 macro_add_line(m, line);
             }
-            /* not inside a macro definition. check if we are calling a macro */
             else
             {
-                /* search for that macro */
+                /* Check for macro calls and expand them. */
                 m = find_macro(firstWord);
-                /* calling a macro can only be done with one word in the line */
-                if (m != NULL)
+                if (m != NULL && macroName == NULL)
                 {
-                    /* macroName holds the 2nd word. if there is a 2nd word in the line, it's an error */
-                    if (macroName != NULL)
-                    {
-                        printf(PP_ERR_EXTRA_MACRO, lineNumber);
-                        success = false;
-                    }
-                    else
-                    {
-                        /* write all the lines for the macro to the output file */
-                        macro_write_lines(m, output);
-                    }
+                    /* Expand the macro. */
+                    macro_write_lines(m, output);
+                }
+                else if (m == NULL)
+                {
+                    /* Write non-macro lines directly to the output. */
+                    fprintf(output, "%s\n", line);
                 }
                 else
                 {
-                    fprintf(output, "%s\n", line);
+                    /* Error handling for incorrect macro usage. */
+                    printf(PP_ERR_EXTRA_MACRO, lineNumber);
+                    success = false;
                 }
             }
         }
+
+        /* free any dynamically allocated memory in this loop cycle */
+        free_if_not_null(firstWord);
+        free_if_not_null(macroName);
+        free_if_not_null(anythingElse);
+    }
+
+    /* just in case we exited the loop in the middle of a macro */
+    if (m != NULL)
+    {
+        free_if_not_null(m->name);
+        free_if_not_null(m);
+    }
+
+    /* free any dynamically allocated memory in this loop cycle */
+    free_if_not_null(firstWord);
+    free_if_not_null(macroName);
+    free_if_not_null(anythingElse);
+
+    /* just in case we exited the loop in the middle of a macro */
+    if (m != NULL)
+    {
+        free_if_not_null(m->name);
+        free_if_not_null(m);
     }
 
     /* free memory */
     free_macro_table();
-    free_if_not_null(firstWord);
-    free_if_not_null(macroName);
-    free_if_not_null(anythingElse);
+
     return success;
 }

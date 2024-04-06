@@ -15,7 +15,6 @@ mem_word codeSection[CODE_SECTION_SIZE];
 
 /* instruction counter */
 mem_word IC;
-/* TODO: do we start the memory array at 100 or always deduct 100 from IC? */
 
 /* data counter */
 mem_word DC;
@@ -90,7 +89,7 @@ void dump_data_section(void)
 {
     int i = 0;
     LOG("\nData section:\n");
-    for (i = BASE_DATA_ADDRESS; i < DC; i++)
+    for (i = BASE_DATA_ADDRESS; i < getDC(); i++)
     {
         LOG("%.4d: [%d]\n", i, read_data_word(i));
     }
@@ -245,7 +244,7 @@ void dump_code_section(void)
     }
     LOG("\n");
 
-    for (i = BASE_CODE_ADDRESS; i < IC; i++)
+    for (i = BASE_CODE_ADDRESS; i < getIC(); i++)
     {
         LOG_AS_BINARY(i, read_code_word(i));
     }

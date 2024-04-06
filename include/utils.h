@@ -13,6 +13,7 @@
 #define bool uint8_t
 #define true 1
 #define false 0
+
 /* Maximum line length in the input file + 1 more for the \n */
 /* TODO: test with line at maximum length */
 #define MAX_LINE_LENGTH 81
@@ -29,7 +30,10 @@
 void *safe_malloc(int size);
 #define free_if_not_null(x) \
     if (x != NULL)          \
-        free(x);
+    {                       \
+        free(x);            \
+        x = NULL;           \
+    }
 
 /* Trim whitespace characters from the beginning of a string */
 void ltrim(char *str);

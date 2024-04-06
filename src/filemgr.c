@@ -10,13 +10,22 @@
 #include <filemgr.h>
 #include <obwriter.h>
 
+/**
+ * @brief Processes an assembly source file through various compilation stages.
+ *
+ * The function performs precompilation, first pass, and second pass on the given file.
+ * It generates intermediate files (.am, .ent, .ext, .ob) throughout the process.
+ *
+ * @param fname The base name of the file to process, without any extension.
+ * @return True if the processing was successful, false if any errors were encountered.
+ */
 bool processFile(char *fname)
 {
     FILE *asFile, *amFile;
     FILE *entFile, *extFile, *obFile;
     char fnameWext[FILENAME_MAX];
 
-    /* add .as extension and try to open the input file */
+    /* Add .as extension and try to open the input file */
     sprintf(fnameWext, "%s%s", fname, AS_EXTENSION);
     if ((asFile = fopen(fnameWext, "r")) == NULL)
     {
@@ -24,8 +33,8 @@ bool processFile(char *fname)
         return false;
     }
 
-    /* add .am extension and try to open the macro output file.
-    no need to allocate a new file name since it's the same length */
+    /* Add .am extension and try to open the macro output file.
+       No need to allocate a new file name since it's the same length */
     sprintf(fnameWext, "%s%s", fname, AM_EXTENSION);
     if ((amFile = fopen(fnameWext, "w")) == NULL)
     {
@@ -36,21 +45,21 @@ bool processFile(char *fname)
     printf(MSG_PROCESSING_FILE, fname);
     printf(MSG_PRECOMPILATION, fname, AS_EXTENSION, fname, AM_EXTENSION);
 
-    /* run precompiler to generate .am file from .as file */
+    /* Run precompiler to generate .am file from .as file */
     if (!precompile(asFile, amFile))
     {
         printf(ERR_FOUND_IN_PRECOMP);
         return false;
     }
 
-    /* we don't need access to the .as file anymore - close file */
+    /* We don't need access to the .as file anymore - close file */
     if (fclose(asFile) != 0)
     {
         printf(ERR_CLOSING_FILE, fname, AS_EXTENSION);
         return false;
     }
 
-    /* close the .am file and reopen it for for reading */
+    /* Close the .am file and reopen it for reading */
     if (fclose(amFile) != 0)
     {
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
@@ -59,7 +68,7 @@ bool processFile(char *fname)
 
     printf(MSG_DONE);
 
-    /* resets the state for the compiler */
+    /* Resets the state for the compiler */
     reset_mc_state();
 
     printf(MSG_FIRST_PASS, fnameWext);
@@ -70,7 +79,7 @@ bool processFile(char *fname)
         return false;
     }
 
-    /* run first pass on the .am file */
+    /* Run first pass on the .am file */
     if (!firstPass(amFile))
     {
         printf(ERR_FOUND_IN_FIRSTPASS);
@@ -108,7 +117,7 @@ bool processFile(char *fname)
         return false;
     }
 
-    /* done with input files */
+    /* Done with input files */
     if (fclose(amFile) != 0)
     {
         printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
@@ -116,7 +125,7 @@ bool processFile(char *fname)
     }
     printf(MSG_DONE);
 
-    /* write entries file only if we have entries in the entry table */
+    /* Write entries file only if we have entries in the entry table */
     if (!entries_is_empty())
     {
         sprintf(fnameWext, "%s%s", fname, ENT_EXTENSION);
@@ -135,7 +144,7 @@ bool processFile(char *fname)
         printf(MSG_DONE);
     }
 
-    /* write externs file only if we have symbols in the externs */
+    /* Write externs file only if we have symbols in the externs */
     if (!externs_is_empty())
     {
         sprintf(fnameWext, "%s%s", fname, EXT_EXTENSION);
@@ -155,7 +164,7 @@ bool processFile(char *fname)
         printf(MSG_DONE);
     }
 
-    /* write object file */
+    /* Write object file */
     sprintf(fnameWext, "%s%s", fname, OB_EXTENSION);
     printf(MSG_OBJECT_FILE, fnameWext);
 
