@@ -40,6 +40,11 @@ bool advanceIC(int howmuch);
 bool advanceDC(int howmuch);
 void write_code_word(int address, mem_word value);
 
+mem_word *code_word_at(int address);
+mem_word *data_word_at(int address);
+
+uint16_t read_bits(mem_word *word, int start_bit, int num_bits);
+
 mem_word read_code_word(int address);
 
 void write_data_word(int address, mem_word value);

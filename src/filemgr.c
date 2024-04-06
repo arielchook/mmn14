@@ -8,15 +8,7 @@
 #include <entries.h>
 #include <externs.h>
 #include <filemgr.h>
-
-bool dump_object_file(FILE *f)
-{
-    if (f == NULL)
-        f = stdout;
-    fprintf(f, "%u %u\n", getIC(), getDC());
-    /* TODO: write contents of object file from code section+data section */
-    return true;
-}
+#include <obwriter.h>
 
 bool processFile(char *fname)
 {

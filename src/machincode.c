@@ -147,6 +147,13 @@ void write_bits(mem_word *word, int start_bit, int num_bits, uint16_t value)
     *word |= (value & ((1 << num_bits) - 1)) << start_bit;
 }
 
+uint16_t read_bits(mem_word *word, int start_bit, int num_bits)
+{
+    uint16_t mask = (1 << num_bits) - 1;
+
+    return ((*word >> start_bit) & mask);
+}
+
 bool serialize_code_mc_word(mc_word *word)
 {
     mem_word *word_at_IC;
