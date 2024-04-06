@@ -21,7 +21,7 @@ bool precompile(FILE *input, FILE *output)
 {
     bool success = true;                        /* Indicates the success of the precompilation process. */
     bool inMacro = false;                       /* Flag to track if currently within a macro definition. */
-    MacroBlock *m;                              /* Pointer to hold the current macro block being defined. */
+    MacroBlock *m = NULL;                       /* Pointer to hold the current macro block being defined. */
     char line[MAX_LINE_LENGTH];                 /* Buffer to hold the current line from the input file. */
     char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
     int lineNumber;
