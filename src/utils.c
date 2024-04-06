@@ -40,14 +40,28 @@ void rtrim(char *str)
     str[i + 1] = '\0';
 }
 
-/* Check if a string starts with a given prefix */
-int startsWith(const char *str, const char *prefix)
+/**
+ * @brief Check if a string starts with a given prefix
+ *
+ * @param str the string to check
+ * @param prefix the prefix to check against
+ *
+ * @return true if str starts with prefix, false otherwise
+ */
+bool startsWith(const char *str, const char *prefix)
 {
     return strncmp(str, prefix, strlen(prefix)) == 0;
 }
 
-/* Check if a string ends with a given suffix */
-int endsWith(const char *str, const char *suffix)
+/**
+ * @brief Check if a string ends with a given suffix
+ *
+ * @param str the string to check
+ * @param suffix the suffix to check against
+ *
+ * @return true if the string ends with the given suffix, false otherwise
+ */
+bool endsWith(const char *str, const char *suffix)
 {
     size_t str_len = strlen(str);
     size_t suffix_len = strlen(suffix);

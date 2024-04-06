@@ -40,9 +40,9 @@ void ltrim(char *str);
 /* Trim whitespace characters from the end of a string */
 void rtrim(char *str);
 /* Check if a string starts with a given prefix */
-int startsWith(const char *str, const char *prefix);
+bool startsWith(const char *str, const char *prefix);
 /* Check if a string ends with a given suffix */
-int endsWith(const char *str, const char *suffix);
+bool endsWith(const char *str, const char *suffix);
 
 /* Function to extract the n-th word from a string
  Returns the extracted word or NULL if n is out of bounds */

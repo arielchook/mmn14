@@ -60,38 +60,47 @@ bool advanceIC(int howmuch)
     }
     return true;
 }
-void write_code_word(int address, mem_word value)
+void write_code_word(mem_word address, mem_word value)
 {
     codeSection[address - BASE_CODE_ADDRESS] = value;
 }
-mem_word *code_word_at(int address)
+mem_word *code_word_at(mem_word address)
 {
+    /* make sure we're not trying to access an area that is beyond the code section */
+    if (address < BASE_CODE_ADDRESS || address >= getIC())
+        return NULL;
     return &codeSection[address - BASE_CODE_ADDRESS];
 }
-mem_word read_code_word(int address)
-{
-    return codeSection[address - BASE_CODE_ADDRESS];
-}
-void write_data_word(int address, mem_word value)
+
+void write_data_word(mem_word address, mem_word value)
 {
     dataSection[address - BASE_DATA_ADDRESS] = value;
 }
-mem_word read_data_word(int address)
+
+mem_word *data_word_at(mem_word address)
 {
-    return dataSection[address - BASE_DATA_ADDRESS];
-}
-mem_word *data_word_at(int address)
-{
+    /* make sure we're not trying to access an area that is beyond the data section */
+    if (address < BASE_DATA_ADDRESS || address >= getDC())
+        return NULL;
     return &dataSection[address - BASE_DATA_ADDRESS];
 }
 
 void dump_data_section(void)
 {
     int i = 0;
+    mem_word *data_word = NULL;
     LOG("\nData section:\n");
     for (i = BASE_DATA_ADDRESS; i < getDC(); i++)
     {
-        LOG("%.4d: [%d]\n", i, read_data_word(i));
+        data_word = data_word_at(i);
+        if (data_word == NULL)
+        {
+            LOG("%.4d: (null)\n", i);
+        }
+        else
+        {
+            LOG("%.4d: [%d]\n", i, *data_word);
+        }
     }
 }
 
@@ -123,7 +132,7 @@ void cleanup_mc_state(void)
 }
 
 /**
- * @brief Function to write a value to specific bits in a mem_word variable
+ * @brief Function to write a value to specific bits in a given mem_word variable.
  *
  * @param word
  * @param start_bit
@@ -135,7 +144,7 @@ void write_bits(mem_word *word, int start_bit, int num_bits, uint16_t value)
     /* Perform bounds checking */
     if (start_bit < 0 || start_bit >= 14 || num_bits <= 0 || num_bits > 14 || start_bit + num_bits > 14)
     {
-        /* this should happen.. */
+        /* this should not happen.. */
         return;
     }
 
@@ -191,7 +200,7 @@ bool serialize_code_mc_word(mc_word *word)
             externs_append(word->contents.fixed_index.external_symbol, getIC());
         }
 
-        LOG_AS_BINARY(getIC(), read_code_word(IC));
+        LOG_AS_BINARY(getIC());
 
         /* advance the instruction counter by 1, since a fixed index addressing takes 2 words */
         advanceIC(1);
@@ -210,25 +219,32 @@ bool serialize_code_mc_word(mc_word *word)
     }
 
     /* debug print the word in memory */
-    LOG_AS_BINARY(getIC(), read_code_word(IC));
+    LOG_AS_BINARY(getIC());
 
     /* advance the instruction counter by 1 */
     advanceIC(1);
     return true;
 }
 
-void LOG_AS_BINARY(mem_word address, mem_word word)
+void LOG_AS_BINARY(mem_word address)
 {
 #ifdef DEBUG
     int j;
+    mem_word *word = code_word_at(address);
     LOG("%.4u: ", address);
+
+    if (word == NULL)
+    {
+        LOG("(null)\n");
+        return;
+    }
 
     /* Print binary representation with spaces between each bit */
     for (j = MC_WORD_SIZE_BITS - 1; j >= 0; j--)
     {
-        LOG("%2d ", (word >> j) & 1);
+        LOG("%2d ", (*word >> j) & 1);
     }
-    LOG("\t(%x)\n", word);
+    LOG("\t(%u)\n", *word);
 #endif
 }
 
@@ -246,6 +262,6 @@ void dump_code_section(void)
 
     for (i = BASE_CODE_ADDRESS; i < getIC(); i++)
     {
-        LOG_AS_BINARY(i, read_code_word(i));
+        LOG_AS_BINARY(i);
     }
 }

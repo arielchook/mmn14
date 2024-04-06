@@ -26,6 +26,15 @@ only 12 bits to represent an address or a value. */
 typedef uint16_t mem_word;
 
 #define BASE_CODE_ADDRESS 100 /*!< code section starts at this address */
+
+int getIC(void);
+bool advanceIC(int howmuch);
+mem_word *code_word_at(mem_word address);
+void write_code_word(mem_word address, mem_word value);
+bool serialize_code_mc_word(mc_word *word);
+void dump_code_section(void);
+void resetIC(void);
+
 #define BASE_DATA_ADDRESS 0
 
 /**
@@ -34,52 +43,51 @@ typedef uint16_t mem_word;
  * @return int data counter
  */
 int getDC(void);
-
-int getIC(void);
-bool advanceIC(int howmuch);
 bool advanceDC(int howmuch);
-void write_code_word(int address, mem_word value);
-
-mem_word *code_word_at(int address);
-mem_word *data_word_at(int address);
-
-uint16_t read_bits(mem_word *word, int start_bit, int num_bits);
-
-mem_word read_code_word(int address);
-
-void write_data_word(int address, mem_word value);
-
-mem_word read_data_word(int address);
-
-uint16_t to_twos_complement(int num);
-
+mem_word *data_word_at(mem_word address);
+void write_data_word(mem_word address, mem_word value);
 bool serialize_data_section(mem_word value);
-
-bool serialize_code_mc_word(mc_word *word);
-
 /**
  * @brief prints out the contents of the data section
  *
  */
 void dump_data_section(void);
+void resetDC(void);
 
-void LOG_AS_BINARY(mem_word address, mem_word word);
-
-void dump_code_section(void);
-
-void resetIC(void);
+uint16_t to_twos_complement(int num);
 
 /**
- * @brief resets the state of our machine code compiler.
- * this should be called before processing each file.
+ * @brief Function to read a value from specific bits in a given mem_word variable.
  *
+ * @param word pointer to the mem_word
+ * @param start_bit the bit index where to start reading from
+ * @param num_bits the number of bits to read
+ *
+ * @return the read value
+ */
+uint16_t read_bits(mem_word *word, int start_bit, int num_bits);
+
+/**
+ * @brief Function to write a value to specific bits in a given mem_word variable.
+ *
+ * @param word
+ * @param start_bit
+ * @param num_bits
+ * @param value
+ */
+void write_bits(mem_word *word, int start_bit, int num_bits, uint16_t value);
+
+void LOG_AS_BINARY(mem_word address);
+
+/**
+ * @brief resets the state of our machine code compiler, including IC and DC.
+ * this should be called before processing each file.
  */
 void reset_mc_state(void);
 
 /**
- * @brief cleans up machine code data structures and free memory.
- * this includes entries and extern lists as well as symbol table
- *
+ * @brief cleans up machine code data structures and frees memory.
+ * this includes entries and extern lists as well as symbol table.
  */
 void cleanup_mc_state(void);
 
