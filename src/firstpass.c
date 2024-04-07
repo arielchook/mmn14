@@ -150,7 +150,8 @@ bool fp_process_line(char *line, int lineNumber)
         hasLabel = 1;
     }
 
-    cmd = extractWord(line, (hasLabel + 1), &pStart); /* Extract the command, considering label presence */
+    /* Extract the command, considering label presence */
+    cmd = extractWord(line, (hasLabel + 1), &pStart);
 
     /* Delegate to fp_process_line_internal for detailed processing */
     success = fp_process_line_internal(firstWord, cmd, pStart, hasLabel, lineNumber);
