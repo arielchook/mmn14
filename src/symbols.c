@@ -7,7 +7,12 @@
 
 static Hashtable *symbolsTable = NULL;
 
-/* Add a symbol to the symbol hashtable */
+/**
+ * @brief Adds a symbol to the symbol hashtable.
+ * 
+ * @param d Pointer to the SymbolBlock structure to add.
+ * @return True if the symbol was added successfully, False if the symbol already exists.
+ */
 bool add_symbol(SymbolBlock *d)
 {
     SymbolBlock *old;
@@ -20,7 +25,12 @@ bool add_symbol(SymbolBlock *d)
     return (old == NULL);
 }
 
-/* Finds a symbol in the macro hashtable and returns it */
+/**
+ * @brief Finds a symbol in the symbol hashtable and returns it.
+ * 
+ * @param name Name of the symbol to find.
+ * @return Pointer to the SymbolBlock if found, NULL otherwise.
+ */
 SymbolBlock *find_symbol(char *name)
 {
     if (symbolsTable == NULL)
@@ -30,7 +40,9 @@ SymbolBlock *find_symbol(char *name)
     return hashtable_get(symbolsTable, name);
 }
 
-/* Frees all memory allocated for the symbol hashtable */
+/**
+ * @brief Frees all memory allocated for the symbol hashtable.
+ */
 void free_symbol_table(void)
 {
     if (symbolsTable != NULL)
@@ -39,24 +51,33 @@ void free_symbol_table(void)
     }
 }
 
+/**
+ * @brief Checks if a given symbol name is valid.
+ * 
+ * Validates the symbol name against reserved words, length, character types, and duplicates.
+ * 
+ * @param symName Symbol name to validate.
+ * @param lineNumber Current line number for error reporting.
+ * @return True if the symbol name is valid, False otherwise.
+ */
 bool is_valid_symbol_name(char *symName, int lineNumber)
 {
     int i;
-    /* check whether symbol name is a reserved word */
+    /* Check whether symbol name is a reserved word */
     if (is_reserved_word(symName))
     {
         printf(ERR_RESERVED_WORD, lineNumber);
         return false;
     }
 
-    /* check that symbol name starts with a letter */
+    /* Check that symbol name starts with a letter */
     if (!isalpha(symName[0]) || strlen(symName) > MAX_SYMBOL_LEN)
     {
         printf(ERR_INVALID_SYMBOL_NAME, lineNumber);
         return false;
     }
 
-    /* check that symbol name contains only alphanumeric characters */
+    /* Check that symbol name contains only alphanumeric characters */
     for (i = 0; i < strlen(symName); i++)
     {
         if (!isalnum(symName[i]))
@@ -66,7 +87,7 @@ bool is_valid_symbol_name(char *symName, int lineNumber)
         }
     }
 
-    /* check if symbol already exists in the symbol table */
+    /* Check if symbol already exists in the symbol table */
     if (find_symbol(symName) != NULL)
     {
         printf(ERR_DUP_SYMBOL, lineNumber, symName);
@@ -76,6 +97,13 @@ bool is_valid_symbol_name(char *symName, int lineNumber)
     return true;
 }
 
+/**
+ * @brief Adds a define symbol to the symbol table.
+ * 
+ * @param name Name of the define symbol.
+ * @param value Integer value of the define symbol.
+ * @return True if the symbol was added successfully, False otherwise.
+ */
 bool add_define(char *name, int value)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
@@ -86,19 +114,30 @@ bool add_define(char *name, int value)
     return add_symbol(sb);
 }
 
+/**
+ * @brief Adds an extern symbol to the symbol table.
+ * 
+ * @param name Name of the extern symbol.
+ * @return True if the symbol was added successfully, False otherwise.
+ */
 bool add_extern(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
 
-    /* create a symbol block for .extern definition */
+    /* Create a symbol block for .extern definition */
     sb->name = strdup(name);
     sb->value = 0; /* .extern has no value */
     sb->type = ST_EXTERN;
 
-    /* set the flag to mark there was at least one .extern */
     return add_symbol(sb);
 }
 
+/**
+ * @brief Adds a data label symbol to the symbol table.
+ * 
+ * @param name Name of the data label symbol.
+ * @return True if the symbol was added successfully, False otherwise.
+ */
 bool add_data_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
@@ -108,21 +147,28 @@ bool add_data_label(char *name)
     return add_symbol(sb);
 }
 
+/**
+ * @brief Adds a code label symbol to the symbol table.
+ * 
+ * @param name Name of the code label symbol.
+ * @return True if the symbol was added successfully, False otherwise.
+ */
 bool add_code_label(char *name)
 {
     SymbolBlock *sb = safe_malloc(sizeof(SymbolBlock));
     sb->name = strdup(name);
-    sb->value = getIC(); /* IC is the current InstructionCounter */
+    sb->value = getIC(); /* IC is the current Instruction Counter */
     sb->type = ST_CODE;
     return add_symbol(sb);
 }
 
 /**
- * @brief this funcion is executed for every symbol in the symbols table.
- * if it's a ST_DATA or ST_STRING it add IC to its address so when written to file
- * it can be placed after the code part properly
- *
- * @param kvp
+ * @brief Updates the addresses of data and string symbols in the symbol table.
+ * 
+ * This function is executed for every symbol in the symbols table. If it's a ST_DATA or ST_STRING,
+ * it adds IC to its address so when written to file, it can be placed after the code part properly.
+ * 
+ * @param kvp The KeyValuePair structure containing the symbol to update.
  */
 void _update_address(const KeyValuePair kvp)
 {
@@ -133,11 +179,19 @@ void _update_address(const KeyValuePair kvp)
     }
 }
 
+/**
+ * @brief Iterates over the symbol table and updates the addresses of data and string symbols.
+ */
 void update_data_symbols_address(void)
 {
     hashtable_iterate(symbolsTable, _update_address);
 }
 
+/**
+ * @brief Dumps the symbol table for debugging purposes.
+ * 
+ * @param kvp The KeyValuePair structure containing the symbol to dump.
+ */
 void _dump_symbol(const KeyValuePair kvp)
 {
     SymbolBlock *sb = (SymbolBlock *)kvp.value;
@@ -161,11 +215,14 @@ void _dump_symbol(const KeyValuePair kvp)
         LOG("(extern)");
         break;
     default:
-        LOG("unkown symbol type (%d)", sb->type);
+        LOG("unknown symbol type (%d)", sb->type);
     }
     LOG("\n");
 }
 
+/**
+ * @brief Logs the contents of the symbol table to assist with debugging.
+ */
 void dump_symbols_table(void)
 {
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
@@ -175,6 +232,5 @@ void dump_symbols_table(void)
     }
 
     LOG("\nSymbols table:\n");
-
     hashtable_iterate(symbolsTable, _dump_symbol);
 }

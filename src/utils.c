@@ -2,6 +2,15 @@
 #include <string.h>
 #include <ctype.h>
 
+/**
+ * @brief Allocates memory safely.
+ * 
+ * This function allocates memory of a specified size and checks for allocation failure.
+ * If memory allocation fails, the program prints an error message and exits.
+ * 
+ * @param size The size of memory to allocate.
+ * @return A pointer to the allocated memory.
+ */
 void *safe_malloc(int size)
 {
     void *p = malloc(size);
@@ -13,7 +22,11 @@ void *safe_malloc(int size)
     return p;
 }
 
-/* Trim whitespace characters from the beginning of a string */
+/**
+ * @brief Trims leading whitespace characters from a string.
+ * 
+ * @param str The string to trim.
+ */
 void ltrim(char *str)
 {
     int i = 0;
@@ -26,7 +39,11 @@ void ltrim(char *str)
     memmove(str, str + i, strlen(str) - i + 1);
 }
 
-/* Trim whitespace characters from the end of a string */
+/**
+ * @brief Trims trailing whitespace characters from a string.
+ * 
+ * @param str The string to trim.
+ */
 void rtrim(char *str)
 {
     int i = strlen(str) - 1;
@@ -41,12 +58,11 @@ void rtrim(char *str)
 }
 
 /**
- * @brief Check if a string starts with a given prefix
- *
- * @param str the string to check
- * @param prefix the prefix to check against
- *
- * @return true if str starts with prefix, false otherwise
+ * @brief Checks if a string starts with a specified prefix.
+ * 
+ * @param str The string to check.
+ * @param prefix The prefix to look for.
+ * @return True if the string starts with the prefix, false otherwise.
  */
 bool startsWith(const char *str, const char *prefix)
 {
@@ -54,12 +70,11 @@ bool startsWith(const char *str, const char *prefix)
 }
 
 /**
- * @brief Check if a string ends with a given suffix
- *
- * @param str the string to check
- * @param suffix the suffix to check against
- *
- * @return true if the string ends with the given suffix, false otherwise
+ * @brief Checks if a string ends with a specified suffix.
+ * 
+ * @param str The string to check.
+ * @param suffix The suffix to look for.
+ * @return True if the string ends with the suffix, false otherwise.
  */
 bool endsWith(const char *str, const char *suffix)
 {
@@ -72,14 +87,30 @@ bool endsWith(const char *str, const char *suffix)
     return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
 
-/* Function to extract the n-th word from a string
- Returns the extracted word or NULL if n is out of bounds */
+/**
+ * @brief Extracts the n-th word from a string, using space as the default separator.
+ * 
+ * @param str The string from which to extract the word.
+ * @param n The word position to extract (1-based).
+ * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
+ * @return The extracted word, or NULL if n is out of bounds.
+ */
 char *extractWord(char *str, int n, char **pStart)
 {
     return extractWordSeparator(str, n, pStart, ' ');
 }
 
-/* FIXME: doesn't handle 2 consecutive seprators. should return an empty string in such a case */
+/**
+ * @brief Extracts the n-th word from a string, using a specified separator.
+ * 
+ * Note: This function doesn't handle consecutive separators and should return an empty string in such a case.
+ * 
+ * @param str The string from which to extract the word.
+ * @param n The word position to extract (1-based).
+ * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
+ * @param separator The character used to separate words in the string.
+ * @return The extracted word, or NULL if n is out of bounds.
+ */
 char *extractWordSeparator(char *str, int n, char **pStart, char separator)
 {
     int wordCount = 0;
@@ -111,14 +142,13 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
 
     if (in_word)
     {
-        (wordCount)++;
+        wordCount++;
         if (wordCount == n)
         {
             end = str;
         }
     }
 
-    /* n-th word does not exist */
     if (wordCount < n || start == NULL || end == NULL)
     {
         return NULL;
@@ -130,7 +160,6 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
     strncpy(result, start, length);
     result[length] = '\0';
 
-    /* this will return a pointer to the start of the word that was extracted */
     if (pStart != NULL)
     {
         *pStart = start;
@@ -139,26 +168,27 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
     return result;
 }
 
+/**
+ * @brief Duplicates a string.
+ * 
+ * @param str The string to duplicate.
+ * @return A pointer to the duplicated string.
+ */
 char *strdup(const char *str)
 {
-    /* Calculate the length of the input string */
     size_t len = strlen(str) + 1;
-
-    /* Allocate memory for the duplicate string */
     char *dup_str = (char *)safe_malloc(len);
-
-    /* Copy the original string into the duplicate */
     strcpy(dup_str, str);
-
     return dup_str;
 }
 
 /**
- * @brief log function used for debugging. this only works if DEBUG is defined. note that this could not be implemented
- * using a macro (i.e. #define) since in ansi-c macros with variable number of params is not supported.
- *
- * @param format format string just like printf's
- * @param ... variable number of params
+ * @brief Logs a formatted message, intended for debugging purposes.
+ * 
+ * Note: This function only operates when DEBUG is defined.
+ * 
+ * @param format The format string for the message.
+ * @param ... Variable number of arguments to format the message.
  */
 void LOG(const char *format, ...)
 {
@@ -168,6 +198,6 @@ void LOG(const char *format, ...)
     vfprintf(stdout, format, args);
     va_end(args);
 #else
-    /* do nothing */
+    // Do nothing if DEBUG is not defined.
 #endif
 }
