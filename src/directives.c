@@ -91,10 +91,10 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
 /**
  * @brief Handles the .data directive in assembly code.
- * 
+ *
  * Parses the .data directive values, converts them to integers or resolves constants using the symbol table,
  * and serializes the values to the data section of the machine code.
- * 
+ *
  * @param dataStmt The statement containing the .data directive values.
  * @param lineNumber The current line number in the assembly file for error reporting.
  * @return True if all values are processed and serialized successfully, False on any error.
@@ -152,7 +152,8 @@ bool handle_data(char *dataStmt, int lineNumber)
             twoc_intValue = to_twos_complement(intValue);
         }
 
-        free_if_not_null(value); // The value string is no longer needed
+        /* no longer needed */
+        free_if_not_null(value);
 
         /* Serialize the value to the data section */
         if (!serialize_data_section(twoc_intValue))
@@ -165,7 +166,6 @@ bool handle_data(char *dataStmt, int lineNumber)
     return true;
 }
 
-
 /**
  * @brief Handles the .string directive by serializing the provided string into the data section of the assembler's memory.
  *        It trims the input, validates the presence of enclosing quotes, and then iterates through each character of the string,
@@ -176,7 +176,8 @@ bool handle_data(char *dataStmt, int lineNumber)
  * @return true If the string was successfully processed and serialized into the data section.
  * @return false If any error occurred during the processing, such as missing string value, missing enclosing quotes, or if the data section is full.
  */
-bool handle_string(char *stringStmt, int lineNumber) {
+bool handle_string(char *stringStmt, int lineNumber)
+{
     char *stringEnd;
 
     /* make sure we have something after the .string directive*/
@@ -186,7 +187,8 @@ bool handle_string(char *stringStmt, int lineNumber) {
         printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]);
         return false;
     }
-    rtrim(stringStmt); // Trim trailing whitespaces
+    /* Trim trailing whitespaces */
+    rtrim(stringStmt);
 
     /* string value must be enclosed in quotes */
     if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE))
@@ -197,16 +199,23 @@ bool handle_string(char *stringStmt, int lineNumber) {
 
     /* Iterate through the string, serializing each character into the data section.
        The starting and ending quotes are ignored, and a '\0' character is written at the end. */
-    stringEnd = stringStmt + strlen(stringStmt) - 1; // Adjust pointer to skip the ending quote
-    *stringEnd = '\0'; // Replace the ending quote with a null terminator to properly end the string in the data section
-    for (stringStmt++; stringStmt <= stringEnd; stringStmt++) { // Start from the character after the beginning quote
-        if (!serialize_data_section(*stringStmt)) { // Serialize each character and check for errors
-            printf(ERR_DATA_SECTION_FULL); // Error if the data section is full and cannot accommodate more data
+    /* Adjust pointer to skip the ending quote */
+    stringEnd = stringStmt + strlen(stringStmt) - 1;
+    /* Replace the ending quote with a null terminator to properly end the string in the data section */
+    *stringEnd = '\0';
+    /* Start from the character after the beginning quote */
+    for (stringStmt++; stringStmt <= stringEnd; stringStmt++)
+    {
+        /* Error if the data section is full and cannot accommodate more data */
+        if (!serialize_data_section(*stringStmt))
+        {
+            printf(ERR_DATA_SECTION_FULL);
             return false;
         }
     }
 
-    return true; // Return true if the entire string was successfully serialized
+    /* Return true if the entire string was successfully serialized */
+    return true;
 }
 
 bool handle_extern(char *externStmt, int lineNumber)
