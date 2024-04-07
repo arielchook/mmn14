@@ -137,7 +137,7 @@ bool handle_data(char *dataStmt, int lineNumber)
                 free_if_not_null(value);
                 return false;
             }
-            /* Use the constant's value */
+            /* Use the constant's value. note that it's already in two-complement form */
             twoc_intValue = sb->value;
         }
         else

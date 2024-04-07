@@ -15,12 +15,12 @@ mem_word dataSection[DATA_SECTION_SIZE];
  */
 mem_word codeSection[CODE_SECTION_SIZE];
 
-/** 
+/**
  * @brief Instruction Counter (IC), tracking the current address in the code section.
  */
 mem_word IC;
 
-/** 
+/**
  * @brief Data Counter (DC), tracking the current address in the data section.
  */
 mem_word DC;
@@ -45,12 +45,12 @@ uint16_t to_twos_complement(int num)
 
 /**
  * @brief Serializes and stores a value in the data section, then advances the Data Counter (DC).
- * @param value The value to be stored in the data section.
+ * @param value The value to be stored in the data section. Must be a 16-bit unsigned integer in a two-complement encoding.
  * @return True if the value was successfully stored, False if the data section is full.
  */
 bool serialize_data_section(mem_word value)
 {
-    write_data_word(DC, to_twos_complement(value)); /* FIXME: do we need to run to_twos_complement again? */
+    write_data_word(getDC(), value);
     return advanceDC(1);
 }
 
@@ -124,7 +124,7 @@ mem_word *code_word_at(mem_word address)
 /**
  * @brief Writes a word to a specific address in the data section.
  * @param address The address in the data section where the word should be written.
- * @param value The word to be written to the data section.
+ * @param value The word to be written to the data section. Must be in two-complement encoding.
  */
 void write_data_word(mem_word address, mem_word value)
 {
@@ -144,10 +144,9 @@ mem_word *data_word_at(mem_word address)
     return &dataSection[address - BASE_DATA_ADDRESS];
 }
 
-
 /**
  * @brief Dumps the current contents of the data section for debugging purposes.
- * 
+ *
  * This function iterates through the data section starting from the base address up to the current
  * value of the Data Counter (DC). For each address, it retrieves the data word and logs it. If the
  * data word at a given address is NULL, indicating an uninitialized or invalid address, it logs
