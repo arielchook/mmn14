@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <ctype.h>
 #include <utils.h>
 #include <hashtable.h>
@@ -9,7 +10,7 @@
 #include <fpopparser.h>
 #include <entries.h>
 
-/*
+/* 
  * Internal function to process a line of assembly code, handling labels, directives, and commands.
  *
  * This function deals with assembly language constructs such as labels, directives like .define, .data, .string, .entry,
@@ -22,7 +23,7 @@
  * - pStart: Pointer to the start of the parameters or operands in the line.
  * - hasLabel: Indicator of whether the line contains a label (1 for true, 0 for false).
  * - lineNumber: The current line number in the assembly source file, used for error reporting.
- *
+ * 
  * Returns:
  * - True if the line was processed successfully, false if an error was encountered.
  */
@@ -108,7 +109,7 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     }
 
     props = get_instruction_props(cmd); /* Locate the command in the instruction table */
-    if (props == NULL)                  /* Invalid command */
+    if (props == NULL) /* Invalid command */
     {
         printf(ERR_UNKNOWN_CMD, lineNumber, cmd);
         return false;
@@ -118,7 +119,7 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     return count_operands_words(pStart + strlen(cmd), lineNumber, props);
 }
 
-/*
+/* 
  * Processes a single line of assembly code, identifying and handling labels, comments, and commands.
  *
  * This function extracts the first word (possible label) and the command from a line of assembly code,
@@ -128,7 +129,7 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
  * Parameters:
  * - line: The line of assembly code to process.
  * - lineNumber: The current line number in the assembly source file, used for error reporting.
- *
+ * 
  * Returns:
  * - True if the line was processed successfully, false if an error was encountered.
  */
@@ -145,7 +146,7 @@ bool fp_process_line(char *line, int lineNumber)
     hasLabel = 0; /* Assume no label is present */
 
     firstWord = extractWord(line, 1, &pStart); /* Extract the first word */
-    if (endsWith(firstWord, LABEL_SUFFIX))     /* Check if the first word is a label */
+    if (endsWith(firstWord, LABEL_SUFFIX)) /* Check if the first word is a label */
     {
         hasLabel = 1;
     }
@@ -162,7 +163,7 @@ bool fp_process_line(char *line, int lineNumber)
     return success;
 }
 
-/*
+/* 
  * Performs the first pass of the assembler, processing each line in the input file.
  *
  * This function iterates through each line of the input assembly file, processing directives, labels,
@@ -171,7 +172,7 @@ bool fp_process_line(char *line, int lineNumber)
  *
  * Parameters:
  * - input: File pointer to the input assembly source file.
- *
+ * 
  * Returns:
  * - True if the first pass completes successfully without errors, false otherwise.
  */
@@ -183,7 +184,7 @@ bool firstPass(FILE *input)
 
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++) /* Read each line */
     {
-        rtrim(line);                                  /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
+        rtrim(line); /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
         success &= fp_process_line(line, lineNumber); /* Process each line and accumulate success status */
     }
 

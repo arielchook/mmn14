@@ -88,13 +88,16 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
     return true;
 }
+
 /**
- * @brief
- *
- * @param dataStmt
- * @param lineNumber
- * @return true
- * @return false
+ * @brief Handles the .data directive in assembly code.
+ * 
+ * Parses the .data directive values, converts them to integers or resolves constants using the symbol table,
+ * and serializes the values to the data section of the machine code.
+ * 
+ * @param dataStmt The statement containing the .data directive values.
+ * @param lineNumber The current line number in the assembly file for error reporting.
+ * @return True if all values are processed and serialized successfully, False on any error.
  */
 bool handle_data(char *dataStmt, int lineNumber)
 {
@@ -107,9 +110,8 @@ bool handle_data(char *dataStmt, int lineNumber)
     ltrim(dataStmt);
     for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, OP_SEPARATOR)) != NULL); valCnt++)
     {
-        /* trim whitespaces around each value */
-        /* FIXME: make sure it can handle ,,, */
-        ltrim(value);
+        /* FIXME: make sure it can handle consecutive separators, e.g., ,,, */
+        ltrim(value); // Trim whitespaces around each value
         if (strlen(value) == 0)
         {
             printf(ERR_MISSING_VALUE, lineNumber, directives[DATA]);
@@ -118,10 +120,10 @@ bool handle_data(char *dataStmt, int lineNumber)
         }
         rtrim(value);
 
-        /* try to convert to int */
+        /* Try to convert the value to an integer */
         intValue = strtol(value, &ptr, 10);
 
-        /* this means it's a string. check if it's a name of a constant */
+        /* Check if the value is a string indicating it might be a constant's name */
         if (*ptr != '\0')
         {
             sb = find_symbol(value);
@@ -129,28 +131,26 @@ bool handle_data(char *dataStmt, int lineNumber)
             {
                 printf(ERR_CANT_FIND_DEFINE, lineNumber, value);
                 free_if_not_null(value);
-
                 return false;
             }
-
-            /* at this point we found a constant with that name. use its value */
+            /* Use the constant's value */
             twoc_intValue = sb->value;
         }
         else
         {
-            /* make sure the int value provided can be represented in memory */
+            /* Validate the integer value can be represented in memory */
             if ((intValue < MIN_VALUE) || (intValue > MAX_VALUE))
             {
                 printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, intValue, MIN_VALUE, MAX_VALUE);
+                free_if_not_null(value);
                 return false;
             }
             twoc_intValue = to_twos_complement(intValue);
         }
 
-        /* don't need it anymore */
-        free_if_not_null(value);
+        free_if_not_null(value); // The value string is no longer needed
 
-        /* write the value to the data section */
+        /* Serialize the value to the data section */
         if (!serialize_data_section(twoc_intValue))
         {
             printf(ERR_DATA_SECTION_FULL);
@@ -161,38 +161,45 @@ bool handle_data(char *dataStmt, int lineNumber)
     return true;
 }
 
-bool handle_string(char *stringStmt, int lineNumber)
-{
+
+/**
+ * @brief Handles the .string directive by serializing the provided string into the data section of the assembler's memory.
+ *        It trims the input, validates the presence of enclosing quotes, and then iterates through each character of the string,
+ *        serializing them into the data section. It also handles and reports any errors encountered during the process.
+ *
+ * @param stringStmt The string statement to be processed, following the ".string" directive.
+ * @param lineNumber The line number in the source file where this directive is found, used for error reporting.
+ * @return true If the string was successfully processed and serialized into the data section.
+ * @return false If any error occurred during the processing, such as missing string value, missing enclosing quotes, or if the data section is full.
+ */
+bool handle_string(char *stringStmt, int lineNumber) {
     char *stringEnd;
 
-    ltrim(stringStmt);
-    if (strlen(stringStmt) == 0)
-    {
-        printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]);
+    ltrim(stringStmt); // Trim leading whitespaces
+    if (strlen(stringStmt) == 0) {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]); // Error for empty string statement
         return false;
     }
-    rtrim(stringStmt);
+    rtrim(stringStmt); // Trim trailing whitespaces
 
-    if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE))
-    {
-        printf(ERR_MISSING_QUOTES, lineNumber);
+    // Validate the presence of starting and ending quotes
+    if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE)) {
+        printf(ERR_MISSING_QUOTES, lineNumber); // Error for missing quotes
         return false;
     }
-    /* go through the string constant and write it to memory character by character, word by word */
-    /* ignore the quotes and write the \0 at the end */
-    stringEnd = stringStmt + strlen(stringStmt) - 1;
-    *stringEnd = '\0';
-    for (stringStmt++; stringStmt <= stringEnd; stringStmt++)
-    {
-        /* write the value to the data section */
-        if (!serialize_data_section(*stringStmt))
-        {
-            printf(ERR_DATA_SECTION_FULL);
+
+    /* Iterate through the string, serializing each character into the data section.
+       The starting and ending quotes are ignored, and a '\0' character is written at the end. */
+    stringEnd = stringStmt + strlen(stringStmt) - 1; // Adjust pointer to skip the ending quote
+    *stringEnd = '\0'; // Replace the ending quote with a null terminator to properly end the string in the data section
+    for (stringStmt++; stringStmt <= stringEnd; stringStmt++) { // Start from the character after the beginning quote
+        if (!serialize_data_section(*stringStmt)) { // Serialize each character and check for errors
+            printf(ERR_DATA_SECTION_FULL); // Error if the data section is full and cannot accommodate more data
             return false;
         }
     }
 
-    return true;
+    return true; // Return true if the entire string was successfully serialized
 }
 
 bool handle_extern(char *externStmt, int lineNumber)
