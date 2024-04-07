@@ -27,6 +27,15 @@
 #define ARRAY_CLOSE_CHAR "]"       /*!< Array suffix */
 #define STR_ENCLOSURE "\""         /*!< strings enclosure characters */
 
+/**
+ * @brief Allocates memory safely.
+ * 
+ * This function allocates memory of a specified size and checks for allocation failure.
+ * If memory allocation fails, the program prints an error message and exits.
+ * 
+ * @param size The size of memory to allocate.
+ * @return A pointer to the allocated memory.
+ */
 void *safe_malloc(int size);
 #define free_if_not_null(x) \
     if (x != NULL)          \
@@ -35,19 +44,67 @@ void *safe_malloc(int size);
         x = NULL;           \
     }
 
-/* Trim whitespace characters from the beginning of a string */
+/**
+ * @brief Trims leading whitespace characters from a string.
+ * 
+ * @param str The string to trim.
+ */
 void ltrim(char *str);
-/* Trim whitespace characters from the end of a string */
+
+/**
+ * @brief Trims trailing whitespace characters from a string.
+ * 
+ * @param str The string to trim.
+ */
 void rtrim(char *str);
-/* Check if a string starts with a given prefix */
+
+/**
+ * @brief Checks if a string starts with a specified prefix.
+ * 
+ * @param str The string to check.
+ * @param prefix The prefix to look for.
+ * @return True if the string starts with the prefix, false otherwise.
+ */
 bool startsWith(const char *str, const char *prefix);
-/* Check if a string ends with a given suffix */
+
+/**
+ * @brief Checks if a string ends with a specified suffix.
+ * 
+ * @param str The string to check.
+ * @param suffix The suffix to look for.
+ * @return True if the string ends with the suffix, false otherwise.
+ */
 bool endsWith(const char *str, const char *suffix);
 
-/* Function to extract the n-th word from a string
- Returns the extracted word or NULL if n is out of bounds */
+/**
+ * @brief Extracts the n-th word from a string, using space as the default separator.
+ * 
+ * @param str The string from which to extract the word.
+ * @param n The word position to extract (1-based).
+ * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
+ * @return The extracted word, or NULL if n is out of bounds.
+ */
 char *extractWord(char *str, int n, char **pStart);
+
+/**
+ * @brief Extracts the n-th word from a string, using a specified separator.
+ * 
+ * Note: This function doesn't handle consecutive separators and should return an empty string in such a case.
+ * 
+ * @param str The string from which to extract the word.
+ * @param n The word position to extract (1-based).
+ * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
+ * @param separator The character used to separate words in the string.
+ * @return The extracted word, or NULL if n is out of bounds.
+ */
 char *extractWordSeparator(char *str, int n, char **pStart, char separator);
+
+/**
+ * @brief Duplicates a string.
+ * 
+ * @param str The string to duplicate.
+ * @return A pointer to the duplicated string.
+ */
 char *strdup(const char *str);
 
 /**
