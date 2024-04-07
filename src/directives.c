@@ -230,10 +230,12 @@ bool handle_string(char *stringStmt, int lineNumber)
  * @return true If the external symbol was successfully processed and added to the external symbols list.
  * @return false If any error occurred during the processing, such as an empty external symbol statement or invalid symbol name.
  */
-bool handle_extern(char *externStmt, int lineNumber) {
+bool handle_extern(char *externStmt, int lineNumber)
+{
     /* Trim leading whitespaces from the external symbol statement */
     ltrim(externStmt);
-    if (strlen(externStmt) == 0) {
+    if (strlen(externStmt) == 0)
+    {
         printf(ERR_MISSING_VALUE, lineNumber, directives[EXTERN]); /* Error for empty external symbol statement */
         return false;
     }
@@ -241,7 +243,8 @@ bool handle_extern(char *externStmt, int lineNumber) {
     rtrim(externStmt);
 
     /* Validate the external symbol name */
-    if (!is_valid_symbol_name(externStmt, lineNumber)) {
+    if (!is_valid_symbol_name(externStmt, lineNumber))
+    {
         /* The symbol name is invalid; an error message is expected to be printed within is_valid_symbol_name */
         return false;
     }
@@ -251,8 +254,6 @@ bool handle_extern(char *externStmt, int lineNumber) {
 
     return true; /* Return true as the external symbol has been successfully added */
 }
-
-
 
 /**
  * @brief Handles the .entry directive by adding the specified symbol to the list of entry symbols.
@@ -265,16 +266,18 @@ bool handle_extern(char *externStmt, int lineNumber) {
  * @return true If the entry statement was successfully processed and added to the list of entries.
  * @return false If any error occurred during the processing, such as an empty entry statement.
  */
-bool handle_entry(char *entryStmt, int lineNumber) {
-    ltrim(entryStmt); // Trim leading whitespaces from the entry statement
-    if (strlen(entryStmt) == 0) {
-        printf(ERR_MISSING_VALUE, lineNumber, directives[ENTRY]); // Error for empty entry statement
+bool handle_entry(char *entryStmt, int lineNumber)
+{
+    /* Trim whitespaces from the entry statement */
+    ltrim(entryStmt);
+    if (strlen(entryStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[ENTRY]);
         return false;
     }
-    rtrim(entryStmt); // Trim trailing whitespaces from the entry statement
+    rtrim(entryStmt);
 
-    // Append the entry statement to the list of entries for later validation against the symbol table
+    /* Append the entry statement to the list of entries for later validation against the symbol table */
     entries_append(entryStmt);
-    return true; // Return true as the entry statement has been successfully added to the list
+    return true;
 }
-

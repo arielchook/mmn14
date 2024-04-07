@@ -24,13 +24,14 @@ bool precompile(FILE *input, FILE *output)
     MacroBlock *m = NULL;                       /* Pointer to hold the current macro block being defined. */
     char line[MAX_LINE_LENGTH];                 /* Buffer to hold the current line from the input file. */
     char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
-    int lineNumber;
+    int lineNumber, len;
 
     /* Loop through each line in the input file until we reach EOF or any failure */
     for (lineNumber = 1; success && fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
-        /* if the last character in the line is not \n it means the line is too long than MAX_LINE_LENGTH */
-        if (line[strlen(line) - 1] != '\n')
+        /* if we got back MAX_LINE_LENGTH length string and the last character in the line is not \n it means the line is too long */
+        len = strlen(line);
+        if ((len >= MAX_LINE_LENGTH - 1) && (line[len - 1] != '\n'))
         {
             printf(PP_ERR_MAX_LENGTH_EXCEEDED, lineNumber, MAX_LINE_LENGTH);
             success = false;
