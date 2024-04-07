@@ -26,9 +26,17 @@ bool precompile(FILE *input, FILE *output)
     char *macroName, *firstWord, *anythingElse; /* Variables to parse the line. */
     int lineNumber;
 
-    /* Loop through each line in the input file. */
-    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
+    /* Loop through each line in the input file until we reach EOF or any failure */
+    for (lineNumber = 1; success && fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
+        /* if the last character in the line is not \n it means the line is too long than MAX_LINE_LENGTH */
+        if (line[strlen(line) - 1] != '\n')
+        {
+            printf(PP_ERR_MAX_LENGTH_EXCEEDED, lineNumber, MAX_LINE_LENGTH);
+            success = false;
+            break;
+        }
+
         ltrim(line); /* Trim leading whitespace. */
         if (strlen(line) == 0)
             continue; /* Skip empty lines. */
@@ -140,18 +148,6 @@ bool precompile(FILE *input, FILE *output)
         free_if_not_null(macroName);
         free_if_not_null(anythingElse);
     }
-
-    /* just in case we exited the loop in the middle of a macro */
-    if (m != NULL)
-    {
-        free_if_not_null(m->name);
-        free_if_not_null(m);
-    }
-
-    /* free any dynamically allocated memory in this loop cycle */
-    free_if_not_null(firstWord);
-    free_if_not_null(macroName);
-    free_if_not_null(anythingElse);
 
     /* just in case we exited the loop in the middle of a macro */
     if (m != NULL)

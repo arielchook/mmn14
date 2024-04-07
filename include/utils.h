@@ -15,7 +15,6 @@
 #define false 0
 
 /* Maximum line length in the input file + 1 more for the \n */
-/* TODO: test with line at maximum length */
 #define MAX_LINE_LENGTH 81
 
 /** parsing constants */
@@ -26,6 +25,7 @@
 #define ARRAY_OPEN_CHAR '['        /*!< Array subscription character */
 #define ARRAY_CLOSE_CHAR "]"       /*!< Array suffix */
 #define STR_ENCLOSURE "\""         /*!< strings enclosure characters */
+#define SPACE ' '                  /* !< space separator character */
 
 /**
  * @brief Allocates memory safely.

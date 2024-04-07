@@ -37,14 +37,12 @@ bool handle_define(char *symbolStmt, int lineNumber)
         return false;
     }
 
-    ltrim(defName);
     if (strlen(defName) == 0)
     {
         printf(ERR_MISSING_DEFINE_NAME, lineNumber);
         free_if_not_null(defName);
         return false;
     }
-    rtrim(defName);
 
     /* make sure constant name is valid */
     if (!is_valid_symbol_name(defName, lineNumber))
@@ -57,22 +55,24 @@ bool handle_define(char *symbolStmt, int lineNumber)
     if ((defVal = extractWordSeparator(symbolStmt, 2, NULL, EQUAL_SEPARATOR)) == NULL)
     {
         printf(ERR_MISSING_DEFINE_VALUE, lineNumber);
+        free_if_not_null(defName);
+
         return false;
     }
 
     /* try to convert to int */
     value = strtol(defVal, &ptr, 10);
 
-    /* we don't need defVal anymore */
-    free_if_not_null(defVal);
-
     if (*ptr != '\0')
     {
         printf(ERR_DEFINE_VALUE_NOT_INT, lineNumber);
+        free_if_not_null(defVal);
         free_if_not_null(defName);
 
         return false;
     }
+    /* we don't need defVal anymore */
+    free_if_not_null(defVal);
 
     /* value must be in the range we can represent in memory */
     if ((value < MIN_VALUE) || (value > MAX_VALUE))
@@ -107,18 +107,22 @@ bool handle_data(char *dataStmt, int lineNumber)
     char *ptr;
     char *value;
 
-    ltrim(dataStmt);
+    /* check we don't have an empry .data command */
+    if (strlen(dataStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[DATA]);
+        return false;
+    }
+
+    /* parse data values one by one */
     for (valCnt = 1; ((value = extractWordSeparator(dataStmt, valCnt, NULL, OP_SEPARATOR)) != NULL); valCnt++)
     {
-        /* FIXME: make sure it can handle consecutive separators, e.g., ,,, */
-        ltrim(value); // Trim whitespaces around each value
         if (strlen(value) == 0)
         {
             printf(ERR_MISSING_VALUE, lineNumber, directives[DATA]);
             free_if_not_null(value);
             return false;
         }
-        rtrim(value);
 
         /* Try to convert the value to an integer */
         intValue = strtol(value, &ptr, 10);
@@ -175,16 +179,19 @@ bool handle_data(char *dataStmt, int lineNumber)
 bool handle_string(char *stringStmt, int lineNumber) {
     char *stringEnd;
 
-    ltrim(stringStmt); // Trim leading whitespaces
-    if (strlen(stringStmt) == 0) {
-        printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]); // Error for empty string statement
+    /* make sure we have something after the .string directive*/
+    ltrim(stringStmt);
+    if (strlen(stringStmt) == 0)
+    {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[STRING]);
         return false;
     }
     rtrim(stringStmt); // Trim trailing whitespaces
 
-    // Validate the presence of starting and ending quotes
-    if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE)) {
-        printf(ERR_MISSING_QUOTES, lineNumber); // Error for missing quotes
+    /* string value must be enclosed in quotes */
+    if (!startsWith(stringStmt, STR_ENCLOSURE) || !endsWith(stringStmt, STR_ENCLOSURE))
+    {
+        printf(ERR_MISSING_QUOTES, lineNumber);
         return false;
     }
 

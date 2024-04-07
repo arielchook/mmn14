@@ -116,7 +116,7 @@ void write_code_word(mem_word address, mem_word value)
 mem_word *code_word_at(mem_word address)
 {
     /* make sure we're not trying to access an area that is beyond the code section */
-    if (address < BASE_CODE_ADDRESS || address >= getIC())
+    if (address < BASE_CODE_ADDRESS || address > getIC())
         return NULL;
     return &codeSection[address - BASE_CODE_ADDRESS];
 }
@@ -139,7 +139,7 @@ void write_data_word(mem_word address, mem_word value)
 mem_word *data_word_at(mem_word address)
 {
     /* make sure we're not trying to access an area that is beyond the data section */
-    if (address < BASE_DATA_ADDRESS || address >= getDC())
+    if (address < BASE_DATA_ADDRESS || address > getDC())
         return NULL;
     return &dataSection[address - BASE_DATA_ADDRESS];
 }

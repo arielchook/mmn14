@@ -6,12 +6,12 @@
 #include <mcwordtypes.h>
 #include <machinecode.h>
 
-/** 
+/**
  * @brief Handles immediate operand parsing and conversion.
- * 
+ *
  * This function processes an immediate operand, converting it to an integer or resolving it as a constant.
  * It validates the value and converts it to two's complement if necessary.
- * 
+ *
  * @param op Operand string starting with '#'.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
@@ -61,12 +61,12 @@ bool handle_immediate(char *op, int lineNumber, mc_word *word)
     return true;
 }
 
-/** 
+/**
  * @brief Handles fixed index addressing mode.
- * 
+ *
  * This function processes an operand in fixed index addressing mode, extracting the array name and index.
  * It checks the symbol table for the array and index and populates the machine code word accordingly.
- * 
+ *
  * @param op Operand string with array name and index.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
@@ -166,11 +166,11 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
     return true;
 }
 
-/** 
+/**
  * @brief Handles direct register addressing mode.
- * 
+ *
  * This function identifies the register number and populates the machine code word accordingly.
- * 
+ *
  * @param op Operand string representing a register.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
@@ -191,11 +191,11 @@ bool handle_direct_register(char *op, int lineNumber, mc_word *word)
     return true;
 }
 
-/** 
+/**
  * @brief Handles direct addressing mode.
- * 
+ *
  * This function looks up the symbol in the symbol table and populates the machine code word based on the symbol type.
- * 
+ *
  * @param op Operand string representing a symbol.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
@@ -240,11 +240,11 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
     return true;
 }
 
-/** 
+/**
  * @brief Processes an operand based on addressing rules.
- * 
+ *
  * This function determines the operand's addressing mode and processes it accordingly.
- * 
+ *
  * @param op The operand string to process.
  * @param address_rules Addressing rules applicable to this operand.
  * @param lineNumber Current line number for error reporting.
@@ -254,12 +254,10 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
 bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *word)
 {
     /* Make sure it's not empty */
-    ltrim(op);
     if (strlen(op) == 0)
     {
         printf(ERR_EMPTY_OPERAND, lineNumber);
     }
-    rtrim(op);
 
     /* Debug log each operand */
     LOG("|%s", op);
@@ -286,13 +284,13 @@ bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *w
     return handle_direct_addressing(op, lineNumber, word);
 }
 
-/** 
+/**
  * @brief Parses operands of an assembly instruction and generates machine code words.
- * 
+ *
  * This function processes source and destination operands of an assembly instruction
  * based on their addressing modes and the instruction properties. It generates and serializes
  * the machine code words for the instruction and its operands.
- * 
+ *
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber Current line number for error reporting.
  * @param props The properties of the instruction being parsed.
@@ -398,4 +396,3 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
 
     return success;
 }
-

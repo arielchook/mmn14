@@ -6,12 +6,12 @@
 #include <mcwordtypes.h>
 #include <machinecode.h>
 
-/** 
+/**
  * @brief Parses the addressing type of an operand based on given rules.
- * 
+ *
  * This function determines the addressing type of the provided operand by analyzing its syntax.
  * It supports immediate, direct, fixed index, and direct register addressing modes.
- * 
+ *
  * @param op The operand to parse.
  * @param address_rules The addressing rules that apply to this operand.
  * @param lineNumber The current line number in the source file for error reporting.
@@ -23,12 +23,10 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     bool improper_format;
 
     /* Make sure the operand is not empty */
-    ltrim(op);
     if (strlen(op) == 0)
     {
         printf(ERR_EMPTY_OPERAND, lineNumber);
     }
-    rtrim(op);
 
     /* Immediate addressing */
     if (startsWith(op, IMMEDIATE_VALUE_PREFIX))
@@ -97,12 +95,12 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     return WT_DIRECT;
 }
 
-/** 
+/**
  * @brief Counts the number of memory words needed for the operands of a statement.
- * 
+ *
  * Analyzes the operands of a machine code instruction to determine how many memory words
  * are required for them, considering the instruction properties and addressing modes.
- * 
+ *
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber The current line number in the source file for error reporting.
  * @param props The properties of the instruction, including allowed addressing modes.
@@ -203,4 +201,3 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
 
     return success;
 }
-

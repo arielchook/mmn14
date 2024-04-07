@@ -8,8 +8,7 @@
  *
  * @param[in] f The file to write the contents to. If NULL, it will write to stdout
  *
- * @return true if the object file was successfully written, false otherwise
  */
-bool dump_object_file(FILE *f);
+void dump_object_file(FILE *f);
 
 #endif

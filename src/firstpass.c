@@ -59,8 +59,6 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
         printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
         return false;
     }
-    ltrim(cmd); /* Trim leading whitespace from the command */
-    rtrim(cmd); /* Trim trailing whitespace from the command */
 
     /* Process .data directive */
     if (strcmp(cmd, directives[DATA]) == 0)
@@ -145,13 +143,21 @@ bool fp_process_line(char *line, int lineNumber)
 
     hasLabel = 0; /* Assume no label is present */
 
+<<<<<<< HEAD
     firstWord = extractWord(line, 1, &pStart); /* Extract the first word */
     if (endsWith(firstWord, LABEL_SUFFIX)) /* Check if the first word is a label */
+=======
+    /* Extract the first word */
+    firstWord = extractWord(line, 1, &pStart);
+    /* Check if the first word is a label */
+    if (endsWith(firstWord, LABEL_SUFFIX))
+>>>>>>> 02a91d17eb2f132c45260b2e8da4458a8e2380e7
     {
         hasLabel = 1;
     }
 
-    cmd = extractWord(line, (hasLabel + 1), &pStart); /* Extract the command, considering label presence */
+    /* Extract the command, considering label presence */
+    cmd = extractWord(line, (hasLabel + 1), &pStart);
 
     /* Delegate to fp_process_line_internal for detailed processing */
     success = fp_process_line_internal(firstWord, cmd, pStart, hasLabel, lineNumber);
@@ -184,8 +190,15 @@ bool firstPass(FILE *input)
 
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++) /* Read each line */
     {
+<<<<<<< HEAD
         rtrim(line); /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
         success &= fp_process_line(line, lineNumber); /* Process each line and accumulate success status */
+=======
+        /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
+        rtrim(line);
+        /* Process each line and accumulate success status */
+        success &= fp_process_line(line, lineNumber);
+>>>>>>> 02a91d17eb2f132c45260b2e8da4458a8e2380e7
     }
 
     if (success) /* Update symbol addresses in the data section if no errors occurred */
