@@ -58,8 +58,6 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
         printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
         return false;
     }
-    ltrim(cmd); /* Trim leading whitespace from the command */
-    rtrim(cmd); /* Trim trailing whitespace from the command */
 
     /* Process .data directive */
     if (strcmp(cmd, directives[DATA]) == 0)
@@ -144,8 +142,10 @@ bool fp_process_line(char *line, int lineNumber)
 
     hasLabel = 0; /* Assume no label is present */
 
-    firstWord = extractWord(line, 1, &pStart); /* Extract the first word */
-    if (endsWith(firstWord, LABEL_SUFFIX))     /* Check if the first word is a label */
+    /* Extract the first word */
+    firstWord = extractWord(line, 1, &pStart);
+    /* Check if the first word is a label */
+    if (endsWith(firstWord, LABEL_SUFFIX))
     {
         hasLabel = 1;
     }
@@ -183,8 +183,10 @@ bool firstPass(FILE *input)
 
     for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++) /* Read each line */
     {
-        rtrim(line);                                  /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
-        success &= fp_process_line(line, lineNumber); /* Process each line and accumulate success status */
+        /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
+        rtrim(line);
+        /* Process each line and accumulate success status */
+        success &= fp_process_line(line, lineNumber);
     }
 
     if (success) /* Update symbol addresses in the data section if no errors occurred */

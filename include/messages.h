@@ -2,6 +2,7 @@
 #define MESSAGES_H
 
 /* Error messages for the pre-compile step */
+#define PP_ERR_MAX_LENGTH_EXCEEDED "Precomp:%d:Maximum line length exceeded (%d)\n"
 #define PP_ERR_NO_NESTED_MACROS "Precomp:%d:Nested macros are not allowed\n"
 #define PP_ERR_EXTRA_CHARS "Precomp:%d:Extraneous characters after macro name\n"
 #define PP_ERR_INVALID_MACRO_NAME "Precomp:%d:invalid macro name specified\n"
@@ -52,9 +53,9 @@
 
 /** General messages */
 #define MSG_PROCESSING_FILE "Processing %s.\n"
-#define MSG_PRECOMPILATION "Precompilation step %s%s -> %s%s ..."
-#define MSG_FIRST_PASS "Assembler first pass %s ..."
-#define MSG_SECOND_PASS "Assembler second pass %s ...\n"
+#define MSG_PRECOMPILATION "Precompilation step %s%s -> %s%s ...\n"
+#define MSG_FIRST_PASS "Running assembler first pass on %s ...\n"
+#define MSG_SECOND_PASS "Running assembler second pass on %s ...\n"
 #define MSG_ENTRIES_FILE "Generating entries file %s ...\n"
 #define MSG_EXTERNS_FILE "Generating extern file %s ...\n"
 #define MSG_OBJECT_FILE "Generating object file %s ...\n"

@@ -9,9 +9,8 @@ static const char ob_encrypted[] = "*#%!";
  *
  * @param[in] f The file to write the contents to. If NULL, it will write to stdout
  *
- * @return true if the object file was successfully written, false otherwise
  */
-bool dump_object_file(FILE *f)
+void dump_object_file(FILE *f)
 {
     int i, j, k;
     uint16_t bits;
@@ -23,12 +22,16 @@ bool dump_object_file(FILE *f)
         f = stdout;
 
     /* write header row */
-    fprintf(f, "%u %u\n", (getIC() - 100), getDC());
+    fprintf(f, "%u %u\n", (getIC() - BASE_CODE_ADDRESS), (getDC() - BASE_DATA_ADDRESS));
 
+    /* write code section */
     for (i = BASE_CODE_ADDRESS; i < getIC(); i++)
     {
         icword = code_word_at(i);
+        /* print the address of the code section word */
         fprintf(f, "%.4u ", i);
+
+        /* for each word, we print 2 bits at a time, starting from the MSB */
         for (j = MC_WORD_SIZE_BITS - 2; j >= 0; j -= 2)
         {
             bits = read_bits(icword, j, 2);
@@ -37,11 +40,14 @@ bool dump_object_file(FILE *f)
         fprintf(f, "\n");
     }
 
+    /* write data section */
     for (k = BASE_DATA_ADDRESS; k < getDC(); k++)
     {
         dataword = data_word_at(k);
+        /* print the address of the code section word */
         fprintf(f, "%.4u ", i + k);
 
+        /* for each word in data section, we print 2 bits at a time, starting from the MSB */
         for (j = MC_WORD_SIZE_BITS - 2; j >= 0; j -= 2)
         {
             bits = read_bits(dataword, j, 2);
@@ -49,5 +55,4 @@ bool dump_object_file(FILE *f)
         }
         fprintf(f, "\n");
     }
-    return true;
 }

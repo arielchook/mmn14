@@ -7,12 +7,12 @@
 #include <spopparser.h>
 #include <symbols.h>
 
-/** 
+/**
  * @brief Checks if an entry statement is valid.
- * 
+ *
  * Validates the symbol specified in an .entry statement by checking its presence and type
  * in the symbol table. .define symbols or external symbols cannot be used as .entry.
- * 
+ *
  * @param entryStmt The entry statement to validate.
  * @param lineNumber The line number in the source file for error reporting.
  * @return True if the entry statement is valid, false otherwise.
@@ -51,12 +51,12 @@ bool is_valid_entry(char *entryStmt, int lineNumber)
     return true;
 }
 
-/** 
+/**
  * @brief Processes a line of assembly code in the second pass of the assembler.
- * 
+ *
  * Handles .define, .data, .string, and .extern directives, which were processed in the first pass,
  * and processes .entry directives and instructions.
- * 
+ *
  * @param firstWord The first word of the line, potentially a label or a directive.
  * @param cmd The command or directive of the line.
  * @param pStart Pointer to the start of parameters or operands in the line.
@@ -68,25 +68,16 @@ bool sp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
 {
     const instruction_props *props;
 
-    /* .define - was already handled in first pass */
-    if (strcmp(firstWord, directives[DEFINE]) == 0)
-    {
-        return true;
-    }
-
-    ltrim(cmd);
-    rtrim(cmd);
-
-    /* .data and .string definition - was handled in first pass */
+    /* .define , .data and .string definition - was handled in first pass */
     /* .extern definition - was also handled in first-pass. in second pass we just keep track
        of the references to external symbols used in the code */
     if ((strcmp(cmd, directives[DATA]) == 0) || (strcmp(cmd, directives[STRING]) == 0) ||
-        (strcmp(cmd, directives[EXTERN]) == 0))
+        (strcmp(cmd, directives[EXTERN]) == 0) || (strcmp(firstWord, directives[DEFINE]) == 0))
     {
         return true;
     }
 
-    /* .entry definition - need to make sure we don't have an extern with the same name */
+    /* .entry definition - need to make sure we don't have an .extern or a .define with the same name */
     if (strcmp(cmd, directives[ENTRY]) == 0)
     {
         return is_valid_entry(pStart + strlen(directives[ENTRY]), lineNumber);
@@ -103,12 +94,12 @@ bool sp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     return parse_operands(pStart + strlen(cmd), lineNumber, props);
 }
 
-/** 
+/**
  * @brief Processes a single line of assembly code during the second pass.
- * 
+ *
  * This function extracts the first word (possibly a label) and the command from a line of assembly code,
  * then calls sp_process_line_internal for further processing.
- * 
+ *
  * @param line The line of assembly code to process.
  * @param lineNumber The current line number in the assembly source file for error reporting.
  * @return True if the line is processed successfully, false if an error is encountered.
@@ -149,12 +140,12 @@ bool sp_process_line(char *line, int lineNumber)
     return success;
 }
 
-/** 
+/**
  * @brief Executes the second pass of the assembler.
- * 
+ *
  * This pass processes each line in the input file, primarily focusing on .entry directives
  * and instructions, and finalizing the machine code output.
- * 
+ *
  * @param input File pointer to the input assembly source file.
  * @return True if the second pass completes successfully without errors, false otherwise.
  */

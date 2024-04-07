@@ -4,10 +4,11 @@
 
 /**
  * @brief Allocates memory safely.
- * 
+ *
  * This function allocates memory of a specified size and checks for allocation failure.
- * If memory allocation fails, the program prints an error message and exits.
- * 
+ * If memory allocation fails, the program prints an error message and exits. There is not point in trying to properly free all the allocated memory
+ * thus far in such case as the os will free up all memory consumed by the program upon exit and this is a critical error.
+ *
  * @param size The size of memory to allocate.
  * @return A pointer to the allocated memory.
  */
@@ -24,7 +25,7 @@ void *safe_malloc(int size)
 
 /**
  * @brief Trims leading whitespace characters from a string.
- * 
+ *
  * @param str The string to trim.
  */
 void ltrim(char *str)
@@ -41,7 +42,7 @@ void ltrim(char *str)
 
 /**
  * @brief Trims trailing whitespace characters from a string.
- * 
+ *
  * @param str The string to trim.
  */
 void rtrim(char *str)
@@ -59,7 +60,7 @@ void rtrim(char *str)
 
 /**
  * @brief Checks if a string starts with a specified prefix.
- * 
+ *
  * @param str The string to check.
  * @param prefix The prefix to look for.
  * @return True if the string starts with the prefix, false otherwise.
@@ -71,7 +72,7 @@ bool startsWith(const char *str, const char *prefix)
 
 /**
  * @brief Checks if a string ends with a specified suffix.
- * 
+ *
  * @param str The string to check.
  * @param suffix The suffix to look for.
  * @return True if the string ends with the suffix, false otherwise.
@@ -89,7 +90,7 @@ bool endsWith(const char *str, const char *suffix)
 
 /**
  * @brief Extracts the n-th word from a string, using space as the default separator.
- * 
+ *
  * @param str The string from which to extract the word.
  * @param n The word position to extract (1-based).
  * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
@@ -97,19 +98,19 @@ bool endsWith(const char *str, const char *suffix)
  */
 char *extractWord(char *str, int n, char **pStart)
 {
-    return extractWordSeparator(str, n, pStart, ' ');
+    return extractWordSeparator(str, n, pStart, SPACE);
 }
 
 /**
  * @brief Extracts the n-th word from a string, using a specified separator.
- * 
- * Note: This function doesn't handle consecutive separators and should return an empty string in such a case.
- * 
+ * Note: if there are consecutive separators in the string, the function returns an empty string ("") for that word. This only applies
+ * if the separator is not a space.
+ *
  * @param str The string from which to extract the word.
  * @param n The word position to extract (1-based).
  * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
  * @param separator The character used to separate words in the string.
- * @return The extracted word, or NULL if n is out of bounds.
+ * @return The extracted word trimmed of leading and trailing whitespace, or NULL if n is out of bounds.
  */
 char *extractWordSeparator(char *str, int n, char **pStart, char separator)
 {
@@ -127,14 +128,28 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
             in_word = 1;
             start = str;
         }
-        else if (*str == separator && in_word)
+        else if (*str == separator)
         {
-            in_word = 0;
-            wordCount++;
-            if (wordCount == n)
+            if (in_word)
             {
-                end = str;
-                break;
+                in_word = 0;
+                wordCount++;
+                if (wordCount == n)
+                {
+                    end = str;
+                    break;
+                }
+            }
+            /* Two consecutive non-space separators */
+            else if (separator != SPACE)
+            {
+                wordCount++;
+                if (wordCount == n)
+                {
+                    start = str;
+                    end = str;
+                    break;
+                }
             }
         }
         str++;
@@ -149,6 +164,7 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
         }
     }
 
+    /* n-th word does not exist */
     if (wordCount < n || start == NULL || end == NULL)
     {
         return NULL;
@@ -160,17 +176,22 @@ char *extractWordSeparator(char *str, int n, char **pStart, char separator)
     strncpy(result, start, length);
     result[length] = '\0';
 
+    /* this will return a pointer to the start of the word that was extracted */
     if (pStart != NULL)
     {
         *pStart = start;
     }
+
+    /* Trim the result */
+    ltrim(result);
+    rtrim(result);
 
     return result;
 }
 
 /**
  * @brief Duplicates a string.
- * 
+ *
  * @param str The string to duplicate.
  * @return A pointer to the duplicated string.
  */
@@ -184,9 +205,9 @@ char *strdup(const char *str)
 
 /**
  * @brief Logs a formatted message, intended for debugging purposes.
- * 
+ *
  * Note: This function only operates when DEBUG is defined.
- * 
+ *
  * @param format The format string for the message.
  * @param ... Variable number of arguments to format the message.
  */
