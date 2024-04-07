@@ -155,7 +155,7 @@ bool processFile(char *fname)
             printf(ERR_FILE_CANT_BE_WRITTEN, fnameWext);
             return false;
         }
-        externs_dump(entFile);
+        externs_dump(extFile);
         if (fclose(extFile) != 0)
         {
             printf(ERR_CLOSING_FILE, fname, EXT_EXTENSION);

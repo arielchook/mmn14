@@ -109,7 +109,7 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
 bool count_operands_words(char *stmt, int lineNumber, const instruction_props *props)
 {
     bool success = true;
-    enum addressing_type src_at, dest_at;
+    enum addressing_type src_at = WT_INVALID, dest_at = WT_INVALID;
     int mem_words_count = 0;
 
     /* Get the first operand, second operand, and 3rd operand if such exists */

@@ -89,7 +89,7 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
 
     /* Look up the array name in the symbol list */
     sb = find_symbol(array_name);
-    if ((sb == NULL))
+    if (sb == NULL)
     {
         printf(ERR_ARRAY_NOT_FOUND, lineNumber, array_name);
         free_if_not_null(array_name);
