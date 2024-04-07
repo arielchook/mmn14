@@ -218,41 +218,63 @@ bool handle_string(char *stringStmt, int lineNumber)
     return true;
 }
 
-bool handle_extern(char *externStmt, int lineNumber)
-{
-    /* FIXME: there could be more than one label in an .extern statement. */
-
+/**
+ * @brief Handles the .extern directive by adding the specified external symbol to the assembler's external symbol list.
+ *        This function trims the input, validates that it is not empty, and checks the validity of the external symbol name.
+ *        It then adds the symbol to the external symbols list for later reference during the assembly process. Note that
+ *        currently, the function is designed to handle only one external symbol per .extern statement, and potential enhancements
+ *        could include handling multiple symbols in a single statement.
+ *
+ * @param externStmt The external symbol statement to be processed, following the ".extern" directive.
+ * @param lineNumber The line number in the source file where this directive is found, used for error reporting.
+ * @return true If the external symbol was successfully processed and added to the external symbols list.
+ * @return false If any error occurred during the processing, such as an empty external symbol statement or invalid symbol name.
+ */
+bool handle_extern(char *externStmt, int lineNumber) {
+    /* Trim leading whitespaces from the external symbol statement */
     ltrim(externStmt);
-    if (strlen(externStmt) == 0)
-    {
-        printf(ERR_MISSING_VALUE, lineNumber, directives[EXTERN]);
+    if (strlen(externStmt) == 0) {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[EXTERN]); /* Error for empty external symbol statement */
         return false;
     }
+    /* Trim trailing whitespaces from the external symbol statement */
     rtrim(externStmt);
 
-    /* make sure extern name is valid and that there are no duplicate symbols */
-    if (!is_valid_symbol_name(externStmt, lineNumber))
-    {
+    /* Validate the external symbol name */
+    if (!is_valid_symbol_name(externStmt, lineNumber)) {
+        /* The symbol name is invalid; an error message is expected to be printed within is_valid_symbol_name */
         return false;
     }
 
+    /* Add the validated external symbol to the external symbols list */
     add_extern(externStmt);
 
-    return true;
+    return true; /* Return true as the external symbol has been successfully added */
 }
 
-bool handle_entry(char *entryStmt, int lineNumber)
-{
-    ltrim(entryStmt);
-    if (strlen(entryStmt) == 0)
-    {
-        printf(ERR_MISSING_VALUE, lineNumber, directives[ENTRY]);
+
+
+/**
+ * @brief Handles the .entry directive by adding the specified symbol to the list of entry symbols.
+ *        The validation of the symbol as a valid entry point is deferred to the second pass of the assembler,
+ *        at which point the entire symbol table is available for reference. This function trims the input,
+ *        validates that it is not empty, and appends the symbol to the list of entries.
+ *
+ * @param entryStmt The entry statement to be processed, following the ".entry" directive.
+ * @param lineNumber The line number in the source file where this directive is found, used for error reporting.
+ * @return true If the entry statement was successfully processed and added to the list of entries.
+ * @return false If any error occurred during the processing, such as an empty entry statement.
+ */
+bool handle_entry(char *entryStmt, int lineNumber) {
+    ltrim(entryStmt); // Trim leading whitespaces from the entry statement
+    if (strlen(entryStmt) == 0) {
+        printf(ERR_MISSING_VALUE, lineNumber, directives[ENTRY]); // Error for empty entry statement
         return false;
     }
-    rtrim(entryStmt);
+    rtrim(entryStmt); // Trim trailing whitespaces from the entry statement
 
-    /* we check the entry statement refers to a valid symbol only in 2nd pass since only then
-    we have the entire symbol table filled up. until then we just add it to the list of entries */
+    // Append the entry statement to the list of entries for later validation against the symbol table
     entries_append(entryStmt);
-    return true;
+    return true; // Return true as the entry statement has been successfully added to the list
 }
+

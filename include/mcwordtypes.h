@@ -5,86 +5,124 @@
 #include <stdint.h>
 
 /**
- * @brief this enum has 2 purposes: first is for the supported addressing types
- * which also indicates the type of memory word in the mc_word union
- *
+ * Enumerates the supported addressing types, which also indicate the type of memory word in the mc_word union.
  */
 enum addressing_type
 {
-    WT_IMMEDIATE = 0,
-    WT_DIRECT = 1,
+    /** Immediate addressing type. */
+    WT_IMMEDIATE = 0,  
+    /** Direct addressing type. */
+    WT_DIRECT = 1,     
+    /** Fixed index addressing type, spanned over two memory words. */
     WT_FIXED_INDEX = 2,
-    WT_DIRECT_REG = 3,
+    /** Direct register addressing type. */
+    WT_DIRECT_REG = 3, 
+    /** Represents a full instruction. */
     WT_INSTRUCTION = 4,
-    WT_INVALID
+    /** Indicates an invalid or undefined addressing type. */
+    WT_INVALID         
 };
 
+/**
+ * Enumerates the symbols for absolute, relocatable, and external addressing, used in A_R_E fields.
+ */
 enum abs_rloc_extern
 {
-    ARE_ABS = 0,
-    ARE_EXTERN = 1,
-    ARE_RELOC = 2
+    /** Absolute addressing. */
+    ARE_ABS = 0,     
+    /** External addressing, for symbols defined in other modules. */
+    ARE_EXTERN = 1,  
+    /** Relocatable addressing, for symbols that can move in memory. */
+    ARE_RELOC = 2    
 };
+
 /**
- * @brief mc_word describes a full instruction in memory after parsing. since an instruction may consist of one
- * or more words in memory we use a union.
- *
- * note that we are not using :bits since it's not supported in ansi c for types smaller than int (e.g. char, uint8_t)
+ * Defines a union representing a memory word in the machine code, accommodating different instruction and addressing formats.
  */
 typedef union
 {
-
-    /* an instruction is the first word that gets written to memory. the dest_addressing and src_addressing are
-    determined by the operands */
+    /**
+     * Represents the first word of an instruction in memory, including opcode and addressing types.
+     */
     struct
     {
-        uint8_t A_R_E;           /* 2-bit ARE */
-        uint8_t dest_addressing; /* 2-bit dest operand addressing type */
-        uint8_t src_addressing;  /* 2-bit source operand addressing type */
-        uint8_t opcode;          /* 4-bit opcode */
+        /** 2-bit Absolute, Relocatable, or External (A_R_E) indicator. */
+        uint8_t A_R_E;           
+        /** 2-bit destination operand addressing type. */
+        uint8_t dest_addressing; 
+        /** 2-bit source operand addressing type. */
+        uint8_t src_addressing;  
+        /** 4-bit opcode of the instruction. */
+        uint8_t opcode;          
     } instruction;
 
-    /* immediate addressing memory word */
+    /**
+     * Represents an immediate addressing memory word.
+     */
     struct
     {
-        uint8_t A_R_E;  /* 2-bit ARE */
-        uint16_t value; /* 12-bit value */
+        /** 2-bit A_R_E indicator. */
+        uint8_t A_R_E;  
+        /** 12-bit immediate value. */
+        uint16_t value; 
     } immediate;
 
-    /* direct addressing memory word */
+    /**
+     * Represents a direct addressing memory word, potentially referring to an external symbol.
+     */
     struct
     {
-        uint8_t A_R_E;    /* 2-bit ARE */
-        uint16_t address; /* 12-bit address of label */
+        /** 2-bit A_R_E indicator. */
+        uint8_t A_R_E;    
+        /** 12-bit address of the label. */
+        uint16_t address; 
+        /** Pointer to an external symbol, if any. */
         char *external_symbol;
     } direct;
 
-    /* fixed index is spanned over 2 memory words */
+    /**
+     * Represents a fixed index addressing spanned over two memory words, potentially referring to an external symbol.
+     */
     struct
     {
-        uint8_t A_R_E_1; /* 2-bit ARE for the 1st word */
-        uint16_t array;  /* 12-bit address of array */
-        uint8_t A_R_E_2; /* 2-bit ARE for the 2nd word */
-        uint16_t index;  /* 12-bit array index */
-        char *external_symbol;
+        /** 2-bit A_R_E for the first word. */
+        uint8_t A_R_E_1;         
+        /** 12-bit address of the array. */
+        uint16_t array;          
+        /** 2-bit A_R_E for the second word. */
+        uint8_t A_R_E_2;         
+        /** 12-bit array index. */
+        uint16_t index;          
+        /** Pointer to an external symbol, if any. */
+        char *external_symbol;   
     } fixed_index;
 
-    /* direct register memory word */
+    /**
+     * Represents a direct register addressing memory word.
+     */
     struct
     {
-        uint8_t A_R_E; /* 2-bit ARE for the 1st word */
-        uint8_t dest;  /* 3-bit dest register number */
-        uint8_t src;   /* 3-bit src register number */
+        /** 2-bit A_R_E indicator. */
+        uint8_t A_R_E; 
+        /** 3-bit destination register number. */
+        uint8_t dest;  
+        /** 3-bit source register number. */
+        uint8_t src;   
+        /** Additional register number, if used. */
         uint8_t regnum;
     } direct_reg;
 
 } mc_word_union;
 
+/**
+ * Struct that encapsulates a memory word in the machine code, including its type and content.
+ */
 typedef struct
 {
-    /* holds the type of memory word which will help detrmine the fields to encode */
-    enum addressing_type type;
-
-    mc_word_union contents;
+    /** The type of memory word, determining which fields in the union are relevant. */
+    enum addressing_type type; 
+    /** The content of the memory word, as defined by the union. */
+    mc_word_union contents;    
 } mc_word;
-#endif
+
+#endif /* MCWORDTYPES_H */
