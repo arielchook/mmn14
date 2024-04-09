@@ -2,14 +2,14 @@
  * @file reserved.h
  * @brief Reserved Words and Instruction Properties for Assembly Language.
  *
- * Defines enums and structures for handling reserved words, including
+ * efines enums and structures for handling reserved words, including
  * directives, assembly commands, and register names. It provides
  * functionalities to check if a given string is a reserved word, a register
  * name, and to retrieve properties for assembly language instructions,
  * such as opcode, operand count, and addressing rules. This setup is
  * crucial for the lexical and syntactic analysis stages of an assembler.
  */
-
+D
 
 #ifndef RESERVED_H
 #define RESERVED_H
@@ -18,21 +18,20 @@
 #include <utils.h>
 #include <stdint.h>
 
-/**
- * @brief enum and a static array containing all supported directives
- *
- */
-enum
-{
-    MCR = 0,
-    ENDMCR,
-    DEFINE,
-    COMMENT,
-    DATA,
-    STRING,
-    ENTRY,
-    EXTERN
-};
+    /**
+     * @brief enum and a static array containing all supported directives
+     *
+     */
+    enum {
+        MCR = 0,
+        ENDMCR,
+        DEFINE,
+        COMMENT,
+        DATA,
+        STRING,
+        ENTRY,
+        EXTERN
+    };
 extern const char *directives[];
 
 /**

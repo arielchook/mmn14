@@ -9,8 +9,9 @@
  * properties and the addressing modes of the operands. This is crucial
  * for generating the correct machine code representation of assembly
  * instructions.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef FPOPPARSER_H
 #define FPOPPARSER_H
@@ -18,13 +19,12 @@
 #include <machinecode.h>
 #include <reserved.h>
 
-
-/** 
+/**
  * @brief Counts the number of memory words needed for the operands of a statement.
- * 
+ *
  * Analyzes the operands of a machine code instruction to determine how many memory words
  * are required for them, considering the instruction properties and addressing modes.
- * 
+ *
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber The current line number in the source file for error reporting.
  * @param props The properties of the instruction, including allowed addressing modes.
