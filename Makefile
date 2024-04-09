@@ -1,5 +1,7 @@
 CC = /usr/bin/gcc
-CFLAGS = -g -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/
+CFLAGS = -g -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/ 
+# uncomment to include the DEBUG define to get extra log messages
+#CFLAGS = -g -ansi -Wall -pedantic -Wstrict-prototypes -Iinclude/ -DDEBUG=true
 
 # Directories
 SRC_DIR := src

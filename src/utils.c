@@ -3,7 +3,6 @@
  * @brief Utility functions for string manipulation, memory allocation, and logging.
  */
 
-
 #include <utils.h>
 #include <string.h>
 #include <ctype.h>
@@ -225,6 +224,6 @@ void LOG(const char *format, ...)
     vfprintf(stdout, format, args);
     va_end(args);
 #else
-    // Do nothing if DEBUG is not defined.
+    /* Do nothing if DEBUG is not defined. */
 #endif
 }
