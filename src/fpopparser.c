@@ -1,3 +1,24 @@
+/**
+ * @file fpopparser.c
+ * @brief Floating-Point Operand Parser.
+ *
+ * Implements functions for parsing the addressing type of operands in assembly statements.
+ * This module provides functionality to analyze operands' syntax and determine their addressing type,
+ * supporting immediate, direct, fixed index, and direct register addressing modes.
+ * 
+ * The main functions in this file are:
+ * - parse_op_addressing_type: Parses the addressing type of an operand based on given rules, considering the operand's syntax.
+ * - count_operands_words: Counts the number of memory words needed for the operands of a machine code instruction,
+ *   analyzing the operands and their addressing modes to determine the required memory allocation.
+ * 
+ * These functions are essential for the translation of assembly statements to machine code instructions,
+ * ensuring proper handling of operands and validation of addressing modes.
+ * 
+ * The module also contains helper functions for string manipulation and error reporting,
+ * facilitating the parsing and processing of assembly statements.
+ */
+
+
 #include <fpopparser.h>
 #include <reserved.h>
 #include <messages.h>

@@ -1,3 +1,23 @@
+/**
+ * @file EntrySymbolManagement.c
+ * @brief Manages Entry Symbols in Assembly Language Processing.
+ *
+ * This file provides functionalities to manage a global list of entry symbols
+ * in the context of assembly language compilation. Entry symbols are labels in
+ * assembly code marked with the .entry directive, signifying they should be
+ * made visible to other modules or files. The file includes functions to:
+ * - Append new entry symbols to the global list.
+ * - Delete the global list, freeing all associated memory.
+ * - Dump all entry symbols and their corresponding values to a file.
+ * - Check if the entry list is empty.
+ *
+ * The management of entry symbols is crucial for the linkage stage of assembly
+ * processing, allowing for proper resolution of symbols that are marked as entry
+ * points into the code. Each entry symbol's value is determined in the second pass
+ * of the assembly process and is written to an output file alongside its name.
+ */
+
+
 #include <entries.h>
 #include <stdio.h>
 #include <stdlib.h>

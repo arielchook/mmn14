@@ -1,3 +1,28 @@
+/**
+ * @file machinecode.c
+ * @brief Machine Code Generation and Memory Management.
+ *
+ * This module contains functions for generating machine code instructions, managing the assembler's memory state,
+ * and performing related operations such as serialization and debugging. It includes functions for manipulating
+ * the data section and code section of the assembler's memory, as well as functions for advancing the Instruction
+ * Counter (IC) and Data Counter (DC), writing words to specific addresses, and dumping the contents of memory sections.
+ * 
+ * The main functions in this file are:
+ * - to_twos_complement: Converts a signed integer to a two's complement encoded 16-bit unsigned integer.
+ * - serialize_data_section: Serializes and stores a value in the data section, then advances the Data Counter (DC).
+ * - serialize_code_mc_word: Serializes and stores a machine code word in the code section at the current IC position and advances IC.
+ * - reset_mc_state: Resets the assembler's memory state, including data and code sections, and the counters.
+ * - cleanup_mc_state: Performs cleanup operations for the assembler's memory state, such as freeing symbol tables and lists.
+ * - dump_data_section: Dumps the current contents of the data section for debugging purposes.
+ * - dump_code_section: Dumps the binary representation of all words in the code section for debugging purposes.
+ * 
+ * These functions provide essential functionality for managing the memory layout of the assembler, storing machine code
+ * instructions and data, and ensuring proper serialization and debugging capabilities during the assembly process.
+ * Machine code generation and memory management are critical components of the assembly process, and these functions
+ * facilitate the conversion of assembly code into executable machine code.
+ */
+
+
 #include <machinecode.h>
 #include <stdio.h>
 #include <symbols.h>

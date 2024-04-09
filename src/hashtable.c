@@ -1,3 +1,25 @@
+/**
+ * @file hashtable.c
+ * @brief Hashtable Implementation.
+ *
+ * Provides functions for creating, manipulating, and destroying hash tables.
+ * This module implements a generic hashtable data structure, supporting key-value pairs.
+ * It includes functionality for inserting, retrieving, resizing, and iterating over entries in the hashtable.
+ * 
+ * The main functions in this file are:
+ * - hash: Generates a hash code from a string using the djb2 algorithm.
+ * - hashtable_create: Creates a new hashtable and initializes it.
+ * - hashtable_destroy: Destroys a hashtable, freeing all associated memory.
+ * - hashtable_resize: Resizes a hashtable when the load factor exceeds a threshold.
+ * - hashtable_insert: Inserts a key-value pair into the hashtable, replacing the value if the key already exists.
+ * - hashtable_get: Retrieves a value from the hashtable by key.
+ * - hashtable_iterate: Iterates over all entries in the hashtable and applies a function to each one.
+ * 
+ * These functions are essential for efficient storage and retrieval of data, providing a flexible
+ * and scalable data structure for various applications.
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

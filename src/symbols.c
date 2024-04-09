@@ -1,3 +1,10 @@
+/**
+ * @file hashtable.h
+ * @brief Function prototypes and definitions for symbol table management.
+ */
+
+
+
 #include <hashtable.h>
 #include <utils.h>
 #include <symbols.h>

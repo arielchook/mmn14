@@ -1,3 +1,9 @@
+/**
+ * @file fpopparser.h
+ * @brief Function prototypes and definitions for parsing operands in the second pass of the assembler.
+ */
+
+
 #include <fpopparser.h>
 #include <reserved.h>
 #include <messages.h>

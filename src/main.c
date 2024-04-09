@@ -1,3 +1,14 @@
+/**
+ * @file main.c
+ * @brief Main function for the assembler program.
+ * 
+ * This file contains the implementation of the main function, which serves as the entry point
+ * for the assembler program. The main function checks for input files provided as command-line
+ * arguments and processes each file independently. After processing each file, it cleans up
+ * the machine code state in preparation for the next file.
+ */
+
+
 #include <utils.h>
 #include <messages.h>
 #include <filemgr.h>

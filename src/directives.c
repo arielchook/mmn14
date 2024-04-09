@@ -1,3 +1,21 @@
+/**
+ * @file DirectiveHandlers.c
+ * @brief Handles Assembly Language Directives.
+ *
+ * This file contains functions to process assembly language directives encountered during
+ * the assembly process. Each function is responsible for a specific type of directive:
+ * - .define: Sets constants in the symbol table.
+ * - .data: Parses and stores data values in the data section.
+ * - .string: Serializes strings into the data section, ensuring null termination.
+ * - .extern: Registers external symbols for linkage.
+ * - .entry: Marks symbols as entry points for external reference.
+ *
+ * The functions perform validation of the input and update relevant data structures,
+ * such as symbol tables and lists of entries, accordingly. Error handling is included
+ * to manage issues like incorrect formatting, invalid names, and value ranges.
+ */
+
+
 #include <symbols.h>
 #include <ctype.h>
 #include <reserved.h>

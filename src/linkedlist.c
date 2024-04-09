@@ -1,3 +1,23 @@
+/**
+ * @file linkedlist.c
+ * @brief Linked List Implementation.
+ *
+ * Provides functions for creating, manipulating, and destroying linked lists.
+ * This module implements a generic singly linked list data structure, supporting operations
+ * such as creation, appending, deletion, traversal, and applying a function to each item.
+ * 
+ * The main functions in this file are:
+ * - linked_list_create: Initializes a new linked list.
+ * - linked_list_append: Appends a new node with data to the end of the linked list.
+ * - linked_list_delete: Deletes the entire linked list and optionally frees the data in each node.
+ * - linked_list_traverse_to_file: Traverses the linked list and executes a given function for every item.
+ * 
+ * These functions provide essential functionality for managing collections of data in a dynamic and flexible manner.
+ * Linked lists are well-suited for scenarios where efficient insertion, deletion, and traversal are required,
+ * and they offer advantages such as dynamic memory allocation and simple implementation.
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <utils.h>

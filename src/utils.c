@@ -1,3 +1,9 @@
+/**
+ * @file utils.h
+ * @brief Utility functions for string manipulation, memory allocation, and logging.
+ */
+
+
 #include <utils.h>
 #include <string.h>
 #include <ctype.h>

@@ -1,3 +1,21 @@
+/**
+ * @file ExternalSymbolManagement.c
+ * @brief Manages External Symbols in Assembly Language Processing.
+ *
+ * This file includes functionalities to manage a global list of external symbols and their addresses
+ * within the context of assembly language compilation. External symbols are declared with the .extern
+ * directive and are defined in other modules or files. The functionalities provided include:
+ * - Appending new external symbols with their addresses to the global list.
+ * - Deleting the global list, thereby freeing all associated memory.
+ * - Dumping all external symbols and their addresses to a specified file stream, defaulting to stdout if none is provided.
+ * - Checking if the list of external symbols is empty.
+ *
+ * The management of external symbols is essential for linking, as it allows the assembler to mark references
+ * to symbols defined outside the current module. The format "extern_name address" is used for each list entry,
+ * facilitating the generation of .ext files during the second pass of the assembly process.
+ */
+
+
 #include <externs.h>
 #include <stdlib.h>
 #include <string.h>

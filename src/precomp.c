@@ -1,3 +1,15 @@
+/**
+ * @file precomp.h
+ * @brief Precompiles the given input file by processing macros and writing the result to the output file.
+ * 
+ * This file contains the implementation of a function to precompile an input file by processing macros
+ * and writing the resulting output to another file. The precompilation process involves reading the input
+ * file line by line, identifying macro definitions and macro calls, expanding macros, and copying non-macro
+ * lines to the output file. The function also handles error checking for nested macros, invalid macro names,
+ * duplicate macros, and other precompilation errors.
+ */
+
+
 #include <stdio.h>
 #include <reserved.h>
 #include <string.h>

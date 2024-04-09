@@ -1,3 +1,25 @@
+/**
+ * @file macros.c
+ * @brief Macro Management and Processing.
+ *
+ * This module contains functions for managing macros in an assembly language context. It provides functionality
+ * for adding macros to a global macro table, retrieving macros by name, adding lines of code to macro definitions,
+ * writing macro lines to an output file, and freeing memory associated with macros and their lines.
+ * 
+ * The main functions in this file are:
+ * - add_macro: Adds a macro to the global macro table, overwriting any existing macro with the same name.
+ * - find_macro: Retrieves a macro from the global macro table by name.
+ * - macro_add_line: Adds a line of code to a macro's line list.
+ * - macro_write_lines: Writes all lines of a macro to an output file.
+ * - free_macro_table: Frees the global macro table and all associated resources, including linked lists of macro lines.
+ * 
+ * These functions provide essential functionality for managing and processing macros during the assembly process.
+ * Macros allow for code reuse and abstraction, enhancing the readability and maintainability of assembly code.
+ * This module facilitates the integration of macros into the assembly workflow, ensuring proper handling and cleanup
+ * of macro definitions and associated resources.
+ */
+
+
 #include <macros.h>
 #include <utils.h>
 #include <hashtable.h>
