@@ -1,7 +1,16 @@
 /**
  * @file macros.h
- * @brief functions for macro management. A macro is identifed by its name and contains a list of lines.
+ * @brief Macro Management in Assembly Processing.
+ *
+ * Defines structures and functions for managing macros in assembly
+ * programming. A macro, represented by a MacroBlock struct, consists
+ * of a name and a list of lines. This file provides functionalities 
+ * to add macros to a table, find macros by name, add lines to macros, 
+ * and write macro lines to a file. The operations ensure efficient 
+ * handling and retrieval of macros, which are commonly used for code 
+ * reuse and simplification in assembly language.
  */
+
 
 #ifndef MACROS_H
 #define MACROS_H

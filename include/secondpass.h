@@ -1,3 +1,14 @@
+/**
+ * @file secondpass.h
+ * @brief Second Pass Processing in Assembly Compilation.
+ *
+ * Outlines the function for the second pass of the assembler, where .entry
+ * directives and instructions are processed to finalize the machine code. This
+ * stage resolves symbols and addresses that were not determined in the first
+ * pass, ensuring the output is ready for linking or execution.
+ */
+
+
 #ifndef SECONDPASS_H
 #define SECONDPASS_H
 

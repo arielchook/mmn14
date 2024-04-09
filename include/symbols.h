@@ -1,3 +1,17 @@
+/**
+ * @file symbols.h
+ * @brief Symbol Management for Assemblers.
+ *
+ * Outlines structures and functions for managing a symbol table in assembly
+ * processing, including adding, finding, and handling different types of symbols
+ * (like defines, externs, data, and code labels). The symbol table is central to
+ * resolving references in assembly language, supporting the assembly process by
+ * providing a mapping from symbol names to their values or addresses. Additional
+ * utilities include validating symbol names, dumping the symbol table for debugging,
+ * and updating symbol addresses post-processing.
+ */
+
+
 #ifndef SYMBOLS_H
 #define SYMBOLS_H
 
@@ -68,7 +82,12 @@ bool add_data_label(char *name);
  */
 bool add_code_label(char *name);
 
-/* Finds a symbol in the macro hashtable and returns it */
+/**
+ * @brief Finds a symbol in the symbol hashtable and returns it.
+ * 
+ * @param name Name of the symbol to find.
+ * @return Pointer to the SymbolBlock if found, NULL otherwise.
+ */
 SymbolBlock *find_symbol(char *name);
 
 /**

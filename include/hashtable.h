@@ -1,4 +1,16 @@
-/* This is a generic hashtable implementations that maps a key of type char* to any object (of type void*) */
+/**
+ * @file hashtable.h
+ * @brief Generic Hashtable Implementation.
+ *
+ * Defines a simple hashtable that maps string keys to generic values (void pointers).
+ * It supports basic operations like insertion, deletion, and retrieval. The hashtable
+ * is designed to grow dynamically in size when its capacity is exceeded, ensuring
+ * efficient storage and retrieval. This file includes the declaration of key-value
+ * pair structures, the hashtable structure itself, and functions for managing the
+ * hashtable such as creation, destruction, insertion, and retrieval.
+ */
+
+
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
@@ -6,27 +18,52 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /* initial capacity of hashtable */
 #define INITIAL_SIZE 16
 
 /* growth factor for the hashtable when capacity is reached */
 #define GROWTH_FACTOR 2
 
-/* Each entry in the hashtable comprises of a key and a value.
-The key is always a string and the value can be whatever */
+
+/**
+ * @struct KeyValuePair
+ * @brief A structure to represent a key-value pair.
+ *
+ * This structure is used to hold a key-value pair. The key is a string (char pointer), and the value is a pointer to any type (void pointer), allowing for the storage of various types of data. This struct is typically used in data structures that map keys to values, such as hash tables.
+ *
+ * @var KeyValuePair::key
+ *     The key part of the key-value pair. It is a pointer to a character array (string). The key is used to uniquely identify the value in a collection.
+ * @var KeyValuePair::value
+ *     The value part of the key-value pair. It is a void pointer, allowing it to point to any type of data. The actual type of data pointed to by this void pointer should be known from the context in which the KeyValuePair is used.
+ */
 typedef struct
 {
-    char *key;
-    void *value;
+    char *key;   /**< Pointer to the key string of the key-value pair. */
+    void *value; /**< Void pointer to the value, allowing for storage of any type of data. */
 } KeyValuePair;
 
-/* The hashtable is implemented using an array of KeyValuePair objects */
+
+/**
+ * @struct Hashtable
+ * @brief A structure to represent a simple hash table.
+ *
+ * This structure represents a simple hash table that uses key-value pairs for storage. The hash table supports basic operations like insertion, deletion, and search. It dynamically grows in size when the capacity is exceeded.
+ *
+ * @var Hashtable::table
+ *     Pointer to an array of key-value pairs (KeyValuePair) stored in the hash table. This serves as the actual storage of the hash table elements.
+ * @var Hashtable::size
+ *     The current number of key-value pairs stored in the hash table. This value is incremented or decremented when elements are added or removed, respectively.
+ * @var Hashtable::capacity
+ *     The maximum number of key-value pairs that can be stored in the hash table before it needs to be resized. Resizing involves allocating a larger array and rehashing the existing elements into it.
+ */
 typedef struct
 {
-    KeyValuePair *table;
-    int size;     /* number of items in the table */
-    int capacity; /* maximum size of the table before it needs to be expanded */
+    KeyValuePair *table; /**< Pointer to an array of key-value pairs representing the hash table storage. */
+    int size;            /**< The current number of key-value pairs in the hash table. */
+    int capacity;        /**< The maximum capacity of the hash table before resizing is required. */
 } Hashtable;
+
 
 
 /** 

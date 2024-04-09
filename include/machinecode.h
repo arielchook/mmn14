@@ -1,3 +1,17 @@
+/**
+ * @file machinecode.h
+ * @brief Machine Code Management for Assembly Compilation.
+ *
+ * Provides definitions and functions for handling machine code generation
+ * and manipulation within an assembler. This includes managing instruction
+ * and data sections, counters for instructions (IC) and data (DC), and
+ * operations like serialization of machine code, writing to specific addresses,
+ * and converting values to two's complement representation. The constants 
+ * define memory sizes, value ranges, and base addresses for code and data.
+ */
+
+
+
 #ifndef MACHINECODE_H
 #define MACHINECODE_H
 

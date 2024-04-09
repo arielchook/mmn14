@@ -1,3 +1,16 @@
+/**
+ * @file spopparser.h
+ * @brief Assembly Instruction Operand Parsing.
+ *
+ * Defines a function for parsing the operands of an assembly instruction
+ * and generating the relevant machine code words. It takes into account the
+ * addressing modes of the operands and the specific properties of the
+ * instruction to ensure accurate machine code serialization. This is a
+ * key part of the assembly process, translating assembly language into
+ * machine-readable code.
+ */
+
+
 #ifndef SPOPPARSER_H
 #define SPOPPARSER_H
 

@@ -1,15 +1,40 @@
+/**
+ * @file linkedlist.h
+ * @brief Generic Linked List Implementation.
+ *
+ * Provides a generic implementation of a singly linked list. Each node in the list can store
+ * data of any type, making the list versatile for various applications. The file includes
+ * definitions for the node and linked list structures, as well as functions for creating,
+ * appending to, and deleting the list. Additional functionalities include traversing the list
+ * and applying a function to each node's data, with the option to output results to a file.
+ */
+
+
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 #include <utils.h>
 
-/* Define the structure for a node in the linked list */
+/**
+ * @brief Defines a struct for a node in a linked list.
+ *
+ * This struct represents a single node within a linked list. Each node
+ * contains a pointer to its data, which is stored as a void pointer to
+ * allow for generic data storage. Additionally, each node has a pointer
+ * to the next node in the list, facilitating the linked list structure.
+ */
 typedef struct Node
 {
     void *data;        /*<! Pointer to the data stored in the node (generic) */
     struct Node *next; /*<! Pointer to the next node in the list */
 } Node;
 
-/* Define the structure for the linked list */
+/**
+ * @brief Defines a struct for representing a linked list.
+ *
+ * This struct is used to represent a simple linked list, where each element
+ * is a node in the list. The list is singly linked, meaning each node points
+ * to the next node in the sequence, with the last node pointing to NULL.
+ */
 typedef struct
 {
     Node *head; /*<! Pointer to the first node in the list */

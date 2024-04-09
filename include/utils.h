@@ -1,3 +1,18 @@
+/**
+ * @file util.h
+ * @brief Utility Functions and Constants for Assembly Processing.
+ *
+ * This file contains utility functions and constants that support various
+ * aspects of assembly language processing. It includes safe memory allocation,
+ * string manipulation (trimming, checking prefixes/suffixes), word extraction,
+ * and debugging support. Additionally, it defines commonly used constants
+ * such as maximum line length, parsing characters for labels, operands,
+ * immediate values, and array notation, as well as a custom boolean type.
+ * These utilities facilitate parsing, memory management, and diagnostic
+ * logging within the assembler.
+ */
+
+
 #ifndef UTIL_H
 #define UTIL_H
 

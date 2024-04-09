@@ -1,3 +1,16 @@
+/**
+ * @file messages.h
+ * @brief Error and Informational Messages for Assembly Processing.
+ *
+ * Contains predefined messages, including error messages for pre-compilation,
+ * first pass, and second pass stages of assembly language processing, as well as
+ * general informational messages. These messages facilitate clear communication
+ * of issues and steps in the assembly process, aiding in debugging and user
+ * interaction. The messages cover a wide range of scenarios, from syntax errors
+ * to memory allocation failures, ensuring comprehensive feedback for the user.
+ */
+
+
 #ifndef MESSAGES_H
 #define MESSAGES_H
 

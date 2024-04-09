@@ -1,9 +1,23 @@
+/**
+ * @file externs.h
+ * @brief External Symbol Management for Assembly Processing.
+ *
+ * This header provides functions for managing a list of external symbols
+ * in assembly language processing. It includes functionalities for appending 
+ * new external symbols with their addresses to a global list, deleting 
+ * the list and freeing memory, dumping the list contents to a file, and 
+ * checking if the list is empty. These operations are essential for handling 
+ * '.extern' directives, which declare symbols defined in other modules.
+ */
+
+
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
 #include <stdint.h>
 #include <utils.h>
 #include <stdio.h>
+
 
 /** 
  * @brief Appends a new external symbol and its address to the global list.

@@ -1,3 +1,15 @@
+/**
+ * @file firstpass.h
+ * @brief First Pass Processing in Assembly Compilation.
+ *
+ * This header file declares the function responsible for performing the first pass
+ * over an assembly source file. The first pass processes directives, labels, and
+ * instructions to build the initial symbol table and set up for the second pass.
+ * It's a crucial step in resolving symbols and preparing the assembly file for
+ * further compilation stages.
+ */
+
+
 #ifndef FIRSTPASS_H
 #define FIRSTPASS_H
 

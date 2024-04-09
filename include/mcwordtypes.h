@@ -1,3 +1,18 @@
+/**
+ * @file mcwordtypes.h
+ * @brief Machine Code Word Types and Structures.
+ *
+ * Defines enums and structures for representing various types of machine
+ * code words and their components in an assembly language compiler or assembler.
+ * This includes enumerating addressing types, defining a union for different
+ * memory word formats, and structuring a complete machine code word. These
+ * definitions are essential for encoding assembly instructions and data into
+ * binary machine code format, supporting a range of instruction types and
+ * addressing modes.
+ */
+
+
+
 #ifndef MCWORDTYPES_H
 #define MCWORDTYPES_H
 

@@ -1,3 +1,15 @@
+/**
+ * @file precomp.h
+ * @brief Precompilation Processing for Assembly Files.
+ *
+ * Defines the function for precompiling assembly files. It processes macro
+ * definitions and expansions, handling 'mcr' to 'endmcr' blocks, and copies
+ * non-macro lines directly to the output. The function ensures macros are
+ * not nested and have valid names, trims whitespace, and skips empty lines,
+ * thereby preparing the file for the main compilation stages.
+ */
+
+
 #ifndef PRECOMP_H
 #define PRECOMP_H
 

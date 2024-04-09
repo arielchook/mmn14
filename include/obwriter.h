@@ -1,3 +1,15 @@
+/**
+ * @file obwriter.h
+ * @brief Object File Writer for Assembled Code.
+ *
+ * Defines the function responsible for writing the final assembled code
+ * and data sections to an object file (.ob format). This is a crucial step
+ * in the assembly process, as it produces the output file that can be used
+ * for linking or loading into memory for execution. The function supports
+ * writing to a specified file or to stdout if no file is provided.
+ */
+
+
 #ifndef OBWRITER_H
 #define OBWRITER_H
 

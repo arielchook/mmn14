@@ -1,3 +1,17 @@
+/**
+ * @file fpoppaser.h
+ * @brief Floating-Point Operation Parsing.
+ *
+ * Defines functionality for parsing floating-point operations within
+ * assembly language statements. Specifically, it includes a function
+ * for counting the number of memory words needed by the operands of
+ * a machine code instruction, taking into account the instruction's
+ * properties and the addressing modes of the operands. This is crucial
+ * for generating the correct machine code representation of assembly
+ * instructions.
+ */
+
+
 #ifndef FPOPPARSER_H
 #define FPOPPARSER_H
 #include <utils.h>

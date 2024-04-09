@@ -1,6 +1,21 @@
+/**
+ * @file filemgr.h
+ * @brief Assembly File Management.
+ *
+ * Defines the process for handling assembly source files through various
+ * compilation stages including precompilation, first pass, and second pass. 
+ * It manages the generation of intermediate and output files with specific 
+ * extensions (.am, .ent, .ext, .ob) relevant to the assembly compilation 
+ * process. Functions within facilitate the entire assembly file processing 
+ * lifecycle from source to object code.
+ */
+
+
 #ifndef FILEMGR_H
 #define FILEMGR_H
 #include <utils.h>
+
+
 
 #define AS_EXTENSION ".as"   /*!< file extension for a source file after precompilation */
 #define AM_EXTENSION ".am"   /*!< file extension for a source file containing macros */

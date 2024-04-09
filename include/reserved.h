@@ -1,3 +1,16 @@
+/**
+ * @file reserved.h
+ * @brief Reserved Words and Instruction Properties for Assembly Language.
+ *
+ * Defines enums and structures for handling reserved words, including
+ * directives, assembly commands, and register names. It provides
+ * functionalities to check if a given string is a reserved word, a register
+ * name, and to retrieve properties for assembly language instructions,
+ * such as opcode, operand count, and addressing rules. This setup is
+ * crucial for the lexical and syntactic analysis stages of an assembler.
+ */
+
+
 #ifndef RESERVED_H
 #define RESERVED_H
 
@@ -22,7 +35,23 @@ enum
 };
 extern const char *directives[];
 
+/**
+ * @brief Find out whether string given in parameter is a reserved word. A reserved word could be a one of the
+ * supported assembly commands, a directive (e.g. .define, .extern etc..) or a name of a register (r0..r7).
+ *
+ * @param cmd string to check
+ * @return true cmd is a reserved word
+ * @return false cmd is not a reserved word
+ */
 bool is_reserved_word(char *cmd);
+
+/**
+ * @brief Returns whether op is a valid register name. Valid names are "r0" to "r7". Case sensitive.
+ *
+ * @param op operand string
+ * @return true valid register name
+ * @return false not a register name
+ */
 bool is_register(char *op);
 
 /**
