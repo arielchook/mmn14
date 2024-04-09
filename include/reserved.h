@@ -9,7 +9,6 @@
  * such as opcode, operand count, and addressing rules. This setup is
  * crucial for the lexical and syntactic analysis stages of an assembler.
  */
-D
 
 #ifndef RESERVED_H
 #define RESERVED_H
@@ -18,20 +17,21 @@ D
 #include <utils.h>
 #include <stdint.h>
 
-    /**
-     * @brief enum and a static array containing all supported directives
-     *
-     */
-    enum {
-        MCR = 0,
-        ENDMCR,
-        DEFINE,
-        COMMENT,
-        DATA,
-        STRING,
-        ENTRY,
-        EXTERN
-    };
+/**
+ * @brief enum and a static array containing all supported directives
+ *
+ */
+enum
+{
+    MCR = 0,
+    ENDMCR,
+    DEFINE,
+    COMMENT,
+    DATA,
+    STRING,
+    ENTRY,
+    EXTERN
+};
 extern const char *directives[];
 
 /**
