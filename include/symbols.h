@@ -48,19 +48,16 @@ typedef struct
 
 /**
  * @brief Adds a define symbol to the symbol table.
- * 
+ *
  * @param name Name of the define symbol.
  * @param value Integer value of the define symbol.
  * @return True if the symbol was added successfully, False otherwise.
  */
 bool add_define(char *name, int value);
 
-
-bool add_string(char *name, char *value);
-
 /**
  * @brief Adds an extern symbol to the symbol table.
- * 
+ *
  * @param name Name of the extern symbol.
  * @return True if the symbol was added successfully, False otherwise.
  */
@@ -68,7 +65,7 @@ bool add_extern(char *name);
 
 /**
  * @brief Adds a data label symbol to the symbol table.
- * 
+ *
  * @param name Name of the data label symbol.
  * @return True if the symbol was added successfully, False otherwise.
  */
@@ -76,7 +73,7 @@ bool add_data_label(char *name);
 
 /**
  * @brief Adds a code label symbol to the symbol table.
- * 
+ *
  * @param name Name of the code label symbol.
  * @return True if the symbol was added successfully, False otherwise.
  */
@@ -108,10 +105,10 @@ bool handle_define(char *defineStmt, int lineNumber);
 
 /**
  * @brief Handles the .data directive in assembly code.
- * 
+ *
  * Parses the .data directive values, converts them to integers or resolves constants using the symbol table,
  * and serializes the values to the data section of the machine code.
- * 
+ *
  * @param dataStmt The statement containing the .data directive values.
  * @param lineNumber The current line number in the assembly file for error reporting.
  * @return True if all values are processed and serialized successfully, False on any error.
@@ -132,9 +129,9 @@ bool handle_string(char *stringStmt, int lineNumber);
 
 /**
  * @brief Checks if a given symbol name is valid.
- * 
+ *
  * Validates the symbol name against reserved words, length, character types, and duplicates.
- * 
+ *
  * @param symName Symbol name to validate.
  * @param lineNumber Current line number for error reporting.
  * @return True if the symbol name is valid, False otherwise.
