@@ -1,5 +1,5 @@
 /**
- * @file ExternalSymbolManagement.c
+ * @file externs.c
  * @brief Manages External Symbols in Assembly Language Processing.
  *
  * This file includes functionalities to manage a global list of external symbols and their addresses

@@ -1,8 +1,8 @@
 /**
  * @file fpoppaser.h
- * @brief Floating-Point Operation Parsing.
+ * @brief First Pass Operation Parsing.
  *
- * Defines functionality for parsing floating-point operations within
+ * Defines functionality for parsing first pass operations within
  * assembly language statements. Specifically, it includes a function
  * for counting the number of memory words needed by the operands of
  * a machine code instruction, taking into account the instruction's

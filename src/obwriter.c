@@ -1,5 +1,5 @@
 /**
- * @file obwriter.h
+ * @file obwriter.c
  * @brief Function to dump the contents of the code section and data section into a .ob file.
  * 
  * This file contains the implementation of a function to dump the contents of the code section

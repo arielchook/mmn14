@@ -1,5 +1,5 @@
 /**
- * @file AssemblyCompiler.c
+ * @file filemgr.c
  * @brief Assembly Source File Compilation Process.
  *
  * Implements the complete process of compiling an assembly source file (.as) through

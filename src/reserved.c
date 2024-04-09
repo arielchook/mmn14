@@ -1,5 +1,5 @@
 /**
- * @file reserved.h
+ * @file reserved.c
  * @brief Contains definitions related to reserved words in the assembly language.
  * 
  * This file provides constant arrays and functions related to reserved words in the assembly language,

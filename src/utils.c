@@ -1,5 +1,5 @@
 /**
- * @file utils.h
+ * @file utils.c
  * @brief Utility functions for string manipulation, memory allocation, and logging.
  */
 

@@ -1,5 +1,5 @@
 /**
- * @file secondpass.h
+ * @file secondpass.c
  * @brief Contains functions related to the second pass of the assembler.
  * 
  * This file provides functions for processing assembly code during the second pass of the assembler,

@@ -1,5 +1,5 @@
 /**
- * @file DirectiveHandlers.c
+ * @file directives.c
  * @brief Handles Assembly Language Directives.
  *
  * This file contains functions to process assembly language directives encountered during

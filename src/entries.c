@@ -1,8 +1,6 @@
 /**
- * @file EntrySymbolManagement.c
- * @brief Manages Entry Symbols in Assembly Language Processing.
- *
- * This file provides functionalities to manage a global list of entry symbols
+ * @file entries.c
+ * @brief This file provides functionalities to manage a global list of entry symbols
  * in the context of assembly language compilation. Entry symbols are labels in
  * assembly code marked with the .entry directive, signifying they should be
  * made visible to other modules or files. The file includes functions to:

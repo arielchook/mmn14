@@ -1,5 +1,5 @@
 /**
- * @file hashtable.h
+ * @file symbols.h
  * @brief Function prototypes and definitions for symbol table management.
  */
 

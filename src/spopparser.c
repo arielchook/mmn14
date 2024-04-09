@@ -1,5 +1,5 @@
 /**
- * @file fpopparser.h
+ * @file spopparser.c
  * @brief Function prototypes and definitions for parsing operands in the second pass of the assembler.
  */
 

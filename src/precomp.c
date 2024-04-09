@@ -1,5 +1,5 @@
 /**
- * @file precomp.h
+ * @file precomp.c
  * @brief Precompiles the given input file by processing macros and writing the result to the output file.
  * 
  * This file contains the implementation of a function to precompile an input file by processing macros
