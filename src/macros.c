@@ -5,20 +5,21 @@
  * This module contains functions for managing macros in an assembly language context. It provides functionality
  * for adding macros to a global macro table, retrieving macros by name, adding lines of code to macro definitions,
  * writing macro lines to an output file, and freeing memory associated with macros and their lines.
- * 
+ *
  * The main functions in this file are:
  * - add_macro: Adds a macro to the global macro table, overwriting any existing macro with the same name.
  * - find_macro: Retrieves a macro from the global macro table by name.
  * - macro_add_line: Adds a line of code to a macro's line list.
  * - macro_write_lines: Writes all lines of a macro to an output file.
  * - free_macro_table: Frees the global macro table and all associated resources, including linked lists of macro lines.
- * 
+ *
  * These functions provide essential functionality for managing and processing macros during the assembly process.
  * Macros allow for code reuse and abstraction, enhancing the readability and maintainability of assembly code.
  * This module facilitates the integration of macros into the assembly workflow, ensuring proper handling and cleanup
  * of macro definitions and associated resources.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <macros.h>
 #include <utils.h>
@@ -30,10 +31,10 @@ static Hashtable *macroTable = NULL;
 
 /**
  * @brief Adds a macro to the global macro table.
- * 
+ *
  * If the macro table doesn't exist yet, it's created. This function attempts to insert
  * a new macro into the table. If a macro with the same name already exists, it's overwritten.
- * 
+ *
  * @param m Pointer to the MacroBlock representing the macro to add.
  * @return True if the macro was successfully added without replacing an existing one, false otherwise.
  */
@@ -51,9 +52,9 @@ bool add_macro(MacroBlock *m)
 
 /**
  * @brief Retrieves a macro from the global macro table by name.
- * 
+ *
  * If the macro table hasn't been initialized or the macro doesn't exist, NULL is returned.
- * 
+ *
  * @param name The name of the macro to find.
  * @return Pointer to the MacroBlock of the found macro, or NULL if not found.
  */
@@ -68,10 +69,10 @@ MacroBlock *find_macro(char *name)
 
 /**
  * @brief Adds a line of code to a macro's line list.
- * 
+ *
  * Initializes the line list if it doesn't exist yet and appends the new line to it.
  * This function also increments the macro's line count.
- * 
+ *
  * @param m Pointer to the MacroBlock to which the line will be added.
  * @param line The line of code to add to the macro.
  */
@@ -90,9 +91,9 @@ void macro_add_line(MacroBlock *m, char *line)
 
 /**
  * @brief Helper function to write a macro line to a file.
- * 
+ *
  * Used internally by the macro_write_lines function to write each line of a macro to the output file.
- * 
+ *
  * @param data Pointer to the line data to write.
  * @param f File pointer to the output file where the line will be written.
  */
@@ -103,9 +104,9 @@ void _dump_macro_line(void *data, FILE *f)
 
 /**
  * @brief Writes all lines of a macro to an output file.
- * 
+ *
  * Iterates through the macro's lines list and writes each line to the specified output file.
- * 
+ *
  * @param m Pointer to the MacroBlock whose lines will be written.
  * @param output File pointer to the output file.
  */
@@ -119,9 +120,9 @@ void macro_write_lines(MacroBlock *m, FILE *output)
 
 /**
  * @brief Helper function to free memory used by macro lines.
- * 
+ *
  * Invoked by free_macro_table to free the linked list of lines associated with each macro.
- * 
+ *
  * @param kvp A key-value pair where the value is a pointer to a MacroBlock to be cleaned up.
  */
 void _free_macro_lines(const KeyValuePair kvp)
@@ -136,7 +137,7 @@ void _free_macro_lines(const KeyValuePair kvp)
 
 /**
  * @brief Frees the global macro table and all associated resources.
- * 
+ *
  * Iterates through the macro table and frees the linked lists of lines for each macro.
  * Then, it destroys the macro table itself.
  */

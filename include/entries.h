@@ -2,20 +2,20 @@
  * @file entries.h
  * @brief Manages entry symbols for assembly processing.
  *
- * This header defines functions to manage a list of entry symbols. It 
+ * This header defines functions to manage a list of entry symbols. It
  * supports operations such as addition, deletion, and exporting to a file.
- * These functionalities are crucial for processing '.entry' directives in 
- * assembly code, ensuring the proper management of entry points across 
+ * These functionalities are crucial for processing '.entry' directives in
+ * assembly code, ensuring the proper management of entry points across
  * different modules.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef ENTRIES_H
 #define ENTRIES_H
 
 #include <utils.h>
 #include <stdio.h>
-
 
 /**
  * @brief adds a symbol to the entries list

@@ -8,6 +8,8 @@
  * name, and to retrieve properties for assembly language instructions,
  * such as opcode, operand count, and addressing rules. This setup is
  * crucial for the lexical and syntactic analysis stages of an assembler.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 #ifndef RESERVED_H

@@ -10,6 +10,8 @@
  * immediate values, and array notation, as well as a custom boolean type.
  * These utilities facilitate parsing, memory management, and diagnostic
  * logging within the assembler.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 #ifndef UTIL_H

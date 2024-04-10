@@ -5,12 +5,12 @@
  * This header file declares a set of functions designed to handle assembly language directives. These functions are responsible for parsing and processing different types of directives encountered in an assembly language file, such as .define, .data, .string, .extern, and .entry. Each function takes the relevant directive statement and the current line number as input, performs the necessary operations such as updating symbol tables, serializing data, or managing external and entry symbols, and returns a boolean indicating the success or failure of the operation.
  *
  * The functions in this file are integral to the assembly process, aiding in the translation from assembly language to machine code by managing the various aspects of assembly directives.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef DIRECTIVES_H
 #define DIRECTIVES_H
-
 
 /**
  * @brief Handles a .define statement, updates the symbols table accordingly, and prints out error messages.

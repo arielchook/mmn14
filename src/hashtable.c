@@ -17,6 +17,8 @@
  * 
  * These functions are essential for efficient storage and retrieval of data, providing a flexible
  * and scalable data structure for various applications.
+ * 
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 

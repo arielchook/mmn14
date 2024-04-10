@@ -1,12 +1,13 @@
 /**
  * @file secondpass.c
  * @brief Contains functions related to the second pass of the assembler.
- * 
+ *
  * This file provides functions for processing assembly code during the second pass of the assembler,
  * including validation of .entry statements, processing of assembly instructions, and finalization
  * of machine code output.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <secondpass.h>
 #include <utils.h>

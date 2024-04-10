@@ -13,8 +13,9 @@
  * The functions perform validation of the input and update relevant data structures,
  * such as symbol tables and lists of entries, accordingly. Error handling is included
  * to manage issues like incorrect formatting, invalid names, and value ranges.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <symbols.h>
 #include <ctype.h>

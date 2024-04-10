@@ -7,6 +7,8 @@
  * instructions to build the initial symbol table and set up for the second pass.
  * It's a crucial step in resolving symbols and preparing the assembly file for
  * further compilation stages.
+ * 
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 

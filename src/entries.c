@@ -13,8 +13,9 @@
  * processing, allowing for proper resolution of symbols that are marked as entry
  * points into the code. Each entry symbol's value is determined in the second pass
  * of the assembly process and is written to an output file alongside its name.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <entries.h>
 #include <stdio.h>

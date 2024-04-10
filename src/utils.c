@@ -1,6 +1,8 @@
 /**
  * @file utils.c
  * @brief Utility functions for string manipulation, memory allocation, and logging.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 #include <utils.h>

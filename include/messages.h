@@ -8,8 +8,9 @@
  * of issues and steps in the assembly process, aiding in debugging and user
  * interaction. The messages cover a wide range of scenarios, from syntax errors
  * to memory allocation failures, ensuring comprehensive feedback for the user.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef MESSAGES_H
 #define MESSAGES_H

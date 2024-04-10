@@ -17,6 +17,8 @@
  *
  * The first pass is critical for establishing the symbol table, which is essential for resolving symbol references
  * and generating the final machine code in the second pass.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 #include <ctype.h>

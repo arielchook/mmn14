@@ -8,8 +8,9 @@
  * efficient storage and retrieval. This file includes the declaration of key-value
  * pair structures, the hashtable structure itself, and functions for managing the
  * hashtable such as creation, destruction, insertion, and retrieval.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
@@ -18,13 +19,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /* initial capacity of hashtable */
 #define INITIAL_SIZE 16
 
 /* growth factor for the hashtable when capacity is reached */
 #define GROWTH_FACTOR 2
-
 
 /**
  * @struct KeyValuePair
@@ -42,7 +41,6 @@ typedef struct
     char *key;   /**< Pointer to the key string of the key-value pair. */
     void *value; /**< Void pointer to the value, allowing for storage of any type of data. */
 } KeyValuePair;
-
 
 /**
  * @struct Hashtable
@@ -64,48 +62,48 @@ typedef struct
     int capacity;        /**< The maximum capacity of the hash table before resizing is required. */
 } Hashtable;
 
-
-
-/** 
+/**
  * @brief Creates a new hashtable.
- * 
+ *
  * Allocates memory for a new hashtable structure and initializes it.
- * 
+ *
  * @return Pointer to the newly created Hashtable.
  */
 Hashtable *hashtable_create(void);
 
-/** 
+/**
  * @brief Destroys a hashtable.
- * 
+ *
  * Frees all memory associated with the hashtable, including keys and values.
- * 
+ *
  * @param ht The hashtable to destroy.
  */
 void hashtable_destroy(Hashtable *ht);
 
-/** 
+/**
  * @brief Inserts a key-value pair into the hashtable.
- * 
+ *
  * If the key already exists, its value is replaced. If the load factor is too high, the table is resized.
- * 
+ *
  * @param ht The hashtable into which the key-value pair is inserted.
  * @param key The key for the key-value pair.
  * @param value The value for the key-value pair.
  * @return Returns the old value if the key already exists, NULL otherwise.
- */void *hashtable_insert(Hashtable *ht, char *key, void *value);
+ */
+void *hashtable_insert(Hashtable *ht, char *key, void *value);
 
-/** 
+/**
  * @brief Retrieves a value from the hashtable by key.
- * 
+ *
  * @param ht The hashtable from which to retrieve the value.
  * @param key The key of the value to retrieve.
  * @return The value associated with the key, or NULL if the key is not found.
- */void *hashtable_get(Hashtable *ht, const char *key);
+ */
+void *hashtable_get(Hashtable *ht, const char *key);
 
-/** 
+/**
  * @brief Iterates over all entries in the hashtable and applies a function to each one.
- * 
+ *
  * @param ht The hashtable over which to iterate.
  * @param step_function The function to apply to each KeyValuePair in the hashtable.
  */

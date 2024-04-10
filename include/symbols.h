@@ -9,8 +9,9 @@
  * providing a mapping from symbol names to their values or addresses. Additional
  * utilities include validating symbol names, dumping the symbol table for debugging,
  * and updating symbol addresses post-processing.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef SYMBOLS_H
 #define SYMBOLS_H
@@ -81,7 +82,7 @@ bool add_code_label(char *name);
 
 /**
  * @brief Finds a symbol in the symbol hashtable and returns it.
- * 
+ *
  * @param name Name of the symbol to find.
  * @return Pointer to the SymbolBlock if found, NULL otherwise.
  */

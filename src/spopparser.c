@@ -1,8 +1,9 @@
 /**
  * @file spopparser.c
  * @brief Function prototypes and definitions for parsing operands in the second pass of the assembler.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <fpopparser.h>
 #include <reserved.h>
