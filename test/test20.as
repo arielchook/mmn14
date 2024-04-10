@@ -1,0 +1,4 @@
+; second pass invalid addressing types
+MAIN: mov r2,r3
+.define x=3
+mov x,MAIN

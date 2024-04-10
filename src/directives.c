@@ -34,6 +34,7 @@
  */
 bool handle_define(char *symbolStmt, int lineNumber)
 {
+    bool success = true;
     char *defName, *defVal;
     char *ptr;
     int value;
@@ -49,63 +50,56 @@ bool handle_define(char *symbolStmt, int lineNumber)
 
     /* is it in the format name=val ? */
     defName = extractWordSeparator(symbolStmt, 1, NULL, EQUAL_SEPARATOR);
-
-    if (defName == NULL)
-    {
-        printf(ERR_MISSING_EQUAL, lineNumber);
-        return false;
-    }
-
-    if (strlen(defName) == 0)
-    {
-        printf(ERR_MISSING_DEFINE_NAME, lineNumber);
-        free_if_not_null(defName);
-        return false;
-    }
-
-    /* make sure constant name is valid */
-    if (!is_valid_symbol_name(defName, lineNumber))
-    {
-        free_if_not_null(defName);
-        return false;
-    }
+    defVal = extractWordSeparator(symbolStmt, 2, NULL, EQUAL_SEPARATOR);
 
     /* look for the value in the name=val */
-    if ((defVal = extractWordSeparator(symbolStmt, 2, NULL, EQUAL_SEPARATOR)) == NULL)
+    if (defVal == NULL)
     {
-        printf(ERR_MISSING_DEFINE_VALUE, lineNumber);
-        free_if_not_null(defName);
-
-        return false;
+        printf(ERR_MISSING_EQUAL, lineNumber);
+        success = false;
     }
 
-    /* try to convert to int */
-    value = strtol(defVal, &ptr, 10);
-
-    if (*ptr != '\0')
+    if (success && strlen(defName) == 0)
     {
-        printf(ERR_DEFINE_VALUE_NOT_INT, lineNumber);
-        free_if_not_null(defVal);
-        free_if_not_null(defName);
-
-        return false;
+        printf(ERR_MISSING_DEFINE_NAME, lineNumber);
+        success = false;
     }
-    /* we don't need defVal anymore */
-    free_if_not_null(defVal);
+
+    /* make sure define name is valid */
+    if (success)
+    {
+        success = is_valid_symbol_name(defName, lineNumber);
+    }
+
+    if (success)
+    {
+        /* try to convert to int */
+        value = strtol(defVal, &ptr, 10);
+        if (*ptr != '\0')
+        {
+            printf(ERR_DEFINE_VALUE_NOT_INT, lineNumber);
+            success = false;
+        }
+    }
 
     /* value must be in the range we can represent in memory */
-    if ((value < MIN_VALUE) || (value > MAX_VALUE))
+    if (success && ((value < MIN_VALUE) || (value > MAX_VALUE)))
     {
         printf(ERR_INT_OUT_OF_BOUNDS, lineNumber, value, MIN_VALUE, MAX_VALUE);
-        free_if_not_null(defName);
-        return false;
+        success = false;
     }
 
     /* store it in the symbols table if all is ok */
-    add_define(defName, value);
-    free_if_not_null(defName);
+    if (success)
+    {
+        add_define(defName, value);
+    }
 
-    return true;
+    /* free memory */
+    free_if_not_null(defName);
+    free_if_not_null(defVal);
+
+    return success;
 }
 
 /**
@@ -271,7 +265,8 @@ bool handle_extern(char *externStmt, int lineNumber)
     /* Add the validated external symbol to the external symbols list */
     add_extern(externStmt);
 
-    return true; /* Return true as the external symbol has been successfully added */
+    /* Return true as the external symbol has been successfully added */
+    return true;
 }
 
 /**

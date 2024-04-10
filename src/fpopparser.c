@@ -48,6 +48,7 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     if (strlen(op) == 0)
     {
         printf(ERR_EMPTY_OPERAND, lineNumber);
+        return WT_INVALID;
     }
 
     /* Immediate addressing */
@@ -139,10 +140,17 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
     char *op_dest = extractWordSeparator(stmt, 2, NULL, OP_SEPARATOR);
     char *more_ops = extractWordSeparator(stmt, 3, NULL, OP_SEPARATOR);
 
-    /* Check for excessive operands */
-    if ((more_ops != NULL) || ((op_dest != NULL) && (props->num_operands < 2)) || ((op_src != NULL) && (props->num_operands < 1)))
+    /* Check for incorrect number of operands:
+     * 1. more than 2 operands or
+     * 2. command has no operarnds and we have op_src set
+     * 3. command has 1 operand and we have op_dest set or op_src is not set
+     * 4. command has 2 operands and we don't have both op_src and op_dest set */
+    if ((more_ops != NULL) ||
+        ((props->num_operands == 0) && (op_src != NULL)) ||
+        ((props->num_operands == 1) && ((op_dest != NULL) || (op_src == NULL))) ||
+        ((props->num_operands == 2) && ((op_src == NULL) || (op_dest == NULL))))
     {
-        printf(ERR_NUM_OPERANDS, lineNumber, props->instruction);
+        printf(ERR_NUM_OPERANDS, lineNumber, props->instruction, props->num_operands);
         success = false;
     }
 
