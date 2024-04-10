@@ -142,7 +142,7 @@ bool is_valid_symbol_name(char *symName, int lineNumber);
 /**
  * @brief Logs the contents of the symbol table to assist with debugging.
  */
-void dump_symbols_table(void);
+void LOG_SYMBOLS_TABLE(void);
 
 /**
  * @brief Iterates over the symbol table and updates the addresses of data and string symbols.

@@ -80,7 +80,7 @@ bool serialize_code_mc_word(mc_word *word);
  * @param word Pointer to the mc_word structure representing the machine code word to be serialized.
  * @return True if the word was successfully serialized and stored, False otherwise.
  */
-void dump_code_section(void);
+void LOG_CODE_SECTION(void);
 
 /**
  * @brief Resets the Instruction Counter (IC) to the base address of the code section.
@@ -128,7 +128,7 @@ bool serialize_data_section(mem_word value);
  * @brief prints out the contents of the data section
  *
  */
-void dump_data_section(void);
+void LOG_DATA_SECTION(void);
 
 /**
  * @brief Resets the Data Counter (DC) to the base address of the data section.

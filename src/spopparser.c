@@ -94,6 +94,13 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
     rtrim(array_name);
     array_index = extractWordSeparator(op, 2, NULL, ARRAY_OPEN_CHAR);
 
+    /* Make sure the array name is not a reserved word */
+    if (is_reserved_word(array_name))
+    {
+        printf(ERR_RESERVED_WORD, lineNumber);
+        return false;
+    }
+
     /* Look up the array name in the symbol list */
     sb = find_symbol(array_name);
     if (sb == NULL)

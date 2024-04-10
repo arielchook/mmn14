@@ -31,6 +31,7 @@
 #include <externs.h>
 #include <filemgr.h>
 #include <obwriter.h>
+#include <symbols.h>
 
 /**
  * @brief Processes an assembly source file through various compilation stages.
@@ -203,5 +204,10 @@ bool processFile(char *fname)
     }
 
     printf(MSG_DONE);
+
+    /* this part is used for debugging and will only work if DEBUG is defined */
+    LOG_DATA_SECTION();
+    LOG_SYMBOLS_TABLE();
+
     return true;
 }

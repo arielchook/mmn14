@@ -75,7 +75,7 @@ void _dump_entry(void *data, FILE *f)
 {
     char *symbol = (char *)data;
     SymbolBlock *sb = find_symbol(symbol);
-    fprintf(f, "%s %u\n", symbol, sb->value);
+    fprintf(f, "%s\t%.4u\n", symbol, sb->value);
 }
 
 /**

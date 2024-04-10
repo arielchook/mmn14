@@ -13,8 +13,8 @@
  * - serialize_code_mc_word: Serializes and stores a machine code word in the code section at the current IC position and advances IC.
  * - reset_mc_state: Resets the assembler's memory state, including data and code sections, and the counters.
  * - cleanup_mc_state: Performs cleanup operations for the assembler's memory state, such as freeing symbol tables and lists.
- * - dump_data_section: Dumps the current contents of the data section for debugging purposes.
- * - dump_code_section: Dumps the binary representation of all words in the code section for debugging purposes.
+ * - LOG_DATA_SECTION: Dumps the current contents of the data section for debugging purposes.
+ * - LOG_CODE_SECTION: Dumps the binary representation of all words in the code section for debugging purposes.
  *
  * These functions provide essential functionality for managing the memory layout of the assembler, storing machine code
  * instructions and data, and ensuring proper serialization and debugging capabilities during the assembly process.
@@ -61,9 +61,9 @@ uint16_t to_twos_complement(int num)
     if (num < 0)
     {
         /* Determine the mask to set the leading bits to 1 */
-        uint16_t mask = 1 << (MC_ADDR_SPACE_BITS - 1);
+        uint16_t mask = 1 << (MC_WORD_SIZE_BITS - 1);
         /* Perform bitwise OR with the mask to set the leading bits to 1 */
-        return (num & ((1 << MC_ADDR_SPACE_BITS) - 1)) | mask;
+        return (num & ((1 << MC_WORD_SIZE_BITS) - 1)) | mask;
     }
     /* If the number is non-negative, return as is */
     return num;
@@ -168,34 +168,6 @@ mem_word *data_word_at(mem_word address)
     if (address < BASE_DATA_ADDRESS || address > getDC())
         return NULL;
     return &dataSection[address - BASE_DATA_ADDRESS];
-}
-
-/**
- * @brief Dumps the current contents of the data section for debugging purposes.
- *
- * This function iterates through the data section starting from the base address up to the current
- * value of the Data Counter (DC). For each address, it retrieves the data word and logs it. If the
- * data word at a given address is NULL, indicating an uninitialized or invalid address, it logs
- * "(null)". This is useful for visualizing the state of the data section at any point during
- * the assembly process.
- */
-void dump_data_section(void)
-{
-    int i = 0;
-    mem_word *data_word = NULL;
-    LOG("\nData section:\n");
-    for (i = BASE_DATA_ADDRESS; i < getDC(); i++)
-    {
-        data_word = data_word_at(i);
-        if (data_word == NULL)
-        {
-            LOG("%.4d: (null)\n", i);
-        }
-        else
-        {
-            LOG("%.4d: [%d]\n", i, *data_word);
-        }
-    }
 }
 
 /**
@@ -371,10 +343,11 @@ void LOG_AS_BINARY(mem_word address)
 }
 
 /**
- * @brief Dumps the binary representation of all words in the code section for debugging purposes.
+ * @brief For debugging purposes, dumps the binary representation of all words in the code section for debugging purposes.
  */
-void dump_code_section(void)
+void LOG_CODE_SECTION(void)
 {
+#ifdef DEBUG
     int i;
     LOG("Code section:\n\t");
     LOG("\t");
@@ -389,4 +362,35 @@ void dump_code_section(void)
     {
         LOG_AS_BINARY(i);
     }
+#endif
+}
+
+/**
+ * @brief For debugging purposes, dumps the current contents of the data section for debugging purposes.
+ *
+ * This function iterates through the data section starting from the base address up to the current
+ * value of the Data Counter (DC). For each address, it retrieves the data word and logs it. If the
+ * data word at a given address is NULL, indicating an uninitialized or invalid address, it logs
+ * "(null)". This is useful for visualizing the state of the data section at any point during
+ * the assembly process.
+ */
+void LOG_DATA_SECTION(void)
+{
+#ifdef DEBUG
+    int i = 0;
+    mem_word *data_word = NULL;
+    LOG("\nData section:\n");
+    for (i = BASE_DATA_ADDRESS; i < getDC(); i++)
+    {
+        data_word = data_word_at(i);
+        if (data_word == NULL)
+        {
+            LOG("%.4d: (null)\n", i);
+        }
+        else
+        {
+            LOG("%.4d: [%d]\n", i, *data_word);
+        }
+    }
+#endif
 }

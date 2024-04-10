@@ -228,10 +228,11 @@ void _dump_symbol(const KeyValuePair kvp)
 }
 
 /**
- * @brief Logs the contents of the symbol table to assist with debugging.
+ * @brief For debugging purposes, logs the contents of the symbol table to assist with debugging.
  */
-void dump_symbols_table(void)
+void LOG_SYMBOLS_TABLE(void)
 {
+#ifdef DEBUG
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
     {
         LOG("Symbol table is empty!\n");
@@ -240,4 +241,5 @@ void dump_symbols_table(void)
 
     LOG("\nSymbols table:\n");
     hashtable_iterate(symbolsTable, _dump_symbol);
+#endif
 }

@@ -49,7 +49,7 @@ void externs_append(char *symbol, uint16_t address)
     /* We only need this for printing to the .ext file at the end of the second pass.
        Therefore, each entry in the list is a string in the format "extern_name address". */
     extern_space_address = safe_malloc(sizeof(symbol) + 6);
-    sprintf(extern_space_address, "%s %.4u", symbol, address);
+    sprintf(extern_space_address, "%s\t%.4u", symbol, address);
     linked_list_append(externs_list, extern_space_address);
 }
 
