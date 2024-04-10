@@ -22,7 +22,7 @@
  * @param op Operand string starting with '#'.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
- * @return True on successful processing, False on error.
+ * @return true on successful processing, false on error.
  */
 bool handle_immediate(char *op, int lineNumber, mc_word *word)
 {
@@ -77,7 +77,7 @@ bool handle_immediate(char *op, int lineNumber, mc_word *word)
  * @param op Operand string with array name and index.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
- * @return True on successful processing, False on error.
+ * @return true on successful processing, false on error.
  */
 bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
 {
@@ -181,7 +181,7 @@ bool handle_fixed_addressing(char *op, int lineNumber, mc_word *word)
  * @param op Operand string representing a register.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
- * @return True on successful processing, False on error.
+ * @return true on successful processing, false on error.
  */
 bool handle_direct_register(char *op, int lineNumber, mc_word *word)
 {
@@ -206,7 +206,7 @@ bool handle_direct_register(char *op, int lineNumber, mc_word *word)
  * @param op Operand string representing a symbol.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
- * @return True on successful processing, False on error.
+ * @return true on successful processing, false on error.
  */
 bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
 {
@@ -256,7 +256,7 @@ bool handle_direct_addressing(char *op, int lineNumber, mc_word *word)
  * @param address_rules Addressing rules applicable to this operand.
  * @param lineNumber Current line number for error reporting.
  * @param word Pointer to machine code word to populate.
- * @return True on successful processing, False on error.
+ * @return true on successful processing, false on error.
  */
 bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *word)
 {
@@ -301,7 +301,7 @@ bool process_operand(char *op, uint8_t address_rules, int lineNumber, mc_word *w
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber Current line number for error reporting.
  * @param props The properties of the instruction being parsed.
- * @return True if operands are processed successfully, False on error.
+ * @return true if operands are processed successfully, false on error.
  */
 bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
 {

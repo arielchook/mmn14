@@ -26,7 +26,7 @@
 #include <linkedlist.h>
 
 /**
- * Global pointer to a linked list that stores entry symbols.
+ * @brief Global pointer to a linked list that stores entry symbols.
  */
 LinkedList *entries_list = NULL;
 

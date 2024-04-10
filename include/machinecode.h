@@ -87,7 +87,7 @@ void dump_code_section(void);
  */
 void resetIC(void);
 
-#define BASE_DATA_ADDRESS 0
+#define BASE_DATA_ADDRESS 0 /*!< allows us to rebase the data section if ever needed */
 
 /**
  * @brief return the data counter

@@ -110,6 +110,7 @@ char *extractWord(char *str, int n, char **pStart)
 
 /**
  * @brief Extracts the n-th word from a string, using a specified separator.
+ * The extracted word is allocated dynamically and should be freed by the caller.
  * Note: if there are consecutive separators in the string, the function returns an empty string ("") for that word. This only applies
  * if the separator is not a space.
  *

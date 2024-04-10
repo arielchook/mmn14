@@ -72,7 +72,7 @@ uint16_t to_twos_complement(int num)
 /**
  * @brief Serializes and stores a value in the data section, then advances the Data Counter (DC).
  * @param value The value to be stored in the data section. Must be a 16-bit unsigned integer in a two-complement encoding.
- * @return True if the value was successfully stored, False if the data section is full.
+ * @return true if the value was successfully stored, False if the data section is full.
  */
 bool serialize_data_section(mem_word value)
 {
@@ -95,7 +95,7 @@ int getIC(void) { return IC; }
 /**
  * @brief Advances the Data Counter (DC) by a specified amount, ensuring it does not exceed the data section size.
  * @param howmuch The amount by which the DC should be advanced.
- * @return True if the DC was advanced without exceeding the limit, False otherwise.
+ * @return true if the DC was advanced without exceeding the limit, False otherwise.
  */
 bool advanceDC(int howmuch)
 {
@@ -111,7 +111,7 @@ bool advanceDC(int howmuch)
 /**
  * @brief Advances the Instruction Counter (IC) by a specified amount, ensuring it does not exceed the code section size.
  * @param howmuch The amount by which the IC should be advanced.
- * @return True if the IC was advanced without exceeding the limit, False otherwise.
+ * @return true if the IC was advanced without exceeding the limit, False otherwise.
  */
 bool advanceIC(int howmuch)
 {
@@ -278,7 +278,7 @@ uint16_t read_bits(mem_word *word, int start_bit, int num_bits)
 /**
  * @brief Serializes and stores a machine code word in the code section at the current IC position and advances IC.
  * @param word Pointer to the mc_word structure representing the machine code word to be serialized.
- * @return True if the word was successfully serialized and stored, False otherwise.
+ * @return true if the word was successfully serialized and stored, False otherwise.
  */
 bool serialize_code_mc_word(mc_word *word)
 {

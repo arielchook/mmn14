@@ -39,7 +39,7 @@ enum addressing_type
 };
 
 /**
- * Enumerates the symbols for absolute, relocatable, and external addressing, used in A_R_E fields.
+ * Enum for absolute, relocatable, and external addressing, used in A_R_E fields.
  */
 enum abs_rloc_extern
 {

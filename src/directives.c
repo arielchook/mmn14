@@ -110,7 +110,7 @@ bool handle_define(char *symbolStmt, int lineNumber)
  *
  * @param dataStmt The statement containing the .data directive values.
  * @param lineNumber The current line number in the assembly file for error reporting.
- * @return True if all values are processed and serialized successfully, False on any error.
+ * @return true if all values are processed and serialized successfully, False on any error.
  */
 bool handle_data(char *dataStmt, int lineNumber)
 {

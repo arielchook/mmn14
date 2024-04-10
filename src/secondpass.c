@@ -26,7 +26,7 @@
  *
  * @param entryStmt The entry statement to validate.
  * @param lineNumber The line number in the source file for error reporting.
- * @return True if the entry statement is valid, false otherwise.
+ * @return true if the entry statement is valid, false otherwise.
  */
 bool is_valid_entry(char *entryStmt, int lineNumber)
 {
@@ -73,7 +73,7 @@ bool is_valid_entry(char *entryStmt, int lineNumber)
  * @param pStart Pointer to the start of parameters or operands in the line.
  * @param hasLabel Indicates whether the line contains a label (1 for true, 0 for false).
  * @param lineNumber The line number in the source file for error reporting.
- * @return True if the line is processed successfully, false if an error is encountered.
+ * @return true if the line is processed successfully, false if an error is encountered.
  */
 bool sp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasLabel, int lineNumber)
 {
@@ -113,7 +113,7 @@ bool sp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
  *
  * @param line The line of assembly code to process.
  * @param lineNumber The current line number in the assembly source file for error reporting.
- * @return True if the line is processed successfully, false if an error is encountered.
+ * @return true if the line is processed successfully, false if an error is encountered.
  */
 bool sp_process_line(char *line, int lineNumber)
 {
@@ -158,7 +158,7 @@ bool sp_process_line(char *line, int lineNumber)
  * and instructions, and finalizing the machine code output.
  *
  * @param input File pointer to the input assembly source file.
- * @return True if the second pass completes successfully without errors, false otherwise.
+ * @return true if the second pass completes successfully without errors, false otherwise.
  */
 bool secondPass(FILE *input)
 {

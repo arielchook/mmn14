@@ -114,7 +114,7 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     /* Process .extern directive */
     if (strcmp(cmd, directives[EXTERN]) == 0)
     {
-        /* Labels before .extern are ignore */
+        /* Labels before .externs are ignore */
         if (hasLabel)
         {
             printf(WARN_LABEL_BEFORE_EXTERN, lineNumber);

@@ -77,7 +77,7 @@ void rtrim(char *str);
  *
  * @param str The string to check.
  * @param prefix The prefix to look for.
- * @return True if the string starts with the prefix, false otherwise.
+ * @return true if the string starts with the prefix, false otherwise.
  */
 bool startsWith(const char *str, const char *prefix);
 
@@ -86,7 +86,7 @@ bool startsWith(const char *str, const char *prefix);
  *
  * @param str The string to check.
  * @param suffix The suffix to look for.
- * @return True if the string ends with the suffix, false otherwise.
+ * @return true if the string ends with the suffix, false otherwise.
  */
 bool endsWith(const char *str, const char *suffix);
 
@@ -102,15 +102,17 @@ char *extractWord(char *str, int n, char **pStart);
 
 /**
  * @brief Extracts the n-th word from a string, using a specified separator.
- *
- * Note: This function doesn't handle consecutive separators and should return an empty string in such a case.
+ * The extracted word is allocated dynamically and should be freed by the caller.
+ * Note: if there are consecutive separators in the string, the function returns an empty string ("") for that word. This only applies
+ * if the separator is not a space.
  *
  * @param str The string from which to extract the word.
  * @param n The word position to extract (1-based).
  * @param pStart Pointer to where to store the starting position of the extracted word in the original string.
  * @param separator The character used to separate words in the string.
- * @return The extracted word, or NULL if n is out of bounds.
+ * @return The extracted word trimmed of leading and trailing whitespace, or NULL if n is out of bounds.
  */
+
 char *extractWordSeparator(char *str, int n, char **pStart, char separator);
 
 /**

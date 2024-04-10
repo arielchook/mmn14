@@ -102,7 +102,7 @@ void externs_dump(FILE *f)
 /**
  * @brief Checks if the externs list is empty.
  *
- * @return True if the externs list is NULL, indicating it's empty. False otherwise.
+ * @return true if the externs list is NULL, indicating it's empty. False otherwise.
  */
 bool externs_is_empty()
 {

@@ -16,6 +16,7 @@
 #define FILEMGR_H
 #include <utils.h>
 
+/* constants for file extensions */
 #define AS_EXTENSION ".as"   /*!< file extension for a source file after precompilation */
 #define AM_EXTENSION ".am"   /*!< file extension for a source file containing macros */
 #define ENT_EXTENSION ".ent" /*!< file extension for an output file containing list of entries */

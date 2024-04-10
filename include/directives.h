@@ -2,9 +2,12 @@
  * @file directives.h
  * @brief Assembly Directive Handlers
  *
- * This header file declares a set of functions designed to handle assembly language directives. These functions are responsible for parsing and processing different types of directives encountered in an assembly language file, such as .define, .data, .string, .extern, and .entry. Each function takes the relevant directive statement and the current line number as input, performs the necessary operations such as updating symbol tables, serializing data, or managing external and entry symbols, and returns a boolean indicating the success or failure of the operation.
- *
- * The functions in this file are integral to the assembly process, aiding in the translation from assembly language to machine code by managing the various aspects of assembly directives.
+ * This header file declares a set of functions designed to handle assembly language directives.
+ * These functions are responsible for parsing and processing different types of directives encountered in an assembly
+ * language file, such as .define, .data, .string, .extern, and .entry.
+ * Each function takes the relevant directive statement and the current line number as input, performs the necessary
+ *  operations such as updating symbol tables, serializing data, or managing external and entry symbols, and returns
+ * a boolean indicating the success or failure of the operation.
  *
  * @authors Ariel Cohen, Jonathan Transky
  */
@@ -17,7 +20,7 @@
  *
  * @param symbolStmt The statement string, after the ".define" part.
  * @param lineNumber The current line number in the file being processed.
- * @return True if the operation was successful, false if any error occurred while processing the statement.
+ * @return true if the operation was successful, false if any error occurred while processing the statement.
  */
 bool handle_define(char *symbolStmt, int lineNumber);
 
@@ -26,7 +29,7 @@ bool handle_define(char *symbolStmt, int lineNumber);
  *
  * @param dataStmt The statement containing the .data directive values.
  * @param lineNumber The current line number in the assembly file for error reporting.
- * @return True if all values are processed and serialized successfully, False on any error.
+ * @return true if all values are processed and serialized successfully, False on any error.
  */
 bool handle_data(char *dataStmt, int lineNumber);
 
@@ -35,7 +38,7 @@ bool handle_data(char *dataStmt, int lineNumber);
  *
  * @param stringStmt The string statement to handle, excluding the .string directive itself.
  * @param lineNumber The current line number in the assembly file for error reporting.
- * @return True if the string is processed successfully, False on any error.
+ * @return true if the string is processed successfully, False on any error.
  */
 bool handle_string(char *stringStmt, int lineNumber);
 
@@ -44,7 +47,7 @@ bool handle_string(char *stringStmt, int lineNumber);
  *
  * @param externStmt The statement string, after the ".extern" part.
  * @param lineNumber The current line number in the file being processed.
- * @return True if the operation was successful, false if any error occurred while processing the statement.
+ * @return true if the operation was successful, false if any error occurred while processing the statement.
  */
 bool handle_extern(char *externStmt, int lineNumber);
 
@@ -53,7 +56,7 @@ bool handle_extern(char *externStmt, int lineNumber);
  *
  * @param entryStmt The entry statement to handle, excluding the .entry directive itself.
  * @param lineNumber The current line number in the assembly file for error reporting.
- * @return True if the entry is added to the list successfully, False on any error.
+ * @return true if the entry is added to the list successfully, False on any error.
  */
 bool handle_entry(char *entryStmt, int lineNumber);
 

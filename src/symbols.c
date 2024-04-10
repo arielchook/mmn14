@@ -18,7 +18,7 @@ static Hashtable *symbolsTable = NULL;
  * @brief Adds a symbol to the symbol hashtable.
  *
  * @param d Pointer to the SymbolBlock structure to add.
- * @return True if the symbol was added successfully, False if the symbol already exists.
+ * @return true if the symbol was added successfully, false if the symbol already exists.
  */
 bool add_symbol(SymbolBlock *d)
 {
@@ -65,7 +65,7 @@ void free_symbol_table(void)
  *
  * @param symName Symbol name to validate.
  * @param lineNumber Current line number for error reporting.
- * @return True if the symbol name is valid, False otherwise.
+ * @return true if the symbol name is valid, false otherwise.
  */
 bool is_valid_symbol_name(char *symName, int lineNumber)
 {
@@ -109,7 +109,7 @@ bool is_valid_symbol_name(char *symName, int lineNumber)
  *
  * @param name Name of the define symbol.
  * @param value Integer value of the define symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_define(char *name, int value)
 {
@@ -125,7 +125,7 @@ bool add_define(char *name, int value)
  * @brief Adds an extern symbol to the symbol table.
  *
  * @param name Name of the extern symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_extern(char *name)
 {
@@ -143,7 +143,7 @@ bool add_extern(char *name)
  * @brief Adds a data label symbol to the symbol table.
  *
  * @param name Name of the data label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_data_label(char *name)
 {
@@ -158,7 +158,7 @@ bool add_data_label(char *name)
  * @brief Adds a code label symbol to the symbol table.
  *
  * @param name Name of the code label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_code_label(char *name)
 {

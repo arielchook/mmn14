@@ -28,7 +28,7 @@
  *
  * @param input Pointer to a FILE object that represents the input file to be precompiled.
  * @param output Pointer to a FILE object where the precompiled output will be written.
- * @return True if precompilation is successful without any errors, false otherwise.
+ * @return true if precompilation is successful without any errors, false otherwise.
  */
 bool precompile(FILE *input, FILE *output)
 {

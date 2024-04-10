@@ -52,7 +52,7 @@ typedef struct
  *
  * @param name Name of the define symbol.
  * @param value Integer value of the define symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, False otherwise.
  */
 bool add_define(char *name, int value);
 
@@ -60,7 +60,7 @@ bool add_define(char *name, int value);
  * @brief Adds an extern symbol to the symbol table.
  *
  * @param name Name of the extern symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, False otherwise.
  */
 bool add_extern(char *name);
 
@@ -68,7 +68,7 @@ bool add_extern(char *name);
  * @brief Adds a data label symbol to the symbol table.
  *
  * @param name Name of the data label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, False otherwise.
  */
 bool add_data_label(char *name);
 
@@ -76,7 +76,7 @@ bool add_data_label(char *name);
  * @brief Adds a code label symbol to the symbol table.
  *
  * @param name Name of the code label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, False otherwise.
  */
 bool add_code_label(char *name);
 
@@ -112,7 +112,7 @@ bool handle_define(char *defineStmt, int lineNumber);
  *
  * @param dataStmt The statement containing the .data directive values.
  * @param lineNumber The current line number in the assembly file for error reporting.
- * @return True if all values are processed and serialized successfully, False on any error.
+ * @return true if all values are processed and serialized successfully, False on any error.
  */
 bool handle_data(char *dataStmt, int lineNumber);
 
@@ -135,7 +135,7 @@ bool handle_string(char *stringStmt, int lineNumber);
  *
  * @param symName Symbol name to validate.
  * @param lineNumber Current line number for error reporting.
- * @return True if the symbol name is valid, False otherwise.
+ * @return true if the symbol name is valid, False otherwise.
  */
 bool is_valid_symbol_name(char *symName, int lineNumber);
 

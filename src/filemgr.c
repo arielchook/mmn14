@@ -39,7 +39,7 @@
  * It generates intermediate files (.am, .ent, .ext, .ob) throughout the process.
  *
  * @param fname The base name of the file to process, without any extension.
- * @return True if the processing was successful, false if any errors were encountered.
+ * @return true if the processing was successful, false if any errors were encountered.
  */
 bool processFile(char *fname)
 {

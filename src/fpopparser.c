@@ -127,7 +127,7 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber The current line number in the source file for error reporting.
  * @param props The properties of the instruction, including allowed addressing modes.
- * @return True if the operands are valid and processed successfully, False otherwise.
+ * @return true if the operands are valid and processed successfully, false otherwise.
  */
 bool count_operands_words(char *stmt, int lineNumber, const instruction_props *props)
 {
