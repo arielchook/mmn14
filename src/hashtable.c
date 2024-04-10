@@ -5,7 +5,7 @@
  * Provides functions for creating, manipulating, and destroying hash tables.
  * This module implements a generic hashtable data structure, supporting key-value pairs.
  * It includes functionality for inserting, retrieving, resizing, and iterating over entries in the hashtable.
- * 
+ *
  * The main functions in this file are:
  * - hash: Generates a hash code from a string using the djb2 algorithm.
  * - hashtable_create: Creates a new hashtable and initializes it.
@@ -14,13 +14,12 @@
  * - hashtable_insert: Inserts a key-value pair into the hashtable, replacing the value if the key already exists.
  * - hashtable_get: Retrieves a value from the hashtable by key.
  * - hashtable_iterate: Iterates over all entries in the hashtable and applies a function to each one.
- * 
+ *
  * These functions are essential for efficient storage and retrieval of data, providing a flexible
  * and scalable data structure for various applications.
- * 
+ *
  * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,11 +27,11 @@
 #include <hashtable.h>
 #include <utils.h>
 
-/** 
+/**
  * @brief Generates a hash code from a string.
- * 
+ *
  * This function applies the djb2 algorithm by Dan Bernstein to generate a hash code.
- * 
+ *
  * @param str The string to hash.
  * @return The generated hash code as an unsigned long.
  */
@@ -45,11 +44,11 @@ unsigned long hash(const char *str)
     return hash;
 }
 
-/** 
+/**
  * @brief Creates a new hashtable.
- * 
+ *
  * Allocates memory for a new hashtable structure and initializes it.
- * 
+ *
  * @return Pointer to the newly created Hashtable.
  */
 Hashtable *hashtable_create(void)
@@ -62,11 +61,11 @@ Hashtable *hashtable_create(void)
     return ht;
 }
 
-/** 
+/**
  * @brief Destroys a hashtable.
- * 
+ *
  * Frees all memory associated with the hashtable, including keys and values.
- * 
+ *
  * @param ht The hashtable to destroy.
  */
 void hashtable_destroy(Hashtable *ht)
@@ -86,11 +85,11 @@ void hashtable_destroy(Hashtable *ht)
     free(ht);
 }
 
-/** 
+/**
  * @brief Resizes a hashtable.
- * 
+ *
  * Grows the hashtable when the load factor exceeds a threshold, rehashing all existing entries.
- * 
+ *
  * @param ht The hashtable to resize.
  */
 void hashtable_resize(Hashtable *ht)
@@ -116,11 +115,11 @@ void hashtable_resize(Hashtable *ht)
     ht->capacity = new_capacity;
 }
 
-/** 
+/**
  * @brief Inserts a key-value pair into the hashtable.
- * 
+ *
  * If the key already exists, its value is replaced. If the load factor is too high, the table is resized.
- * 
+ *
  * @param ht The hashtable into which the key-value pair is inserted.
  * @param key The key for the key-value pair.
  * @param value The value for the key-value pair.
@@ -151,9 +150,9 @@ void *hashtable_insert(Hashtable *ht, char *key, void *value)
     return NULL;
 }
 
-/** 
+/**
  * @brief Retrieves a value from the hashtable by key.
- * 
+ *
  * @param ht The hashtable from which to retrieve the value.
  * @param key The key of the value to retrieve.
  * @return The value associated with the key, or NULL if the key is not found.
@@ -173,9 +172,9 @@ void *hashtable_get(Hashtable *ht, const char *key)
     return NULL;
 }
 
-/** 
+/**
  * @brief Iterates over all entries in the hashtable and applies a function to each one.
- * 
+ *
  * @param ht The hashtable over which to iterate.
  * @param step_function The function to apply to each KeyValuePair in the hashtable.
  */

@@ -64,6 +64,7 @@ MacroBlock *find_macro(char *name)
     {
         return NULL;
     }
+
     return hashtable_get(macroTable, name);
 }
 
@@ -150,4 +151,5 @@ void free_macro_table()
     hashtable_iterate(macroTable, _free_macro_lines);
     /* delete the macro hashtable */
     hashtable_destroy(macroTable);
+    macroTable = NULL;
 }

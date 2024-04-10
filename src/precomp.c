@@ -100,6 +100,7 @@ bool precompile(FILE *input, FILE *output)
                 inMacro = true;
                 m = safe_malloc(sizeof(MacroBlock));
                 m->name = strdup(macroName);
+                m->lines_list = NULL;
             }
         }
         else if (strcmp(firstWord, directives[ENDMCR]) == 0)
@@ -128,6 +129,7 @@ bool precompile(FILE *input, FILE *output)
         }
         else
         {
+
             /* Process lines within macro definitions or expand macros. */
             if (inMacro)
             {

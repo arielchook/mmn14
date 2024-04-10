@@ -56,6 +56,7 @@ void free_symbol_table(void)
     {
         hashtable_destroy(symbolsTable);
     }
+    symbolsTable = NULL;
 }
 
 /**
