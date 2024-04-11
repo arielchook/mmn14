@@ -8,10 +8,10 @@ OpenU Assembler is a powerful assembly compiler developed by Ariel Cohen and Jon
 
 ### Features
 
-**Macro Processing:** Efficient handling and expansion of macros in the precompilation stage for streamlined assembly code.  
-**Symbol Table Construction:** Detailed first pass analysis to identify labels, directives, and instructions, creating a robust symbol table for reference resolution.  
-**Instruction Processing:** Second pass validation and translation of assembly instructions into an optimized and secure machine code.  
-**Encryption to 4-Base Encoding:** Unique binary-to-4-base encryption using specific operators for enhanced code security.
+- **Macro Processing:** Efficient handling and expansion of macros in the precompilation stage for streamlined assembly code.
+- **Symbol Table Construction:** Detailed first pass analysis to identify labels, directives, and instructions, creating a robust symbol table for reference resolution.
+- **Instruction Processing:** Second pass validation and translation of assembly instructions into an optimized and secure machine code.
+- **Encryption to 4-Base Encoding:** Unique binary-to-4-base encryption using specific operators for enhanced code security.
 
 ### Workflow
 
