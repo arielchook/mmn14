@@ -1,0 +1,5 @@
+; check that duplicate macros are not allowed
+MAIN: mov r3, LIST[sz]
+hlt
+LOOP: jmp W
+bne W
