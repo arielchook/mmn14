@@ -1,7 +1,6 @@
-# mmn14
+# Maman14 - OpenU Assembler
 
-Maman14 - OpenU Assembler
-Authors: Ariel Cohen & Jonathan Transky
+Authors: **Ariel Cohen** & **Jonathan Transky**
 
 ## Overview
 
