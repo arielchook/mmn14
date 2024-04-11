@@ -29,8 +29,8 @@ This will generate the `assembler` executable in the `bin` folder.
 ## Usage
 
 To use the compiler, run `./bin/assembler` followed by names of the input files with no extension.  
-The assembler accepts multiple files and processes them one by one.
-For example:
+The assembler accepts multiple files and processes them one by one.  
+For example:  
 `./bin/assembler test/ps` will run the assembler on the file `ps.as` under the `test` folder.
 
 At the end of a successful assembler compilation the following files will be generated:
