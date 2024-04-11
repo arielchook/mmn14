@@ -1,9 +1,10 @@
 obj/*
 bin/*
 test/*.am
+test/*.ob
+test/*.ent
+test/*.ext
 test/test.c
-*.ob
-*.am
-*.ent
-*.ext
 doc/*
+vscode/*
+Doxyfile
