@@ -8,6 +8,8 @@
  * instruction to ensure accurate machine code serialization. This is a
  * key part of the assembly process, translating assembly language into
  * machine-readable code.
+ * 
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 

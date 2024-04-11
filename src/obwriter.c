@@ -1,13 +1,14 @@
 /**
  * @file obwriter.c
  * @brief Function to dump the contents of the code section and data section into a .ob file.
- * 
+ *
  * This file contains the implementation of a function to dump the contents of the code section
  * and data section into a .ob file. It writes the header row indicating the size of the code
  * section and data section, followed by the binary representation of each word in the code
  * section and data section.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <obwriter.h>
 #include <machinecode.h>
@@ -33,7 +34,7 @@ void dump_object_file(FILE *f)
         f = stdout;
 
     /* write header row */
-    fprintf(f, "%u %u\n", (getIC() - BASE_CODE_ADDRESS), (getDC() - BASE_DATA_ADDRESS));
+    fprintf(f, "\t%u %u\n", (getIC() - BASE_CODE_ADDRESS), (getDC() - BASE_DATA_ADDRESS));
 
     /* write code section */
     for (i = BASE_CODE_ADDRESS; i < getIC(); i++)
@@ -62,6 +63,7 @@ void dump_object_file(FILE *f)
         for (j = MC_WORD_SIZE_BITS - 2; j >= 0; j -= 2)
         {
             bits = read_bits(dataword, j, 2);
+
             fputc(ob_encrypted[bits], f);
         }
         fprintf(f, "\n");

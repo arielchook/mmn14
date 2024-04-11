@@ -6,11 +6,11 @@
  * and manipulation within an assembler. This includes managing instruction
  * and data sections, counters for instructions (IC) and data (DC), and
  * operations like serialization of machine code, writing to specific addresses,
- * and converting values to two's complement representation. The constants 
+ * and converting values to two's complement representation. The constants
  * define memory sizes, value ranges, and base addresses for code and data.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
-
 
 #ifndef MACHINECODE_H
 #define MACHINECODE_H
@@ -80,14 +80,14 @@ bool serialize_code_mc_word(mc_word *word);
  * @param word Pointer to the mc_word structure representing the machine code word to be serialized.
  * @return True if the word was successfully serialized and stored, False otherwise.
  */
-void dump_code_section(void);
+void LOG_CODE_SECTION(void);
 
 /**
  * @brief Resets the Instruction Counter (IC) to the base address of the code section.
  */
 void resetIC(void);
 
-#define BASE_DATA_ADDRESS 0
+#define BASE_DATA_ADDRESS 0 /*!< allows us to rebase the data section if ever needed */
 
 /**
  * @brief return the data counter
@@ -128,7 +128,7 @@ bool serialize_data_section(mem_word value);
  * @brief prints out the contents of the data section
  *
  */
-void dump_data_section(void);
+void LOG_DATA_SECTION(void);
 
 /**
  * @brief Resets the Data Counter (DC) to the base address of the data section.

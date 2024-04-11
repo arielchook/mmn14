@@ -7,8 +7,9 @@
  * non-macro lines directly to the output. The function ensures macros are
  * not nested and have valid names, trims whitespace, and skips empty lines,
  * thereby preparing the file for the main compilation stages.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #ifndef PRECOMP_H
 #define PRECOMP_H

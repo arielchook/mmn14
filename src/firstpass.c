@@ -17,6 +17,8 @@
  *
  * The first pass is critical for establishing the symbol table, which is essential for resolving symbol references
  * and generating the final machine code in the second pass.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 #include <ctype.h>
@@ -30,41 +32,42 @@
 #include <fpopparser.h>
 #include <entries.h>
 
-/*
- * Internal function to process a line of assembly code, handling labels, directives, and commands.
+/**
+ * @brief Internal function to process a line of assembly code, handling labels, directives, and commands.
  *
  * This function deals with assembly language constructs such as labels, directives like .define, .data, .string, .entry,
  * and .extern, as well as machine instructions. It performs validation checks on labels, interprets directives, and
  * prepares for the translation of instructions to machine code by counting operand words and ensuring syntax correctness.
  *
- * Parameters:
- * - firstWord: The first word in the line, which could be a label or a directive.
- * - cmd: The command or directive extracted from the line, following any label.
- * - pStart: Pointer to the start of the parameters or operands in the line.
- * - hasLabel: Indicator of whether the line contains a label (1 for true, 0 for false).
- * - lineNumber: The current line number in the assembly source file, used for error reporting.
- *
- * Returns:
- * - True if the line was processed successfully, false if an error was encountered.
+ * @param firstWord The first word in the line, which could be a label or a directive.
+ * @param cmd The command or directive extracted from the line, following any label.
+ * @param pStart Pointer to the start of the parameters or operands in the line.
+ * @param hasLabel Indicator of whether the line contains a label (1 for true, 0 for false).
+ * @param lineNumber The current line number in the assembly source file, used for error reporting.
+ * @return true if the line was processed successfully, false if an error was encountered.
  */
 bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasLabel, int lineNumber)
 {
     const instruction_props *props;
-    /* Handle .define directive - constant definition */
-    if (strcmp(firstWord, directives[DEFINE]) == 0)
-    {
-        if (hasLabel) /* Labels are not allowed before a .define statement */
-        {
-            printf(ERR_DEFINE_WITH_LABEL, lineNumber);
-            return false;
-        }
-        return handle_define(pStart + strlen(directives[DEFINE]), lineNumber);
-    }
 
     /* Process labels */
     if (hasLabel)
     {
-        firstWord[strlen(firstWord) - 1] = '\0'; /* Remove the colon from the label */
+        /* Ensure there is a command following the label, if present */
+        if (cmd == NULL)
+        {
+            printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
+            return false;
+        }
+        /* Labels are not allowed before a .define statement */
+        if (strcmp(cmd, directives[DEFINE]) == 0)
+        {
+            printf(ERR_DEFINE_WITH_LABEL, lineNumber);
+            return false;
+        }
+
+        /* Remove the colon from the label */
+        firstWord[strlen(firstWord) - 1] = '\0';
 
         /* Validate the label's format and uniqueness */
         if (!is_valid_symbol_name(firstWord, lineNumber))
@@ -73,11 +76,10 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
         }
     }
 
-    /* Ensure there is a command following the label, if present */
-    if (cmd == NULL)
+    /* Process .define directive - constant definition */
+    if (strcmp(firstWord, directives[DEFINE]) == 0)
     {
-        printf(ERR_LABEL_WITH_NO_CMD, lineNumber);
-        return false;
+        return handle_define(pStart + strlen(directives[DEFINE]), lineNumber);
     }
 
     /* Process .data directive */
@@ -101,10 +103,10 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     /* Process .entry directive */
     if (strcmp(cmd, directives[ENTRY]) == 0)
     {
-        if (hasLabel) /* Labels are not allowed before .entry */
+        /* Labels before .entries are ignored */
+        if (hasLabel)
         {
-            printf(ERR_LABEL_BEFORE_ENTRY, lineNumber);
-            return false;
+            printf(WARN_LABEL_BEFORE_ENTRY, lineNumber);
         }
         return handle_entry(pStart + strlen(directives[ENTRY]), lineNumber);
     }
@@ -112,10 +114,10 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     /* Process .extern directive */
     if (strcmp(cmd, directives[EXTERN]) == 0)
     {
-        if (hasLabel) /* Labels are not allowed before .extern */
+        /* Labels before .externs are ignore */
+        if (hasLabel)
         {
-            printf(ERR_LABEL_BEFORE_EXTERN, lineNumber);
-            return false;
+            printf(WARN_LABEL_BEFORE_EXTERN, lineNumber);
         }
         return handle_extern(pStart + strlen(directives[EXTERN]), lineNumber);
     }
@@ -126,8 +128,10 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
         add_code_label(firstWord); /* Add label to symbol table with current instruction counter (IC) value */
     }
 
-    props = get_instruction_props(cmd); /* Locate the command in the instruction table */
-    if (props == NULL)                  /* Invalid command */
+    /* Locate the command in the instruction table */
+    props = get_instruction_props(cmd);
+    /* Invalid command */
+    if (props == NULL)
     {
         printf(ERR_UNKNOWN_CMD, lineNumber, cmd);
         return false;
@@ -137,19 +141,16 @@ bool fp_process_line_internal(char *firstWord, char *cmd, char *pStart, int hasL
     return count_operands_words(pStart + strlen(cmd), lineNumber, props);
 }
 
-/*
- * Processes a single line of assembly code, identifying and handling labels, comments, and commands.
+/**
+ * @brief Processes a single line of assembly code, identifying and handling labels, comments, and commands.
  *
  * This function extracts the first word (possible label) and the command from a line of assembly code,
  * then delegates the detailed processing to fp_process_line_internal. It manages memory for dynamically
  * allocated strings used during line processing.
  *
- * Parameters:
- * - line: The line of assembly code to process.
- * - lineNumber: The current line number in the assembly source file, used for error reporting.
- *
- * Returns:
- * - True if the line was processed successfully, false if an error was encountered.
+ * @param line The line of assembly code to process.
+ * @param lineNumber The current line number in the assembly source file, used for error reporting.
+ * @return true if the line was processed successfully, false if an error was encountered.
  */
 bool fp_process_line(char *line, int lineNumber)
 {
@@ -184,18 +185,15 @@ bool fp_process_line(char *line, int lineNumber)
     return success;
 }
 
-/*
- * Performs the first pass of the assembler, processing each line in the input file.
+/**
+ * @brief Performs the first pass of the assembler, processing each line in the input file.
  *
  * This function iterates through each line of the input assembly file, processing directives, labels,
  * and instructions. It sets the foundation for symbol table creation and prepares for the second pass
  * of assembly by updating symbol addresses and validating entries.
  *
- * Parameters:
- * - input: File pointer to the input assembly source file.
- *
- * Returns:
- * - True if the first pass completes successfully without errors, false otherwise.
+ * @param input File pointer to the input assembly source file.
+ * @return true if the first pass completes successfully without errors, false otherwise.
  */
 bool firstPass(FILE *input)
 {
@@ -203,7 +201,8 @@ bool firstPass(FILE *input)
     char line[MAX_LINE_LENGTH];
     int lineNumber;
 
-    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++) /* Read each line */
+    /* Read each line until EOF*/
+    for (lineNumber = 1; fgets(line, MAX_LINE_LENGTH, input) != NULL; lineNumber++)
     {
         /* Remove trailing whitespace (precompile step has already processed leading whitespace and empty lines) */
         rtrim(line);

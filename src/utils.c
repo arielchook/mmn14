@@ -1,8 +1,9 @@
 /**
  * @file utils.c
  * @brief Utility functions for string manipulation, memory allocation, and logging.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <utils.h>
 #include <string.h>
@@ -12,8 +13,10 @@
  * @brief Allocates memory safely.
  *
  * This function allocates memory of a specified size and checks for allocation failure.
- * If memory allocation fails, the program prints an error message and exits. There is not point in trying to properly free all the allocated memory
- * thus far in such case as the os will free up all memory consumed by the program upon exit and this is a critical error.
+ * If memory allocation fails, is is considered a critical error. The program prints an error message and exits.
+ * After reading online and consulting with several seasoned C programmers, it appears that it is actually safer to just exit here
+ * and let the OS reclaim the memory, rather than trying to free it up ourselves. Any action at this point might drive the process (and OS)
+ * into further instability.
  *
  * @param size The size of memory to allocate.
  * @return A pointer to the allocated memory.
@@ -109,6 +112,7 @@ char *extractWord(char *str, int n, char **pStart)
 
 /**
  * @brief Extracts the n-th word from a string, using a specified separator.
+ * The extracted word is allocated dynamically and should be freed by the caller.
  * Note: if there are consecutive separators in the string, the function returns an empty string ("") for that word. This only applies
  * if the separator is not a space.
  *
@@ -225,6 +229,6 @@ void LOG(const char *format, ...)
     vfprintf(stdout, format, args);
     va_end(args);
 #else
-    // Do nothing if DEBUG is not defined.
+    /* Do nothing if DEBUG is not defined. */
 #endif
 }

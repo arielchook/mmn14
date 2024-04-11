@@ -5,19 +5,20 @@
  * Implements functions for parsing the addressing type of operands in assembly statements.
  * This module provides functionality to analyze operands' syntax and determine their addressing type,
  * supporting immediate, direct, fixed index, and direct register addressing modes.
- * 
+ *
  * The main functions in this file are:
  * - parse_op_addressing_type: Parses the addressing type of an operand based on given rules, considering the operand's syntax.
  * - count_operands_words: Counts the number of memory words needed for the operands of a machine code instruction,
  *   analyzing the operands and their addressing modes to determine the required memory allocation.
- * 
+ *
  * These functions are essential for the translation of assembly statements to machine code instructions,
  * ensuring proper handling of operands and validation of addressing modes.
- * 
+ *
  * The module also contains helper functions for string manipulation and error reporting,
  * facilitating the parsing and processing of assembly statements.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <fpopparser.h>
 #include <reserved.h>
@@ -47,6 +48,7 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
     if (strlen(op) == 0)
     {
         printf(ERR_EMPTY_OPERAND, lineNumber);
+        return WT_INVALID;
     }
 
     /* Immediate addressing */
@@ -125,7 +127,7 @@ enum addressing_type parse_op_addressing_type(char *op, uint8_t address_rules, i
  * @param stmt The assembly statement containing the operands.
  * @param lineNumber The current line number in the source file for error reporting.
  * @param props The properties of the instruction, including allowed addressing modes.
- * @return True if the operands are valid and processed successfully, False otherwise.
+ * @return true if the operands are valid and processed successfully, false otherwise.
  */
 bool count_operands_words(char *stmt, int lineNumber, const instruction_props *props)
 {
@@ -138,10 +140,17 @@ bool count_operands_words(char *stmt, int lineNumber, const instruction_props *p
     char *op_dest = extractWordSeparator(stmt, 2, NULL, OP_SEPARATOR);
     char *more_ops = extractWordSeparator(stmt, 3, NULL, OP_SEPARATOR);
 
-    /* Check for excessive operands */
-    if ((more_ops != NULL) || ((op_dest != NULL) && (props->num_operands < 2)) || ((op_src != NULL) && (props->num_operands < 1)))
+    /* Check for incorrect number of operands:
+     * 1. more than 2 operands or
+     * 2. command has no operarnds and we have op_src set
+     * 3. command has 1 operand and we have op_dest set or op_src is not set
+     * 4. command has 2 operands and we don't have both op_src and op_dest set */
+    if ((more_ops != NULL) ||
+        ((props->num_operands == 0) && (op_src != NULL)) ||
+        ((props->num_operands == 1) && ((op_dest != NULL) || (op_src == NULL))) ||
+        ((props->num_operands == 2) && ((op_src == NULL) || (op_dest == NULL))))
     {
-        printf(ERR_NUM_OPERANDS, lineNumber, props->instruction);
+        printf(ERR_NUM_OPERANDS, lineNumber, props->instruction, props->num_operands);
         success = false;
     }
 

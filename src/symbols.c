@@ -1,9 +1,9 @@
 /**
  * @file symbols.h
  * @brief Function prototypes and definitions for symbol table management.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
-
 
 #include <hashtable.h>
 #include <utils.h>
@@ -16,9 +16,9 @@ static Hashtable *symbolsTable = NULL;
 
 /**
  * @brief Adds a symbol to the symbol hashtable.
- * 
+ *
  * @param d Pointer to the SymbolBlock structure to add.
- * @return True if the symbol was added successfully, False if the symbol already exists.
+ * @return true if the symbol was added successfully, false if the symbol already exists.
  */
 bool add_symbol(SymbolBlock *d)
 {
@@ -34,7 +34,7 @@ bool add_symbol(SymbolBlock *d)
 
 /**
  * @brief Finds a symbol in the symbol hashtable and returns it.
- * 
+ *
  * @param name Name of the symbol to find.
  * @return Pointer to the SymbolBlock if found, NULL otherwise.
  */
@@ -56,16 +56,17 @@ void free_symbol_table(void)
     {
         hashtable_destroy(symbolsTable);
     }
+    symbolsTable = NULL;
 }
 
 /**
  * @brief Checks if a given symbol name is valid.
- * 
+ *
  * Validates the symbol name against reserved words, length, character types, and duplicates.
- * 
+ *
  * @param symName Symbol name to validate.
  * @param lineNumber Current line number for error reporting.
- * @return True if the symbol name is valid, False otherwise.
+ * @return true if the symbol name is valid, false otherwise.
  */
 bool is_valid_symbol_name(char *symName, int lineNumber)
 {
@@ -106,10 +107,10 @@ bool is_valid_symbol_name(char *symName, int lineNumber)
 
 /**
  * @brief Adds a define symbol to the symbol table.
- * 
+ *
  * @param name Name of the define symbol.
  * @param value Integer value of the define symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_define(char *name, int value)
 {
@@ -123,9 +124,9 @@ bool add_define(char *name, int value)
 
 /**
  * @brief Adds an extern symbol to the symbol table.
- * 
+ *
  * @param name Name of the extern symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_extern(char *name)
 {
@@ -141,9 +142,9 @@ bool add_extern(char *name)
 
 /**
  * @brief Adds a data label symbol to the symbol table.
- * 
+ *
  * @param name Name of the data label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_data_label(char *name)
 {
@@ -156,9 +157,9 @@ bool add_data_label(char *name)
 
 /**
  * @brief Adds a code label symbol to the symbol table.
- * 
+ *
  * @param name Name of the code label symbol.
- * @return True if the symbol was added successfully, False otherwise.
+ * @return true if the symbol was added successfully, false otherwise.
  */
 bool add_code_label(char *name)
 {
@@ -171,10 +172,10 @@ bool add_code_label(char *name)
 
 /**
  * @brief Updates the addresses of data and string symbols in the symbol table.
- * 
+ *
  * This function is executed for every symbol in the symbols table. If it's a ST_DATA or ST_STRING,
  * it adds IC to its address so when written to file, it can be placed after the code part properly.
- * 
+ *
  * @param kvp The KeyValuePair structure containing the symbol to update.
  */
 void _update_address(const KeyValuePair kvp)
@@ -196,7 +197,7 @@ void update_data_symbols_address(void)
 
 /**
  * @brief Dumps the symbol table for debugging purposes.
- * 
+ *
  * @param kvp The KeyValuePair structure containing the symbol to dump.
  */
 void _dump_symbol(const KeyValuePair kvp)
@@ -228,10 +229,11 @@ void _dump_symbol(const KeyValuePair kvp)
 }
 
 /**
- * @brief Logs the contents of the symbol table to assist with debugging.
+ * @brief For debugging purposes, logs the contents of the symbol table to assist with debugging.
  */
-void dump_symbols_table(void)
+void LOG_SYMBOLS_TABLE(void)
 {
+#ifdef DEBUG
     if ((symbolsTable == NULL) || (symbolsTable->size == 0))
     {
         LOG("Symbol table is empty!\n");
@@ -240,4 +242,5 @@ void dump_symbols_table(void)
 
     LOG("\nSymbols table:\n");
     hashtable_iterate(symbolsTable, _dump_symbol);
+#endif
 }

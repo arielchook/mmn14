@@ -18,8 +18,8 @@ Getting Started
 To use the OpenU Assembler, follow this basic command-line syntax:
 
 
-openu_assembler input_file.asm -o output_file
-
+bin/assembler test/input_file
+This command executes the assembler binary on your specified assembly file. The assembler's output (object code, entry, and external files) will be generated according to how the assembler is programmed to handle output.
 
 Building OpenU Assembler
 

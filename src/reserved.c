@@ -1,11 +1,12 @@
 /**
  * @file reserved.c
  * @brief Contains definitions related to reserved words in the assembly language.
- * 
+ *
  * This file provides constant arrays and functions related to reserved words in the assembly language,
  * including directive keywords, instruction properties, and functions to check if a word is a reserved word.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <reserved.h>
 #include <string.h>

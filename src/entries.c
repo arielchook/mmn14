@@ -13,8 +13,9 @@
  * processing, allowing for proper resolution of symbols that are marked as entry
  * points into the code. Each entry symbol's value is determined in the second pass
  * of the assembly process and is written to an output file alongside its name.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <entries.h>
 #include <stdio.h>
@@ -25,7 +26,7 @@
 #include <linkedlist.h>
 
 /**
- * Global pointer to a linked list that stores entry symbols.
+ * @brief Global pointer to a linked list that stores entry symbols.
  */
 LinkedList *entries_list = NULL;
 
@@ -74,7 +75,7 @@ void _dump_entry(void *data, FILE *f)
 {
     char *symbol = (char *)data;
     SymbolBlock *sb = find_symbol(symbol);
-    fprintf(f, "%s %u\n", symbol, sb->value);
+    fprintf(f, "%s\t%.4u\n", symbol, sb->value);
 }
 
 /**

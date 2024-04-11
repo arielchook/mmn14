@@ -7,6 +7,8 @@
  * in the assembly process, as it produces the output file that can be used
  * for linking or loading into memory for execution. The function supports
  * writing to a specified file or to stdout if no file is provided.
+ * 
+ * @authors Ariel Cohen, Jonathan Transky
  */
 
 

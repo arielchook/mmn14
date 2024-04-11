@@ -6,7 +6,7 @@
  * precompilation, first pass, and second pass stages, generating intermediate and final
  * output files such as macro-expanded source (.am), entries (.ent), externals (.ext), and
  * object code (.ob). Each stage involves specific processing tasks:
- * 
+ *
  * - Precompilation: Expands macros and generates a macro-expanded source file.
  * - First Pass: Analyzes the source to build symbol tables and determine memory layout.
  * - Second Pass: Finalizes the machine code by resolving symbol references and generating
@@ -16,8 +16,9 @@
  * is correctly processed or providing informative error messages if issues are encountered.
  * The function relies on various utility and handling functions defined in included headers,
  * orchestrating the compilation process and managing output file generation and memory cleanup.
+ *
+ * @authors Ariel Cohen, Jonathan Transky
  */
-
 
 #include <utils.h>
 #include <messages.h>
@@ -30,6 +31,7 @@
 #include <externs.h>
 #include <filemgr.h>
 #include <obwriter.h>
+#include <symbols.h>
 
 /**
  * @brief Processes an assembly source file through various compilation stages.
@@ -38,7 +40,7 @@
  * It generates intermediate files (.am, .ent, .ext, .ob) throughout the process.
  *
  * @param fname The base name of the file to process, without any extension.
- * @return True if the processing was successful, false if any errors were encountered.
+ * @return true if the processing was successful, false if any errors were encountered.
  */
 bool processFile(char *fname)
 {
@@ -202,5 +204,10 @@ bool processFile(char *fname)
     }
 
     printf(MSG_DONE);
+
+    /* this part is used for debugging and will only work if DEBUG is defined */
+    LOG_DATA_SECTION();
+    LOG_SYMBOLS_TABLE();
+
     return true;
 }
