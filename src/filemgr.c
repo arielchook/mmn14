@@ -112,6 +112,8 @@ bool processFile(char *fname)
             printf(ERR_CLOSING_FILE, fname, AM_EXTENSION);
         }
 
+        /* If any errors were found in first-pass, we stop. This is called out in the maman guidlines in page 34, item #16 in the algorithm */
+        /* I've also posted a note about this in the forum at https://opal.openu.ac.il/mod/ouilforum/discuss.php?d=3193491&p=7575242#p7575242 */
         return false;
     }
 

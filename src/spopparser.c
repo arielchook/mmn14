@@ -334,6 +334,8 @@ bool parse_operands(char *stmt, int lineNumber, const instruction_props *props)
     word_instruction->type = WT_INSTRUCTION;
     word_instruction->contents.instruction.A_R_E = ARE_ABS;
     word_instruction->contents.instruction.opcode = props->opcode;
+    word_instruction->contents.instruction.src_addressing = 0;
+    word_instruction->contents.instruction.dest_addressing = 0;
 
     /* Is there a source operand? */
     if (success && op_src != NULL)
