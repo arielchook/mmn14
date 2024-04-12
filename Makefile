@@ -44,7 +44,7 @@ test: assembler
 		bin/assembler $$test_file; \
 	done
 	@echo "*****************************************************************************"
-	@echo "************ Running test for valid scenario, and comparing output" *********"
+	@echo "************ Running test for valid scenario, and comparing output **********"
 	bin/assembler test/ps 
 	diff -w test/ps.ob test/forum_files/ps.ob
 	diff -w test/ps.ent test/forum_files/ps.ent

@@ -1,6 +1,6 @@
 # Maman14 - OpenU Assembler
 
-Authors: **Ariel Cohen** & **Jonathan Transky**
+Authors: **Ariel Cohen** (ID 329599187) & **Jonathan Transky** (ID 216846733)
 
 ## Overview
 
